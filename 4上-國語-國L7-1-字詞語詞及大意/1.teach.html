@@ -2001,6 +2001,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 
 
 
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2021,6 +2022,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 /* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
 .rec-open { display: none; border-style: dashed; }
 body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
 .action-list > .item { display: flex; align-items: center; gap: 12px; }
 .result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
