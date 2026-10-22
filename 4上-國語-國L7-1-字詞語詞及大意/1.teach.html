@@ -2002,6 +2002,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 
 
 
+
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2059,12 +2061,132 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
       <div class="page-head"><span class="label">國L7-1 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
       <div class="flow-steps">
-        <div class="step" data-reveal><div class="badge">35'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">先備小考</div><div class="body">這一課要用到的舊經驗<br>五題</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
         <div class="arrow" data-reveal>→</div>
         <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝下一節小考範圍</div></div>
       </div>
     </section>
 
+    <!-- ① 小考：題目出自 本節 prereq_quiz（先備） -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 先備小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">這一課要用到的舊經驗</div>
+        <div class="sub">範圍：部首、字形、字音、大意</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L7-1" data-cp-kp="部首" data-cp-hash="a975c5" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 部首</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「打」「拉」「推」的部首都是「手部」，都是手做出來的動作。下列哪一個字的部首也是「手部」？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">跑</button>
+          <button class="q-opt">踢</button>
+          <button class="q-opt">吼</button>
+          <button class="q-opt" data-correct>抱</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「抱」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L7-1" data-cp-kp="部首" data-cp-hash="62e0d3" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 先備 · 部首</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「燒」「烤」「煮」都跟火有關，部首都是「火部」。下列哪一個字最可能也跟「火」有關？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>燈</button>
+          <button class="q-opt">河</button>
+          <button class="q-opt">樹</button>
+          <button class="q-opt">鐵</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「燈」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L7-1" data-cp-kp="字形" data-cp-hash="2e7494" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 選擇</span> 先備 · 字形</span><h2 id="q3-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「己」「已」「巳」長得很像，只差一小段。下列哪一個說法是對的？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">它們只是寫法不同，其實是同一個字</button>
+          <button class="q-opt" data-correct>它們是三個不同的字，讀音和意思都不一樣，不能互換</button>
+          <button class="q-opt">只要別人看得懂，寫哪一個都可以</button>
+          <button class="q-opt">長得像的字，讀音一定也一樣</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L7-1" data-cp-kp="字音" data-cp-hash="abbec7" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 選擇</span> 先備 · 字音</span><h2 id="q4-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「行」在「行走」念ㄒㄧㄥˊ，在「銀行」念ㄏㄤˊ。這件事告訴我們什麼？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">兩個讀音可以隨便挑一個念</button>
+          <button class="q-opt">「行」是寫錯的字</button>
+          <button class="q-opt" data-correct>同一個字在不同語詞裡可能有不同讀音，意思也跟著不同</button>
+          <button class="q-opt">中文的字每個都只有一種讀音</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L7-1" data-cp-kp="大意" data-cp-hash="125835" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 選擇</span> 先備 · 大意</span><h2 id="q5-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「小華想做出好吃的蛋炒飯。第一次飯太溼，第二次蛋炒焦了，第三次鹽放太多。他一次又一次的試，終於炒出全家都稱讚的蛋炒飯。」這段話主要在說什麼？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">蛋炒飯很難炒，不要輕易嘗試</button>
+          <button class="q-opt">小華的家人很喜歡吃蛋炒飯</button>
+          <button class="q-opt">炒飯的時候鹽不可以放太多</button>
+          <button class="q-opt" data-correct>小華經過好幾次失敗，最後成功做出好吃的蛋炒飯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
 
     <section class="slide" data-phase="learn" data-slide-id="dayi" aria-labelledby="dayi-t" hidden>
       <div class="page-head"><span class="label">國L7-1 字詞語詞及大意</span><h2 id="dayi-t" class="title">課文在說什麼？</h2></div>
@@ -2297,7 +2419,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
-    <!-- ③ 重點總結：本節 points，同時是下一節小考範圍 -->
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
     <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 國L7-1</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
       <div class="action-list">
