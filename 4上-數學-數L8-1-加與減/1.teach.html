@@ -2078,12 +2078,53 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .stepline .s .no { flex:none; width:38px; height:38px; border-radius:50%; background:var(--accent);
   color:var(--surface); font-weight:700; display:flex; align-items:center; justify-content:center; }
 
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 
 </head>
-<body>
-<main class="deck" aria-label="8-1 加與減 課程教學">
+<body data-lesson="數L8-1">
+<main class="deck" aria-label="加與減的併式｜課程教學 · 四上數學 8-1">
   <div class="stage" id="stage" tabindex="-1">
+
     <section class="slide is-active" data-slide-id="cover">
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第八單元 兩步驟問題與併式 · 8-1</div>
@@ -2091,7 +2132,151 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="sub">用括號告訴別人：這裡要先算</div>
       </div>
     </section>
-    <section class="slide" data-slide-id="story" hidden>
+
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">數L8-1 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">先備小考</div><div class="body">這一課要用到的舊經驗<br>五題</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝下一節小考範圍</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 本節 prereq_quiz（先備） -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 先備小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">這一課要用到的舊經驗</div>
+        <div class="sub">範圍：併式解題、加減併式與括號</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L8-1" data-cp-kp="併式解題" data-cp-hash="cf314e" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 併式解題</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">冰箱裡原有 75 杯綠豆沙，又放進 25 杯。現在冰箱裡有幾杯？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">50 杯</button>
+          <button class="q-opt">75 杯</button>
+          <button class="q-opt" data-correct>100 杯</button>
+          <button class="q-opt">175 杯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「100 杯」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L8-1" data-cp-kp="加減併式與括號" data-cp-hash="d7c122" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 先備 · 加減併式與括號</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「書架上原有 128 本書，借出 24 本後，又放進 15 本，現在有幾本？」要先算哪一步？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">先算 24＋15</button>
+          <button class="q-opt">先算 128＋15</button>
+          <button class="q-opt">哪一步先算都可以</button>
+          <button class="q-opt" data-correct>先算借出 24 本後剩下幾本</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「先算借出 24 本後剩下幾本」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L8-1" data-cp-kp="併式解題" data-cp-hash="cc1462" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 選擇</span> 先備 · 併式解題</span><h2 id="q3-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">一箱果汁有 48 瓶，阿姨拿走 12 瓶，媽媽拿走 8 瓶，還剩下幾瓶？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>28 瓶</button>
+          <button class="q-opt">20 瓶</button>
+          <button class="q-opt">36 瓶</button>
+          <button class="q-opt">40 瓶</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「28 瓶」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L8-1" data-cp-kp="加減併式與括號" data-cp-hash="c285b9" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 選擇</span> 先備 · 加減併式與括號</span><h2 id="q4-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">算式 （75＋25）－70 裡的括號，你覺得是什麼意思？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">括號裡的部分最後算</button>
+          <button class="q-opt" data-correct>括號裡的部分要先算</button>
+          <button class="q-opt">括號只是好看，沒有意思</button>
+          <button class="q-opt">括號表示不用算</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「括號裡的部分要先算」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L8-1" data-cp-kp="併式解題" data-cp-hash="a69ad2" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 選擇</span> 先備 · 併式解題</span><h2 id="q5-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">停車場有 40 輛車，開走 15 輛，又開進 20 輛，現在有幾輛？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">25 輛</button>
+          <button class="q-opt" data-correct>45 輛</button>
+          <button class="q-opt">55 輛</button>
+          <button class="q-opt">75 輛</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「45 輛」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="story" hidden>
 <div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">綠豆沙賣了多少？</h2></div>
       <div class="two-col">
         <div class="calc-card"><span class="cap">題目</span>
@@ -2103,51 +2288,64 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         </div>
       </div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">答案是 <b>30 杯</b>。這是三年級就會的<b>兩步驟解題</b>。</span></div>
     </section>
-    <section class="slide" data-slide-id="where100" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="where100" hidden>
 <div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">再算的算式裡，100 是怎麼來的？</h2></div>
       <div class="calc-rows">
         <div class="calc-card" data-reveal><span class="cap">先算</span><span class="calc">75＋25＝<span class="res">100</span></span></div>
         <div class="calc-card" data-reveal><span class="cap">再算</span><span class="calc"><span class="br">100</span>－70＝30</span></div>
       </div>
-      <div class="question-frame" style="margin-top:var(--s3);">
+      <div class="question-frame" style="margin-top:0;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);">
         <div class="q tier-1" data-reveal><span class="tier">看見</span><span class="text">再算的算式裡有一個 100，題目裡卻找不到 100。</span></div>
         <div class="q tier-2" data-reveal><span class="tier">想想</span><span class="text">這個 100 是<b>先算出來的結果</b>：75＋25。</span></div>
         <div class="q tier-3" data-reveal><span class="tier">用用</span><span class="text">那我們可以直接把 100 <b>換成 75＋25</b> 嗎？</span></div>
       </div>
     </section>
-    <section class="slide" data-slide-id="merge" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="merge" style="gap:16px" hidden>
 <div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">把 100 換成 75＋25，兩個算式變一個</h2></div>
       <div class="calc-rows">
         <div class="calc-card" data-reveal><span class="cap">原本兩個算式</span><span class="calc">75＋25＝100　　100－70＝30</span></div>
         <div class="merge-arrow" data-reveal>↓ 把 100 換成 75＋25，並加上括號 ↓</div>
         <div class="calc-card" data-reveal><span class="cap">合併成一個算式（併式）</span><span class="calc"><span class="br">（75＋25）</span>－70＝30</span></div>
       </div>
-      <div class="two-col" style="margin-top:var(--s3);">
+      <div class="two-col" style="margin-top:0;">
         <div class="concept-card" data-reveal><div class="head">括號的意思</div><div class="body">括號框住的是<b>先算</b>的部分。看到括號，就先算括號裡面。</div></div>
         <div class="concept-card" data-reveal><div class="head">併式的意思</div><div class="body">一個算式同時記下<b>先算什麼、再算什麼、答案是多少</b>。</div></div>
       </div>
     </section>
-    <section class="slide" data-slide-id="bookshelf" hidden>
-<div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">換你想：括號要加在哪裡？</h2><span class="step">練習</span></div>
+
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L8-1" data-cp-kp="加減併式與括號" data-cp-hash="31b9d7" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數L8-1 · 加減併式與括號</span><h2 id="cp1-t" class="title">換你想：括號要加在哪裡？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">書架上原有 128 本書，借出 24 本後，又放進 15 本，現在有幾本？<br>先算 128－24＝104，再算 104＋15＝119。合併成一個算式應該是——</p>
-        <div class="q-options">
+        <p class="q-stem">書架上原有 128 本書，借出 24 本後，又放進 15 本，現在有幾本？先算 128－24＝104，再算 104＋15＝119。合併成一個算式應該是——</p>
+        <div class="q-options abcd two">
           <button class="q-opt">128－（24＋15）＝119</button>
           <button class="q-opt">（128＋15）－24＝119</button>
           <button class="q-opt" data-correct>（128－24）＋15＝119</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
-      </div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text"><b>先算的是 128－24</b>，所以括號就加在 128－24 上面。</span></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">先算的是 128－24，所以括號就加在 128－24 上面。</span>
+      </div>
     </section>
-    <section class="slide" data-slide-id="divider-back" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="divider-back" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二部分</div>
         <div class="headline">如果先算的部分，在算式的<b>後面</b>呢？</div>
         <div class="sub">這是最容易寫錯的一種</div>
       </div>
     </section>
-    <section class="slide" data-slide-id="pot" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="pot" hidden>
 <div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">湯鍋打折，會找回多少元？</h2></div>
       <div class="calc-card"><span class="cap">題目</span>
         <div style="font-size:var(--t4);">一個湯鍋原價 1250 元，打折後比原價<b>便宜了 125 元</b>，媽媽付了 1500 元，會找回多少元？</div>
@@ -2158,7 +2356,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="s" data-reveal><span class="no">3</span><span class="calc">1500－<span class="br">（1250－125）</span>＝375<span class="lbl">併式</span></span></div>
       </div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">先算的 1250－125 在算式的<b>後面</b>，括號就加在後面。</span></div>
     </section>
-    <section class="slide" data-slide-id="trap" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="trap" hidden>
 <div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">小心！這樣寫是錯的</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見錯誤</div><div class="text"><span class="calc">1500－1250－125</span><br>沒有括號，就會變成「先減 1250、再減 125」，算出來是 125，<b>意思完全不一樣</b>。</div></div>
@@ -2166,7 +2365,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="right-side" data-reveal><div class="mark">✓ 正確寫法</div><div class="text"><span class="calc">1500－<span class="br">（1250－125）</span>＝375</span><br>括號告訴大家：<b>先算湯鍋打折後多少錢</b>。</div></div>
       </div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-warn"></use></svg></span><span class="text">先算的部分放在後面時，<b>括號一定不能省</b>。</span></div>
     </section>
-    <section class="slide" data-slide-id="juice" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="juice" hidden>
 <div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">同一題，兩種併式都對（一箱果汁 48 瓶，阿姨拿 12 瓶、媽媽拿 8 瓶）</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal><div class="head">先算阿姨拿走後剩下</div>
@@ -2180,20 +2380,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         </div>
       </div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">兩個括號的<b>意思</b>不同：左邊是剩下的，右邊是共拿走的。</span></div>
     </section>
-    <section class="slide" data-slide-id="quiz-where" hidden>
-<div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">括號加在哪裡？</h2><span class="step">小測驗</span></div>
+
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L8-1" data-cp-kp="加減併式與括號" data-cp-hash="63cf0a" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L8-1 · 加減併式與括號</span><h2 id="cp2-t" class="title">括號加在哪裡？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">哥哥原有 130 元，買早餐花掉 65 元，媽媽又給他 100 元，他現在有幾元？<br>下面哪一個併式，正確記錄了這題的解題過程？</p>
-        <div class="q-options">
+        <p class="q-stem">哥哥原有 130 元，買早餐花掉 65 元，媽媽又給他 100 元，他現在有幾元？下面哪一個併式，正確記錄了這題的解題過程？</p>
+        <div class="q-options abcd two">
           <button class="q-opt" data-correct>（130－65）＋100＝165</button>
           <button class="q-opt">130－（65＋100）＝165</button>
           <button class="q-opt">（130＋100）－65＝165</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
-      </div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">事情的順序是「先花掉 65」，所以先算 130－65，括號加在它身上。（第三個答案雖然也是 165，但記錄的順序跟題目不一樣。）</span></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">事情的順序是先花掉 65，所以先算 130－65，括號加在它身上</span>
+      </div>
     </section>
-    <section class="slide" data-slide-id="check" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="check" hidden>
 <div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">併式完，這樣檢查</h2></div>
       <div class="action-list">
         <div class="item" data-reveal>先算什麼？再算什麼？先用兩個算式寫出來</div>
@@ -2202,16 +2412,21 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="item" data-reveal>回頭念一次：括號裡表示什麼？答案表示什麼？</div>
       </div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">算得對還不夠，要能<b>說出括號在題目裡代表什麼</b>。</span></div>
     </section>
-    <section class="slide" data-slide-id="summary" hidden>
-<div class="page-head"><span class="label">8-1 加與減</span><h2 class="title">今天要記住的三件事</h2></div>
-      <div class="flow-steps">
-        <div class="step" data-reveal><div class="badge">1</div><div class="head">括號＝先算</div><div class="body">看到括號，先算括號裡面。</div></div>
-        <div class="arrow">→</div>
-        <div class="step" data-reveal><div class="badge">2</div><div class="head">先算的加括號</div><div class="body">不管先算的在前面還後面，括號都加在它身上。</div></div>
-        <div class="arrow">→</div>
-        <div class="step" data-reveal><div class="badge">3</div><div class="head">一題可能兩種寫法</div><div class="body">只要記錄的過程說得通，都算對。</div></div>
-      </div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">併式＝用<b>一個</b>算式，把「先算、再算、答案」通通記下來。</span></div>
+
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數L8-1</span><h2 id="summary-t" class="title">今天帶走這三件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>括號＝先算：看到括號，先算括號裡面<span class="next-tag">下節考 選擇・是非</span></div>
+        <div class="item" data-reveal>先算的那一步加括號，不管它在算式的前面還是後面<span class="next-tag">下節考 選擇・簡答</span></div>
+        <div class="item" data-reveal>同一題可能有兩種併式，只要記錄的過程說得通都對<span class="next-tag">下節考 是非</span></div>
+      </div>
+      <div class="takeaway-band" data-reveal>
+        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
+        <span class="text">下一節開頭的小考，就考這三條——今天回家唸一遍</span>
+      </div>
     </section>
+
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>17</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2223,6 +2438,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {
