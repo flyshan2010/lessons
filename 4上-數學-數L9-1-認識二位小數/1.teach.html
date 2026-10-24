@@ -2166,11 +2166,51 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 /* HUD 高 64px，但 .slide 只留 24px padding，貼底的 takeaway-band 會壓到
    「第 N 頁 · 揭露 x/y」。這裡把底部留白補足，讓 HUD 永遠讀得到。 */
 .deck .slide { padding-bottom: 72px; }
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 
 </head>
-<body>
-<main class="deck" aria-label="9-1 認識二位小數 課程教學">
+<body data-lesson="數L9-1">
+<main class="deck" aria-label="認識二位小數｜課程教學 · 四上數學 9-1">
   <div class="stage" id="stage" tabindex="-1">
 
     <section class="slide is-active" data-slide-id="cover">
@@ -2181,7 +2221,148 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="recall" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">數L9-1 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">先備小考</div><div class="body">這一課要用到的舊經驗<br>五題</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝下一節小考範圍</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 本節 prereq_quiz（先備） -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 先備小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">這一課要用到的舊經驗</div>
+        <div class="sub">範圍：二位小數的意義與讀寫、小數的大小比較</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L9-1" data-cp-kp="二位小數的意義與讀寫" data-cp-hash="4638d3" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 二位小數的意義與讀寫</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">把 1 張色紙平分成 10 等分，1 等分是幾張色紙？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>0.1 張</button>
+          <button class="q-opt">1 張</button>
+          <button class="q-opt">0.01 張</button>
+          <button class="q-opt">10 張</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「0.1 張」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L9-1" data-cp-kp="二位小數的意義與讀寫" data-cp-hash="953258" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 先備 · 二位小數的意義與讀寫</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">0.7 要怎麼唸？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">零點七十</button>
+          <button class="q-opt" data-correct>零點七</button>
+          <button class="q-opt">七</button>
+          <button class="q-opt">七分之一</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「零點七」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L9-1" data-cp-kp="二位小數的意義與讀寫" data-cp-hash="d3bc06" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 選擇</span> 先備 · 二位小數的意義與讀寫</span><h2 id="q3-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">把 1 條繩子平分成 100 段，1 段是這條繩子的幾分之幾？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">1/10</button>
+          <button class="q-opt">100/1</button>
+          <button class="q-opt" data-correct>1/100</button>
+          <button class="q-opt">10/100</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「1/100」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L9-1" data-cp-kp="二位小數的意義與讀寫" data-cp-hash="623fc2" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 選擇</span> 先備 · 二位小數的意義與讀寫</span><h2 id="q4-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">3 個 0.1 合起來是多少？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">0.03</button>
+          <button class="q-opt" data-correct>0.3</button>
+          <button class="q-opt">3</button>
+          <button class="q-opt">30</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「0.3」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="是非" data-cp-src="數L9-1" data-cp-kp="小數的大小比較" data-cp-hash="dd2507" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 是非</span> 先備 · 小數的大小比較</span><h2 id="q5-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">0.6 比 0.4 大。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！6 個 0.1 比 4 個 0.1 多</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="recall" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">先想想：0.1 張是怎麼來的？</h2></div>
       <div class="two-col">
         <div class="hg-wrap" data-hgrid data-locked data-preset="10">
@@ -2198,7 +2379,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">圖上塗色的 1 條，就是 10 個小格，也就是 0.1 張。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="birth" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="birth" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">分成 100 等分，1 等分是 0.01 張</h2></div>
       <div class="two-col">
         <div class="hg-wrap" data-hgrid data-locked data-preset="1">
@@ -2214,7 +2395,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">1/10 記成 0.1；1/100 就記成 <b>0.01</b>。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="try-007" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="try-007" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">換你塗：塗出 0.07 張</h2><span class="step">動手做</span></div>
       <div class="two-col">
         <div class="hg-wrap" data-hgrid data-target="7">
@@ -2229,7 +2410,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="series" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="series" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">幾個 0.01，就是零點零幾</h2></div>
       <div class="hg-set" style="justify-content:space-around;">
         <div class="hg-wrap" data-reveal data-hgrid data-locked data-preset="2"><div class="hgrid"></div><div class="hg-readout"></div></div>
@@ -2239,7 +2420,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">0.02 讀作零點零二、0.09 讀作零點零九——<b>幾個 0.01 就是零點零幾</b>。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="read-trap" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="read-trap" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">小數怎麼唸？別把位名唸出來</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal>
@@ -2255,7 +2436,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">整數部分要唸位名（五千六百七十八）；<b>小數部分只唸數字</b>，一個一個唸。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="divider-mixed" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="divider-mixed" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二部分</div>
         <div class="headline">整數和小數合起來</div>
@@ -2263,7 +2444,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="merge" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="merge" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">兩個部分合起來：2.5 張和 0.04 張</h2></div>
       <div class="hg-set">
         <div class="hg-whole">1 張</div>
@@ -2279,7 +2460,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="try-136" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="try-136" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">換你塗：塗出 1.36 張</h2><span class="step">動手做</span></div>
       <div class="hg-set">
         <div class="hg-whole">1 張</div>
@@ -2294,7 +2475,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">3 條是 0.3 張、6 小格是 0.06 張，加上原來的 1 張 → <b>1.36</b> 張。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="place" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="place" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">寫下來看看：1.47 和 2.05</h2></div>
       <div class="two-col">
         <table class="ptable" data-reveal>
@@ -2312,7 +2493,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="zero-trap" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="zero-trap" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">2.05 和 2.5，一樣嗎？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal>
@@ -2328,7 +2509,28 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-cross"></use></svg></span><span class="text">0 是用來<b>占位置</b>的：拿掉 0，5 就從百分位跳到十分位了。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="match" hidden>
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="是非" data-cp-src="數L9-1" data-cp-kp="小數的位值與化聚" data-cp-hash="8a08a4" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數L9-1 · 小數的位值與化聚</span><h2 id="cp1-t" class="title">2.05 和 2.5 一樣多？</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">2.05 張和 2.5 張一樣多。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！2.05 是 2 張又 5 小格，2.5 是 2 張又 5 條</span>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="match" hidden>
       <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">配配看：哪個小數配哪句話？</h2><span class="step">練習</span></div>
       <div class="drag-match z4" data-drag-match>
         <div class="pool">
@@ -2349,32 +2551,40 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">先看「幾個 0.1」放十分位、「幾個 0.01」放百分位，再把整數部分寫在小數點前面。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="quiz-seq" hidden>
-      <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">接下去數：0.08 的下一個是？</h2><span class="step">練習</span></div>
-      <div class="calc-card"><span class="cap">數數看</span><span class="calc">0.05 → 0.06 → 0.07 → 0.08 → （　？　）</span></div>
-      <div class="quiz row-opts" data-quiz data-mode="single" style="margin-top:var(--s3);">
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L9-1" data-cp-kp="二位小數的意義與讀寫" data-cp-hash="f91f52" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L9-1 · 二位小數的意義與讀寫</span><h2 id="cp2-t" class="title">接下去數：0.08 的下一個是？</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">括號裡應該填哪一個？</p>
-        <div class="q-options">
+        <div class="q-options abcd">
           <button class="q-opt">0.10</button>
           <button class="q-opt">0.8</button>
           <button class="q-opt" data-correct>0.09</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
-      <div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">一次多 1 個 0.01：8 個 0.01 → <b>9</b> 個 0.01，也就是 0.09。</span></div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">一次多 1 個 0.01：8 個 0.01 → 9 個 0.01，也就是 0.09。</span>
+      </div>
     </section>
 
-    <section class="slide" data-slide-id="summary" hidden>
-      <div class="page-head"><span class="label">9-1 認識二位小數</span><h2 class="title">今天這一節，一句話總結</h2></div>
-      <div class="data-focus">
-        <div class="figure-num"><span class="num">0.01</span><span class="unit">＝ 1/100</span></div>
-        <div class="readout">
-          <div class="claim" data-reveal>把 1 平分成 100 份，1 份就是 0.01</div>
-          <div class="note" data-reveal>幾個 0.01 就是零點零幾；和整數合起來，就寫成 1.47、2.05 這種二位小數。</div>
-        </div>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數L9-1</span><h2 id="summary-t" class="title">今天帶走這三件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>1 平分成 100 份，1 份是 1/100，記作 0.01，讀作零點零一<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>幾個 0.01 就是零點零幾；小數部分不唸位名，0.23 唸零點二三<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>整數和小數合起來：2.05＝2 個 1 和 5 個 0.01，中間的 0 不能省<span class="next-tag">下節考 是非・簡答</span></div>
       </div>
-      <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-clock"></use></svg></span><span class="text">下一節要學：<b>百分位</b>這個位名，還有 12 個 0.01 怎麼換成 0.1 和 0.01。</span></div>
+      <div class="takeaway-band" data-reveal>
+        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
+        <span class="text">下一節開頭的小考，就考這三條——今天回家唸一遍</span>
+      </div>
     </section>
 
     <div class="hud">
@@ -2390,222 +2600,88 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 </main>
 
 <script>
-/* ===== 數L9 二位小數 專用互動元件 ===== */
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
 (() => {
-  const fmt = (cents) => {
-    const s = (cents / 100).toFixed(2);
-    return s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
   };
 
-  /* ── 1. 可點選塗色的百格板 ───────────────────────────── */
-  document.querySelectorAll('[data-hgrid]').forEach((wrap) => {
-    const grid = wrap.querySelector('.hgrid');
-    if (!grid) return;
-    const whole = Number(wrap.dataset.whole || 0);
-    const target = wrap.dataset.target ? Number(wrap.dataset.target) : null;
-    const preset = Number(wrap.dataset.preset || 0);
-    const locked = wrap.hasAttribute('data-locked');
-    const readout = wrap.querySelector('.hg-readout');
-
-    for (let i = 0; i < 100; i++) {
-      const c = document.createElement('div');
-      c.className = 'cell';
-      if (i < preset) c.classList.add('is-on');
-      grid.appendChild(c);
-    }
-    if (locked) grid.classList.add('locked');
-
-    const cells = [...grid.children];
-    let hit = false;
-    const paint = () => {
-      const n = cells.filter((c) => c.classList.contains('is-on')).length;
-      const cents = whole * 100 + n;
-      if (readout) {
-        let html = `塗色 <span class="num">${n}</span> 格`;
-        html += `<span class="sub">${whole ? `${whole} 張又 ` : ''}${n} 個 0.01 張　＝　`;
-        html += `<b>${fmt(cents)}</b> 張</span>`;
-        if (target !== null) {
-          if (n === target) html += `<span class="sub ok">✓ 答對了！${fmt(whole * 100 + target)} 張</span>`;
-          else html += `<span class="sub">目標：塗出 ${fmt(whole * 100 + target)} 張</span>`;
-        }
-        readout.innerHTML = html;
-      }
-      if (target !== null && n === target && !hit) {
-        hit = true;
-        wrap.dispatchEvent(new CustomEvent('tds:answered', { bubbles: true, detail: { correct: true } }));
-      }
-    };
-    if (!locked) {
-      grid.addEventListener('click', (e) => {
-        const c = e.target.closest('.cell');
-        if (!c) return;
-        c.classList.toggle('is-on');
-        paint();
-      });
-    }
-    wrap.querySelector('[data-hg-clear]')?.addEventListener('click', () => {
-      cells.forEach((c) => c.classList.remove('is-on'));
-      hit = false;
-      paint();
-    });
-    wrap.querySelector('[data-hg-row]')?.addEventListener('click', () => {
-      const n = cells.filter((c) => c.classList.contains('is-on')).length;
-      const to = Math.min(100, (Math.floor(n / 10) + 1) * 10);
-      cells.forEach((c, i) => c.classList.toggle('is-on', i < to));
-      paint();
-    });
-    paint();
-  });
-
-  /* ── 2. 直式計算逐步動畫（進位／退位＋小數點對齊） ────── */
-  const UNITS = ['0.01', '0.1', '1', '10', '100'];
-  document.querySelectorAll('[data-vcalc]').forEach((box) => {
-    const op = box.dataset.op === '-' ? '-' : '+';
-    const A = Math.round(Number(box.dataset.a) * 100);
-    const B = Math.round(Number(box.dataset.b) * 100);
-    const RES = op === '+' ? A + B : A - B;
-    const intLen = Math.max(String(Math.floor(A / 100)).length, String(Math.floor(B / 100)).length,
-                            String(Math.floor(Math.abs(RES) / 100)).length);
-    const nd = intLen + 2;                       // 總位數（含兩位小數）
-    const digits = (v) => {                      // 由右至左，idx0＝百分位
-      const s = String(v).padStart(nd, '0');
-      return [...s].reverse().map(Number);
-    };
-    const a = digits(A), b = digits(B);
-    const top = a.slice();                       // 被減數（退位會被改寫）
-    const ans = new Array(nd).fill(null);
-    const carry = new Array(nd + 1).fill(null);
-    const struck = new Array(nd).fill(false);
-    const borrowVal = new Array(nd).fill(null);
-
-    const cols = 1 + intLen + 1 + 2;             // 運算符欄 ＋ 整數欄 ＋ 小數點欄 ＋ 兩位小數
-    const dotCol = 1 + intLen;
-    const colOf = (idx) => (idx < 2 ? cols - 1 - idx : cols - 1 - idx - 1);
-    const sig = (v) => 2 + String(Math.floor(Math.abs(v) / 100)).length;   // 有效位數（含兩位小數）
-    const sigA = sig(A), sigB = sig(B), sigR = sig(RES);
-    const show = (d, idx, lim) => (idx >= lim ? '' : String(d));
-
-    const board = document.createElement('div');
-    board.className = 'vc-board';
-    board.style.gridTemplateColumns = `repeat(${cols}, auto)`;
-    box.prepend(board);
-    const say = box.querySelector('.vc-say');
-
-    const cell = (txt, cls) => {
-      const d = document.createElement('div');
-      d.className = 'c' + (cls ? ' ' + cls : '');
-      d.textContent = txt;
-      return d;
-    };
-
-    let lit = -1, step = 0;
-    const draw = () => {
-      board.innerHTML = '';
-      // 進位／借位列
-      for (let c = 0; c < cols; c++) {
-        let t = '', cls = op === '+' ? 'carry' : 'borrow';
-        for (let i = 0; i < nd; i++) {
-          if (colOf(i) !== c) continue;
-          if (op === '+' && carry[i] != null && i > 0) t = String(carry[i]);
-          if (op === '-' && borrowVal[i] != null) t = String(borrowVal[i]);
-        }
-        board.appendChild(cell(t, cls));
-      }
-      // 被加數／被減數
-      board.appendChild(cell('', ''));
-      for (let c = 1; c < cols; c++) {
-        if (c === dotCol) { board.appendChild(cell('.', 'dot' + (step === 0 ? ' dotlit' : ''))); continue; }
-        const idx = [...Array(nd).keys()].find((i) => colOf(i) === c);
-        const cls = (idx === lit ? ' lit' : '') + (struck[idx] ? ' strike' : '');
-        board.appendChild(cell(show(a[idx], idx, sigA), cls.trim()));
-      }
-      // 運算符＋加數／減數
-      board.appendChild(cell(op === '+' ? '＋' : '－', 'op'));
-      for (let c = 1; c < cols; c++) {
-        if (c === dotCol) { board.appendChild(cell('.', 'dot' + (step === 0 ? ' dotlit' : ''))); continue; }
-        const idx = [...Array(nd).keys()].find((i) => colOf(i) === c);
-        board.appendChild(cell(show(b[idx], idx, sigB), idx === lit ? 'lit' : ''));
-      }
-      const rule = document.createElement('div');
-      rule.className = 'rule';
-      board.appendChild(rule);
-      // 答案列
-      board.appendChild(cell('', ''));
-      for (let c = 1; c < cols; c++) {
-        if (c === dotCol) {
-          const shown = ans.some((v) => v != null);
-          board.appendChild(cell('.', 'dot' + (shown ? '' : ' blank') + (step === 0 ? ' dotlit' : '')));
-          continue;
-        }
-        const idx = [...Array(nd).keys()].find((i) => colOf(i) === c);
-        board.appendChild(cell(ans[idx] == null ? '' : show(ans[idx], idx, sigR), 'ans' + (idx === lit ? ' lit' : '')));
-      }
-    };
-
-    const steps = [];
-    steps.push(() => {
-      lit = -1;
-      say && (say.innerHTML = '先把 <b>小數點對齊</b>：小數點標的是個位的位置，對齊了，個位對個位、十分位對十分位、百分位對百分位。');
-    });
-    if (op === '+') {
-      let cr = 0;
-      for (let i = 0; i < nd; i++) {
-        const da = a[i], db = b[i], ci = cr;
-        const s = da + db + ci, d = s % 10, co = Math.floor(s / 10);
-        cr = co;
-        steps.push(() => {
-          lit = i; ans[i] = d;
-          if (co && i + 1 < nd) carry[i + 1] = co;
-          const eq = ci ? `${da}＋${db}＋${ci}（進位）＝${s}` : `${da}＋${db}＝${s}`;
-          const u = UNITS[Math.min(i, UNITS.length - 1)];
-          let t = `算幾個 <b>${u}</b>：${eq}。`;
-          if (co) t += `${s} 個 ${u} 可以換成 1 個 ${UNITS[Math.min(i + 1, UNITS.length - 1)]} 和 ${d} 個 ${u}，<b>進位</b>寫在左邊。`;
-          else t += `剩 ${d} 個 ${u}。`;
-          say && (say.innerHTML = t);
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
         });
-      }
-    } else {
-      for (let i = 0; i < nd; i++) {
-        steps.push(() => {
-          lit = i;
-          const u = UNITS[Math.min(i, UNITS.length - 1)];
-          let note = '';
-          if (top[i] < b[i]) {
-            let j = i + 1;
-            while (j < nd && top[j] === 0) { top[j] = 9; struck[j] = true; borrowVal[j] = 9; j++; }
-            if (j < nd) { top[j] -= 1; struck[j] = true; borrowVal[j] = top[j]; }
-            top[i] += 10;
-            note = `不夠減，先<b>退位</b>：把 1 個 ${UNITS[Math.min(j, UNITS.length - 1)]} 換成 10 個 ${UNITS[Math.min(j - 1, UNITS.length - 1)]}。`;
-          }
-          const d = top[i] - b[i];
-          ans[i] = d;
-          say && (say.innerHTML = `算幾個 <b>${u}</b>：${note}${top[i]}－${b[i]}＝${d}，剩 ${d} 個 ${u}。`);
-        });
-      }
-    }
-    steps.push(() => {
-      lit = -1;
-      const shown = fmt(RES);
-      const raw = (RES / 100).toFixed(2);
-      let t = `答案的小數點，對齊上面的小數點寫下來 → <b>${raw}</b>。`;
-      if (shown !== raw) t += `　${raw} 和 ${shown} 一樣大，可以改記成 <b>${shown}</b>。`;
-      say && (say.innerHTML = t);
-      box.dispatchEvent(new CustomEvent('tds:answered', { bubbles: true, detail: { correct: true } }));
+      } else return;
+      drawResult();
     });
-
-    const go = () => { if (step < steps.length) { steps[step](); step++; draw(); } };
-    const reset = () => {
-      step = 0; lit = -1;
-      ans.fill(null); carry.fill(null); struck.fill(false); borrowVal.fill(null);
-      for (let i = 0; i < nd; i++) top[i] = a[i];
-      draw();
-      say && (say.innerHTML = '按「算下一步」，一步一步把直式算出來。');
-    };
-    box.querySelector('[data-vc-next]')?.addEventListener('click', go);
-    box.querySelector('[data-vc-reset]')?.addEventListener('click', reset);
-    reset();
-  });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
 })();
+
 </script>
 
 <script>
