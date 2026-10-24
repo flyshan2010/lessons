@@ -2015,12 +2015,54 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .slide[data-slide-id="rainbow-infer"] > .flow-steps { flex: 0 0 auto; }
 /* 尚未揭露的內容不可點——避免老師誤觸還沒出現的翻牌或選項 */
 [data-reveal]:not(.is-shown) { pointer-events: none; }
+
+
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
-<main class="deck" aria-label="信仰與生活課程教學">
+<body data-lesson="社3-1">
+<main class="deck" aria-label="課程教學｜信仰與生活 · 社會四上 3-1">
   <div class="stage" id="stage" tabindex="-1">
-    <!-- 1 封面 -->
+
     <section class="slide" data-slide-id="cover" aria-labelledby="cover-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第三單元 家鄉的傳統信仰與老街 · 3-1</div>
@@ -2029,8 +2071,146 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 2 導入 -->
-    <section class="slide" data-slide-id="ask" aria-labelledby="ask-t" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">社3-1 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">先備小考</div><div class="body">這一課要用到的舊經驗<br>五題</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝下一節小考範圍</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 本節 prereq_quiz（先備） -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 先備小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">這一課要用到的舊經驗</div>
+        <div class="sub">範圍：廟宇與居民生活、原住民族的信仰與祭典、尊重不同的信仰</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社3-1" data-cp-kp="廟宇與居民生活" data-cp-hash="0b9315" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 廟宇與居民生活</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">有一個村子住在海邊，大家都靠捕魚生活。你猜他們最可能特別拜哪一位神明？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">保佑考試順利的神明</button>
+          <button class="q-opt">保佑生意興隆的神明</button>
+          <button class="q-opt">保佑身體健康的神明</button>
+          <button class="q-opt" data-correct>保佑出海平安的神明</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「保佑出海平安的神明」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社3-1" data-cp-kp="原住民族的信仰與祭典" data-cp-hash="524b1e" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 先備 · 原住民族的信仰與祭典</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">你聽過原住民族的「豐年祭」「五年祭」這類活動嗎？你覺得他們舉辦這些活動，主要是為了什麼？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt" data-correct>感謝祖先與神靈，並祈求保佑</button>
+          <button class="q-opt">單純為了表演給觀光客看</button>
+          <button class="q-opt">為了比賽誰跳舞跳得最好</button>
+          <button class="q-opt">為了慶祝放暑假</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「感謝祖先與神靈，並祈求保佑」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社3-1" data-cp-kp="廟宇與居民生活" data-cp-hash="f9b31f" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 選擇</span> 先備 · 廟宇與居民生活</span><h2 id="q3-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">除了拜拜以外，家鄉的廟宇和廟前廣場還常常用來做什麼？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">只能拜拜，不能做別的事</button>
+          <button class="q-opt">當作學校上課的教室</button>
+          <button class="q-opt" data-correct>舉辦熱鬧的慶典活動</button>
+          <button class="q-opt">只有過年才會開門</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「舉辦熱鬧的慶典活動」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="社3-1" data-cp-kp="尊重不同的信仰" data-cp-hash="3fe1ee" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 先備 · 尊重不同的信仰</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">每個人的信仰可能不一樣，沒有誰比較高級。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="是非" data-cp-src="社3-1" data-cp-kp="原住民族的信仰與祭典" data-cp-hash="acc5f4" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 是非</span> 先備 · 原住民族的信仰與祭典</span><h2 id="q5-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">祖先留下來的傳說，有時候也會告訴族人做人做事的規矩。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="ask" aria-labelledby="ask-t" hidden>
       <div class="page-head"><span class="label">3-1 信仰與生活</span><h2 id="ask-t" class="title">為什麼要拜拜？</h2></div>
       <div class="question-frame">
         <div class="q tier-1" data-reveal><span class="tier">看見</span><span class="text">家鄉的人在什麼時候舉行祭典？</span></div>
@@ -2043,8 +2223,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 3 過場：原住民族 -->
-    <section class="slide" data-slide-id="divider-ind" aria-labelledby="divider-ind-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="divider-ind" aria-labelledby="divider-ind-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第一部分</div>
         <div id="divider-ind-t" class="headline">原住民族的傳統信仰</div>
@@ -2052,8 +2231,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 4 信仰的對象 -->
-    <section class="slide" data-slide-id="ind-belief" aria-labelledby="ind-belief-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="ind-belief" aria-labelledby="ind-belief-t" hidden>
       <div class="page-head"><span class="label">原住民族的傳統信仰</span><h2 id="ind-belief-t" class="title">他們敬畏的是誰？</h2></div>
       <div class="card-grid">
         <div class="concept-card" data-reveal><div class="head">祖靈</div><div class="body">祖先的靈魂，是許多原住民族傳統信仰的<strong>核心</strong></div></div>
@@ -2065,8 +2243,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 5 什麼時候舉行祭典 -->
-    <section class="slide" data-slide-id="ind-when" aria-labelledby="ind-when-t" hidden>
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社3-1" data-cp-kp="原住民族的信仰與祭典" data-cp-hash="678221" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 社3-1 · 原住民族的信仰與祭典</span><h2 id="cp1-t" class="title">他們敬畏的是誰？</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">許多原住民族的傳統信仰，最敬畏的對象是什麼？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">只有天上的太陽</button>
+          <button class="q-opt" data-correct>祖靈與自然界的神靈</button>
+          <button class="q-opt">外國傳來的神明</button>
+          <button class="q-opt">村子裡最有錢的人</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">敬畏祖先，也敬畏自然——生活完全依靠這片土地</span>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="ind-when" aria-labelledby="ind-when-t" hidden>
       <div class="page-head"><span class="label">祭典的時機</span><h2 id="ind-when-t" class="title">什麼時候會舉行祭典或儀式？</h2></div>
       <div class="action-list">
         <div class="item" data-reveal>播種、收割——一整年的糧食就靠這兩件事</div>
@@ -2079,8 +2279,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 6 祭典舉例 -->
-    <section class="slide" data-slide-id="ind-cases" aria-labelledby="ind-cases-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="ind-cases" aria-labelledby="ind-cases-t" hidden>
       <div class="page-head"><span class="label">兩個祭典的例子</span><h2 id="ind-cases-t" class="title">五年祭與戰祭，各在求什麼？</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal>
@@ -2103,8 +2302,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 7 彩虹橋傳說（文本） -->
-    <section class="slide" data-slide-id="rainbow-story" aria-labelledby="rainbow-story-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="rainbow-story" aria-labelledby="rainbow-story-t" hidden>
       <div class="page-head"><span class="label">泰雅族的傳說</span><h2 id="rainbow-story-t" class="title">彩虹橋傳說</h2></div>
       <div class="split-2">
         <div>
@@ -2132,8 +2330,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 8 彩虹橋推論頁（老師指定：祖訓與生活規範的連結） -->
-    <section class="slide" data-slide-id="rainbow-infer" aria-labelledby="rainbow-infer-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="rainbow-infer" aria-labelledby="rainbow-infer-t" hidden>
       <div class="page-head"><span class="label">從傳說推論</span><h2 id="rainbow-infer-t" class="title">一個傳說，怎麼管住整個部落的生活？</h2></div>
       <div class="flow-steps">
         <div class="step" data-reveal><div class="badge">1</div><div class="head">相信</div><div class="body">祖靈在彩虹橋的另一端等著</div></div>
@@ -2151,8 +2348,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 9 過場：漢人 -->
-    <section class="slide" data-slide-id="divider-han" aria-labelledby="divider-han-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="divider-han" aria-labelledby="divider-han-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二部分</div>
         <div id="divider-han-t" class="headline">漢人的傳統信仰</div>
@@ -2160,8 +2356,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 10 廟宇的兩個角色 -->
-    <section class="slide" data-slide-id="temple-role" aria-labelledby="temple-role-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="temple-role" aria-labelledby="temple-role-t" hidden>
       <div class="page-head"><span class="label">廟宇在家鄉的位置</span><h2 id="temple-role-t" class="title">廟宇不只是拜拜的地方</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal>
@@ -2182,8 +2377,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 11 土地公 vs 媽祖 -->
-    <section class="slide" data-slide-id="gods" aria-labelledby="gods-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="gods" aria-labelledby="gods-t" hidden>
       <div class="page-head"><span class="label">最重要的一頁</span><h2 id="gods-t" class="title">神明的職務，看得出居民的生活</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal>
@@ -2206,8 +2400,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 12 繞境 -->
-    <section class="slide" data-slide-id="parade" aria-labelledby="parade-t" hidden>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社3-1" data-cp-kp="廟宇與居民生活" data-cp-hash="b19474" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 社3-1 · 廟宇與居民生活</span><h2 id="cp2-t" class="title">從神明猜生活</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">臺南永康的鹽行天后宮拜的是媽祖，這透露出這裡以前是什麼樣的地方？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt" data-correct>在海邊，居民要渡海、討海</button>
+          <button class="q-opt">在高山上，居民靠打獵</button>
+          <button class="q-opt">在沙漠裡，很缺水</button>
+          <button class="q-opt">在大城市，都是工廠</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">媽祖保佑航海平安——這裡以前就在海邊</span>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="parade" aria-labelledby="parade-t" hidden>
       <div class="page-head"><span class="label">最盛大的信仰活動</span><h2 id="parade-t" class="title">繞境是在做什麼？</h2></div>
       <div class="figure-block figure-top">
         <div class="figure">
@@ -2233,8 +2449,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 13 過場：現代生活 -->
-    <section class="slide" data-slide-id="divider-modern" aria-labelledby="divider-modern-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="divider-modern" aria-labelledby="divider-modern-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第三部分</div>
         <div id="divider-modern-t" class="headline">信仰與現代生活</div>
@@ -2242,8 +2457,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 14 多元信仰 -->
-    <section class="slide" data-slide-id="diverse" aria-labelledby="diverse-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="diverse" aria-labelledby="diverse-t" hidden>
       <div class="page-head"><span class="label">現在的家鄉</span><h2 id="diverse-t" class="title">居民有哪些不同的信仰活動？</h2></div>
       <div class="card-grid">
         <div class="concept-card" data-reveal><div class="head">燒香拜拜</div><div class="body">到廟裡祭拜神明</div></div>
@@ -2257,8 +2471,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 15 減香迷思 -->
-    <section class="slide" data-slide-id="incense" aria-labelledby="incense-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="incense" aria-labelledby="incense-t" hidden>
       <div class="page-head"><span class="label">觀念的轉變</span><h2 id="incense-t" class="title">不燒香，就是不夠虔誠嗎？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal>
@@ -2277,27 +2490,29 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 16 尊重與包容 -->
-    <section class="slide" data-slide-id="respect" aria-labelledby="respect-t" hidden>
-      <div class="page-head"><span class="label">這一課最重要的態度</span><h2 id="respect-t" class="title">遇到和自己不同的信仰，怎麼做？</h2></div>
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社3-1" data-cp-kp="尊重不同的信仰" data-cp-hash="a93cd1" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 社3-1 · 尊重不同的信仰</span><h2 id="cp3-t" class="title">遇到和自己不同的信仰，怎麼做？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">同學說星期天要去教會做禮拜，不能一起打球。你會怎麼回答？</p>
-        <div class="q-options">
+        <div class="q-options abcd two">
           <button class="q-opt">做禮拜有什麼好去的，別去了啦。</button>
           <button class="q-opt">那我以後都不找你打球了。</button>
-          <button class="q-opt" data-correct="true">沒關係，那我們改成星期六下午吧！</button>
+          <button class="q-opt" data-correct>沒關係，那我們改成星期六下午吧！</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
-        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
-        <span class="text">面對不同的信仰，我們都應該<strong>尊重與包容</strong>——這不是客氣，是把對方看成和自己一樣重要的人。</span>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">面對不同的信仰，要尊重與包容</span>
       </div>
     </section>
 
-    <!-- 17 過場：我們的家鄉 -->
-    <section class="slide" data-slide-id="divider-local" aria-labelledby="divider-local-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="divider-local" aria-labelledby="divider-local-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">我們的家鄉</div>
         <div id="divider-local-t" class="headline">永康的三座廟</div>
@@ -2305,8 +2520,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 18 永康三廟 -->
-    <section class="slide" data-slide-id="local-temples" aria-labelledby="local-temples-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="local-temples" aria-labelledby="local-temples-t" hidden>
       <div class="page-head"><span class="label">臺南市永康區</span><h2 id="local-temples-t" class="title">三座廟，三個不同的故事</h2></div>
       <div class="card-grid">
         <div class="concept-card" data-reveal>
@@ -2324,8 +2538,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 19 永康三廟推論 -->
-    <section class="slide" data-slide-id="local-infer" aria-labelledby="local-infer-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="local-infer" aria-labelledby="local-infer-t" hidden>
       <div class="page-head"><span class="label">把課本的道理用上來</span><h2 id="local-infer-t" class="title">哪一座廟，說出了哪一件事？</h2></div>
       <div class="drag-match" data-drag-match>
         <div class="pool">
@@ -2349,19 +2562,15 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 20 總結 -->
-    <section class="slide" data-slide-id="summary" aria-labelledby="summary-t" hidden>
-      <div class="page-head"><span class="label">今天學到的</span><h2 id="summary-t" class="title">信仰與生活・重點回顧</h2></div>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 社3-1</span><h2 id="summary-t" class="title">今天帶走這五件事</h2></div>
       <div class="action-list">
-        <div class="item is-done" data-reveal>原住民族信仰祖靈與自然神靈，在重要時刻舉行祭典祈求保佑</div>
-        <div class="item is-done" data-reveal>彩虹橋傳說：祖先的訓誡變成族人做人做事的規範</div>
-        <div class="item is-done" data-reveal>神明的職務反映生活：土地公守農田、媽祖保航海</div>
-        <div class="item is-done" data-reveal>廟宇是信仰中心，也是居民聚會的地方；觀念改變，信仰活動也會改變</div>
-        <div class="item is-done" data-reveal>面對不同的信仰，尊重與包容</div>
-      </div>
-      <div class="takeaway-band" data-reveal>
-        <span class="icon"><svg class="ico"><use href="#ico-pencil"></use></svg></span>
-        <span class="text">接下來分組練習：挑戰題要為班上設計一份「尊重不同信仰」的相處約定。</span>
+        <div class="item" data-reveal>原住民族敬畏祖靈與自然神靈，在播種、收割、狩獵等最需要保佑的時刻舉行祭典<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>彩虹橋傳說：祖先的訓誡，變成族人做人做事的規範<span class="next-tag">下節考 是非</span></div>
+        <div class="item" data-reveal>神明的職務反映生活：土地公守農田、媽祖保航海<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>廟宇是信仰中心，也是生活中心；觀念改變，信仰活動也會跟著改變<span class="next-tag">下節考 是非</span></div>
+        <div class="item" data-reveal>面對不同的信仰，要尊重與包容<span class="next-tag">下節考 簡答</span></div>
       </div>
     </section>
 
@@ -2376,6 +2585,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {
@@ -2502,5 +2796,6 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   render(slideFromHash(), false);
 })();
 </script>
+
 </body>
 </html>

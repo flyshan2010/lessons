@@ -2153,11 +2153,53 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   padding:var(--s2) var(--s4); font-size:var(--t3); font-weight:700; }
 .samequot .row2 .eq { color:var(--accent); }
 .samequot .row2 .tag { font-size:var(--t5); font-weight:400; color:var(--muted); }
+
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
-<main class="deck" aria-label="除以一位數課程教學">
+<body data-lesson="數L6-1">
+<main class="deck" aria-label="除以一位數｜課程教學 · 四上數學 6-1">
   <div class="stage" id="stage" tabindex="-1">
+
     <section class="slide is-active" data-slide-id="cover" aria-labelledby="cover-t">
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第六單元 除法 · 6-1</div>
@@ -2165,27 +2207,147 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="sub">8972 元平分給 6 個人，每個人可以分到多少？</div>
       </div>
     </section>
-    <section class="slide" data-slide-id="recap" aria-labelledby="recap-t" hidden>
-      <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="recap-t" class="title">三年級學過的，先想一遍</h2></div>
-      <div class="compare-pair">
-        <div class="side" data-reveal>
-          <div class="head">已經會的</div>
-          <div class="item">三位數 ÷ 一位數（例：357 ÷ 7）</div>
-          <div class="item">先分百、再分十、最後分一</div>
-        </div>
-        <div class="vs">→</div>
-        <div class="side is-focus" data-reveal>
-          <div class="head">今天要學的</div>
-          <div class="item">四位數 ÷ 一位數（例：8972 ÷ 6）</div>
-          <div class="item">多一步：<b>要先分千</b></div>
-        </div>
-      </div>
-      <div class="takeaway-band" data-reveal>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">做法完全一樣，只是<b>多分一次</b>——位數變多，步驟就多一步</span>
+
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">數L6-1 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">先備小考</div><div class="body">這一課要用到的舊經驗<br>五題</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝下一節小考範圍</div></div>
       </div>
     </section>
-    <section class="slide" data-slide-id="story" aria-labelledby="story-t" hidden>
+
+    <!-- ① 小考：題目出自 本節 prereq_quiz（先備） -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 先備小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">這一課要用到的舊經驗</div>
+        <div class="sub">範圍：除以一位數、餘數與驗算</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L6-1" data-cp-kp="除以一位數" data-cp-hash="e3b449" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 除以一位數</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">357 ÷ 7 ＝ ？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">50 …7</button>
+          <button class="q-opt">5 …7</button>
+          <button class="q-opt">510</button>
+          <button class="q-opt" data-correct>51</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「51」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L6-1" data-cp-kp="除以一位數" data-cp-hash="9fc8f7" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 先備 · 除以一位數</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">6 × ？ ＝ 54</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>9</button>
+          <button class="q-opt">8</button>
+          <button class="q-opt">7</button>
+          <button class="q-opt">6</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「9」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L6-1" data-cp-kp="除以一位數" data-cp-hash="e87a11" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 選擇</span> 先備 · 除以一位數</span><h2 id="q3-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">2 張千元可以換成幾張百元？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">2 張</button>
+          <button class="q-opt" data-correct>20 張</button>
+          <button class="q-opt">200 張</button>
+          <button class="q-opt">2000 張</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「20 張」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L6-1" data-cp-kp="除以一位數" data-cp-hash="84b1d5" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 選擇</span> 先備 · 除以一位數</span><h2 id="q4-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">425 ÷ 6 ＝（　）…（　）</p>
+        <div class="q-options abcd">
+          <button class="q-opt">70 …0</button>
+          <button class="q-opt">7 …5</button>
+          <button class="q-opt" data-correct>70 …5</button>
+          <button class="q-opt">60 …5</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「70 …5」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L6-1" data-cp-kp="餘數與驗算" data-cp-hash="2922ea" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 選擇</span> 先備 · 餘數與驗算</span><h2 id="q5-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">246 ÷ 3 算完，用什麼方法可以檢查有沒有算錯？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">再除一次看看</button>
+          <button class="q-opt">把商和除數相加</button>
+          <button class="q-opt">把被除數減掉商</button>
+          <button class="q-opt" data-correct>商 × 除數 ＋ 餘數，看是不是等於被除數</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="story" aria-labelledby="story-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="story-t" class="title">阿公的柚子醬工資</h2></div>
       <div class="task-card" data-reveal>
         <div class="mission">把 8972 元平分給 6 個人，每人最多分到幾元？剩下幾元？</div>
@@ -2199,7 +2361,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">錢不能撕開，所以分不完的就<b>剩下來</b>——那就是餘數</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="place" aria-labelledby="place-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="place" aria-labelledby="place-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="place-t" class="title">8972 元是怎麼組成的？</h2></div>
       <div class="pv-row">
         <div class="pv-card" data-reveal><div class="u">千元</div><div class="n">8</div><div class="d">8 張千元</div></div>
@@ -2212,7 +2375,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">直式除法就是<b>照這四種單位，一種一種分下去</b>——先分最大的千元</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="step1" aria-labelledby="step1-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="step1" aria-labelledby="step1-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="step1-t" class="title">第一步：先分千元</h2></div>
       <div class="two-col">
       <div class="center" data-reveal>
@@ -2236,7 +2400,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">剩下的 2 張千元不能丟掉——下一步要<b>換成百元</b>繼續分</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="step2" aria-labelledby="step2-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="step2" aria-labelledby="step2-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="step2-t" class="title">第二步：再分百元</h2></div>
       <div class="two-col">
       <div class="center" data-reveal>
@@ -2262,7 +2427,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">2 張千元和 9 張百元合起來是 29 張百元——這就是直式裡「29」的意思</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="step3" aria-labelledby="step3-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="step3" aria-labelledby="step3-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="step3-t" class="title">第三步、第四步：分十元和一元</h2></div>
       <div class="two-col">
       <div class="center" data-reveal>
@@ -2289,7 +2455,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         </div>
       </div>
     </section>
-    <section class="slide" data-slide-id="full" aria-labelledby="full-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="full" aria-labelledby="full-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="full-t" class="title">完整的直式長這樣</h2></div>
       <div class="two-col">
       <div class="center" data-reveal>
@@ -2319,7 +2486,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         </div>
       </div>
     </section>
-    <section class="slide" data-slide-id="verify" aria-labelledby="verify-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="verify" aria-labelledby="verify-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="verify-t" class="title">算完怎麼知道對不對？自己驗算</h2></div>
       <div class="verify" data-verify="8972" data-reveal>
         <div class="v-head"><svg class="ico"><use href="#ico-cycle"></use></svg>乘除互逆：<b>商 × 除數 ＋ 餘數 ＝ 被除數</b></div>
@@ -2335,32 +2503,39 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">驗算算出來<b>剛好等於被除數</b>就對了；不等於就回頭找哪一步錯</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="quiz1" aria-labelledby="quiz1-t" hidden>
-      <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="quiz1-t" class="title">換你算：3172 ÷ 6</h2></div>
+
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L6-1" data-cp-kp="除以一位數" data-cp-hash="991e7d" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數L6-1 · 除以一位數</span><h2 id="cp1-t" class="title">換你算：3172 ÷ 6</h2></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">3172 ÷ 6 ＝（　）…（　）</p>
-        <div class="q-options">
+        <p class="q-stem">3172 ÷ 6 ＝（ ）…（ ）</p>
+        <div class="q-options abcd">
           <button class="q-opt" data-correct>528 … 4</button>
           <button class="q-opt">528 … 3</button>
           <button class="q-opt">52 … 52</button>
           <button class="q-opt">538 … 4</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">31 個百 ÷ 6 ＝ 5 …1；17 個十 ÷ 6 ＝ 2 …5；52 個一 ÷ 6 ＝ 8 …4。<b>驗算：528 × 6 ＋ 4 ＝ 3172</b></span>
+        <span class="text">31 個百 ÷ 6 ＝ 5 …1；17 個十 ÷ 6 ＝ 2 …5；52 個一 ÷ 6 ＝ 8 …4。驗算：528 × 6 ＋ 4 ＝ 3172</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="div1" aria-labelledby="div1-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="div1" aria-labelledby="div1-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">四位數除以一位數</div>
         <div id="div1-t" class="headline">商一定是四位數嗎？</div>
         <div class="sub">看看下一題會發生什麼事</div>
       </div>
     </section>
-    <section class="slide" data-slide-id="three" aria-labelledby="three-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="three" aria-labelledby="three-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="three-t" class="title">千位不夠分的時候</h2></div>
       <div class="two-col">
       <div class="center" data-reveal>
@@ -2388,7 +2563,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">1845 ÷ 9 ＝ <b>205</b> … 0——商是三位數，中間的 0 是位值的守門員</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="zero" aria-labelledby="zero-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="zero" aria-labelledby="zero-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="zero-t" class="title">個位不夠分，商的個位記 0</h2></div>
       <div class="two-col">
       <div class="center" data-reveal>
@@ -2415,7 +2591,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">2725 ÷ 8 ＝ <b>340</b> … 5——沒寫這個 0，答案就變成 34，<b>整整少了十倍</b></span>
       </div>
     </section>
-    <section class="slide" data-slide-id="misc" aria-labelledby="misc-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="misc" aria-labelledby="misc-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="misc-t" class="title">課本點名的三個錯誤</h2></div>
       <div class="stepline">
         <div class="s" data-reveal><span class="no">✗</span><span><b>商沒對齊位值</b>——商的每一位要對準被除數的那一位，寫歪了整個答案都錯</span></div>
@@ -2427,25 +2604,31 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">這三個錯誤佔了全班錯誤的一大半——<b>算完先檢查這三件事</b></span>
       </div>
     </section>
-    <section class="slide" data-slide-id="quiz2" aria-labelledby="quiz2-t" hidden>
-      <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="quiz2-t" class="title">換你算：2164 ÷ 4</h2></div>
+
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L6-1" data-cp-kp="除以一位數" data-cp-hash="e2276e" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L6-1 · 除以一位數</span><h2 id="cp2-t" class="title">換你算：2164 ÷ 4</h2></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">2164 ÷ 4 ＝（　）…（　）</p>
-        <div class="q-options">
+        <p class="q-stem">2164 ÷ 4 ＝（ ）…（ ）</p>
+        <div class="q-options abcd">
           <button class="q-opt">51 … 0</button>
           <button class="q-opt" data-correct>541 … 0</button>
           <button class="q-opt">541 … 2</button>
           <button class="q-opt">54 … 1</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">2 個千不夠分 → 21 個百 ÷ 4 ＝ 5 …1；16 個十 ÷ 4 ＝ 4 …0；4 個一 ÷ 4 ＝ 1 …0。<b>整除也要寫「…0」</b></span>
+        <span class="text">2 個千不夠分 → 21 個百 ÷ 4 ＝ 5 …1；16 個十 ÷ 4 ＝ 4 …0；4 個一 ÷ 4 ＝ 1 …0。整除也要寫「…0」</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="task" aria-labelledby="task-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="task" aria-labelledby="task-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="task-t" class="title">課堂任務：分裝獵人</h2></div>
       <div class="task-card" data-reveal>
         <div class="mission">找出家裡或教室中「幾個裝成一盒／一包」的東西，拍下來或畫下來</div>
@@ -2457,7 +2640,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         </div>
       </div>
     </section>
-    <section class="slide" data-slide-id="wrap" aria-labelledby="wrap-t" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="wrap" aria-labelledby="wrap-t" hidden>
       <div class="page-head"><span class="label">6-1 除以一位數</span><h2 id="wrap-t" class="title">今天學到什麼</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>順序</b>：先分千、再分百、再分十、最後分一</div>
@@ -2470,6 +2654,22 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">下一節除數會變成<b>兩位數</b>——那時候就不能一位一位分了，要學新招：<b>估商</b></span>
       </div>
     </section>
+
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數L6-1</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>由大到小分：先分千、再分百、再分十、最後分一<span class="next-tag">下節考 選擇・簡答</span></div>
+        <div class="item" data-reveal>分剩的大單位換成小單位，和下一位合起來繼續分<span class="next-tag">下節考 是非</span></div>
+        <div class="item" data-reveal>不夠除，商那一位記 0；整除時餘數 0 也要寫<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>驗算：商 × 除數 ＋ 餘數 ＝ 被除數<span class="next-tag">下節考 是非</span></div>
+      </div>
+      <div class="takeaway-band" data-reveal>
+        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
+        <span class="text">下一節開頭的小考，就考這四條——今天回家唸一遍</span>
+      </div>
+    </section>
+
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>17</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2483,128 +2683,90 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 </main>
 
 <script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
 (() => {
-  const STAGE_W = 1600, STAGE_H = 900;
-  const stage = document.querySelector('#stage');
-  const slides = [...document.querySelectorAll('.slide')];
-  const current = document.querySelector('[data-current]');
-  const total = document.querySelector('[data-total]');
-  const progress = document.querySelector('[data-progress]');
-  let index = 0;
-  if (!stage || !slides.length) return;
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
 
-  const clamp = (v) => Math.max(0, Math.min(v, slides.length - 1));
-
-  /* ── 逐步揭露：一次只出一個元件，讓推論過程在課堂上展開 ──
-     data-after-answer 的元件（含答案的判斷帶）不在手動揭露序列裡，
-     必須等學生按下「對答案」才會出現，否則測驗形同先公布答案。 */
-  const steps = (slide) => [...slide.querySelectorAll('[data-reveal]:not([data-after-answer])')];
-  const revealNext = (slide) => {
-    const next = steps(slide).find((el) => !el.classList.contains('is-shown'));
-    if (!next) return false;
-    next.classList.add('is-shown');
-    return true;
-  };
-  const revealPrev = (slide) => {
-    const shown = steps(slide).filter((el) => el.classList.contains('is-shown'));
-    if (!shown.length) return false;
-    shown[shown.length - 1].classList.remove('is-shown');
-    return true;
-  };
-  const setReveal = (slide, all) => {
-    slide.querySelectorAll('[data-reveal]').forEach((el) => {
-      // 答案帶即使回看也不自動亮，維持「答過才看得到」
-      if (all && !el.hasAttribute('data-after-answer')) el.classList.add('is-shown');
-      else el.classList.remove('is-shown');
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
     });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
   };
-  const updateRevealMeta = () => {
-    const slide = slides[index];
-    const all = steps(slide);
-    const shown = all.filter((el) => el.classList.contains('is-shown')).length;
-    const meta = document.querySelector('[data-reveal-meta]');
-    if (meta) meta.textContent = all.length ? `· 揭露 ${shown}/${all.length}` : '';
-  };
-  const advance = () => {
-    if (revealNext(slides[index])) { updateRevealMeta(); return; }
-    render(index + 1);
-  };
-  const back = () => {
-    if (revealPrev(slides[index])) { updateRevealMeta(); return; }
-    render(index - 1, true, true);
-  };
-  // 非 TDS 題型（點選項、翻答案卡）也要能觸發：作答動作一發生就放出該頁的答案帶
-  document.addEventListener('click', (e) => {
-    const t = e.target && e.target.closest
-      ? e.target.closest('.rcard, .opt, .q-opt, [data-quiz-check], [data-match-check], [data-order-check], [data-flip], [data-verify-check], [data-ld-step]')
-      : null;
-    if (!t) return;
-    const sl = t.closest('.slide');
-    if (sl) sl.querySelectorAll('[data-after-answer]').forEach((el) => el.classList.add('is-shown'));
-  });
-  // 答對／答錯後才放出含答案的判斷帶
-  document.addEventListener('tds:answered', (e) => {
-    const slide = e.target && e.target.closest ? e.target.closest('.slide') : null;
-    if (!slide) return;
-    slide.querySelectorAll('[data-after-answer]').forEach((el) => el.classList.add('is-shown'));
-  });
 
-  const render = (next, updateHash = true, fromBack = false) => {
-    index = clamp(next);
-    slides.forEach((s, i) => {
-      const active = i === index;
-      s.classList.toggle('is-active', active);
-      s.hidden = !active;
-      s.setAttribute('aria-hidden', String(!active));
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
     });
-    if (current) current.textContent = String(index + 1);
-    if (total) total.textContent = String(slides.length);
-    if (progress) progress.style.width = `${((index + 1) / slides.length) * 100}%`;
-    // 往前翻＝這頁還沒講，全部收起；往回翻＝這頁講完了，全部攤開
-    setReveal(slides[index], fromBack);
-    updateRevealMeta();
-    if (updateHash) history.replaceState(null, '', `#${encodeURIComponent(slides[index].dataset.slideId)}`);
-  };
-
-  const slideFromHash = () => {
-    const id = decodeURIComponent(location.hash.slice(1));
-    const found = slides.findIndex((s) => s.dataset.slideId === id);
-    return found >= 0 ? found : 0;
-  };
-
-  const isInteractive = (t) => Boolean(t.closest('a, button, input, textarea, select, [data-hotspot], [data-quiz], [data-flip], [data-picker], [data-drag-match], [data-order]'));
-  addEventListener('keydown', (e) => {
-    if (isInteractive(e.target)) return;
-    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); advance(); }
-    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); back(); }
-    else if (e.key === 'ArrowDown') { e.preventDefault(); render(index + 1); }   // 直接跳下一頁，不逐步
-    else if (e.key === 'ArrowUp') { e.preventDefault(); render(index - 1, true, true); }
-    else if (e.key === 'Home') { e.preventDefault(); render(0); }
-    else if (e.key === 'End') { e.preventDefault(); render(slides.length - 1); }
-  });
-
-  document.querySelector('[data-action="previous"]')?.addEventListener('click', back);
-  document.querySelector('[data-action="next"]')?.addEventListener('click', advance);
-  document.querySelector('[data-action="reveal-all"]')?.addEventListener('click', () => {
-    setReveal(slides[index], true); updateRevealMeta();
-  });
-  document.querySelector('[data-action="fullscreen"]')?.addEventListener('click', async () => {
-    try {
-      if (document.fullscreenElement) await document.exitFullscreen();
-      else await document.documentElement.requestFullscreen();
-    } catch (err) { console.warn('無法切換全螢幕', err); }
-  });
-
-  const resize = () => {
-    const scale = Math.min(innerWidth / STAGE_W, innerHeight / STAGE_H);
-    stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
-  };
-  addEventListener('hashchange', () => render(slideFromHash(), false));
-  addEventListener('resize', resize);
-  resize();
-  render(slideFromHash(), false);
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
 })();
+
 </script>
+
 <script>
 /* ── 乘除互逆驗算自檢按鈕 ─────────────────────────────
    學生自己按「檢查」→ 對了才放出解說帶（data-after-answer）。 */
