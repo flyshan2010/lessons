@@ -2061,12 +2061,54 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .stepline .s { display:flex; gap:var(--s3); align-items:flex-start; font-size:var(--t4); }
 .stepline .s .no { flex:none; width:38px; height:38px; border-radius:50%; background:var(--accent);
   color:var(--surface); font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 
 </head>
-<body>
-<main class="deck" aria-label="認識全等課程教學">
+<body data-lesson="數L7-3">
+<main class="deck" aria-label="認識全等｜課程教學 · 四上數學 7-3">
   <div class="stage" id="stage" tabindex="-1">
+
     <section class="slide is-active" data-slide-id="cover">
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第七單元 三角形與全等 · 7-3</div>
@@ -2074,7 +2116,135 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="sub">兩個圖形疊在一起，會不會完全重合？</div>
       </div>
     </section>
-    <section class="slide" data-slide-id="same-source" hidden>
+
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">數L7-3 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">前節小考</div><div class="body">上一節的重點，五題<br>選擇・是非・簡答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝這一課的重點</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 數L7-2 的 summary.json next_quiz -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 前節小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">上一節學過的，還記得嗎？</div>
+        <div class="sub">範圍：數L7-2 的「重點總結」4 條（畫三角形）</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L7-2" data-cp-kp="畫三角形" data-cp-hash="88b311" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 數L7-2 · 畫三角形</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">畫三角形的共同做法，哪一個順序是對的？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">量長度 → 畫角 → 連接</button>
+          <button class="q-opt">連接 → 畫角 → 量長度</button>
+          <button class="q-opt" data-correct>畫角 → 量長度 → 連接</button>
+          <button class="q-opt">畫角 → 連接 → 量長度</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">先角、再邊、最後連</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L7-2" data-cp-kp="畫三角形" data-cp-hash="86d304" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 數L7-2 · 畫三角形</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">用直尺量出 3 公分，直尺要怎麼放？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">直尺的邊緣對準起點</button>
+          <button class="q-opt" data-correct>0 刻度對準起點</button>
+          <button class="q-opt">1 刻度對準起點</button>
+          <button class="q-opt">隨便放，看得到就好</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">0 刻度對起點，量出來才準</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="是非" data-cp-src="數L7-2" data-cp-kp="畫三角形" data-cp-hash="fca7ff" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 是非</span> 數L7-2 · 畫三角形</span><h2 id="q3-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">在百點卡上，橫著相鄰兩點和直著相鄰兩點的距離一樣長。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！所以數格子就能比長短</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="數L7-2" data-cp-kp="畫三角形" data-cp-hash="5d8128" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 數L7-2 · 畫三角形</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">線段 AB 和線段 BA 是兩條不一樣的邊。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！AB 和 BA 是同一條邊</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="簡答" data-cp-src="數L7-2" data-cp-kp="畫三角形" data-cp-hash="bd8c6f" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 簡答</span> 數L7-2 · 畫三角形</span><h2 id="q5-t" class="title">寫在小白板上</h2></div>
+      <p class="q-stem big">要畫「∠A 是 120 度、兩邊 3 公分和 4 公分」的三角形，寫出三個步驟。</p>
+      <div class="row center">
+        <button class="flip-card short-ans" data-flip>
+          <span class="inner"><span class="face front">老師翻牌看參考答案</span><span class="face back">先畫 120 度角、再量 3 和 4 公分、最後連接</span></span>
+        </button>
+      </div>
+      <div class="row center"><button class="ds-btn rec-open" type="button">📋 記錄本題</button></div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="same-source" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="same-source-t" class="title">用同一個圖形描出來的兩個圖形</h2></div>
       <div class="two-col">
         <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">甲</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">乙</text></svg><span class="cap">甲、乙都是照同一片附件描出來的</span></div>
@@ -2089,7 +2259,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">方向不一樣，不代表<b>是不同的圖形</b></span>
       </div>
     </section>
-    <section class="slide" data-slide-id="predict" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="predict" style="gap:var(--s2)" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="predict-t" class="title">猜猜看</h2></div>
       <div class="two-col">
         <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">甲</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">乙</text></svg><span class="cap">把乙剪下來，疊到甲上面</span></div>
@@ -2105,21 +2276,24 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">真的拿去疊疊看——<b>轉一下就完全重合了</b></span>
       </div>
     </section>
-    <section class="slide" data-slide-id="move" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="move" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="move-t" class="title">第一種：直接移過去</h2></div><div class="tri-grid"><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="14,136 150,136 14,34" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="154.0" class="tri-t" text-anchor="middle">甲</text><polygon points="190,136 326,136 190,34" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="174.0" y="154.0" class="tri-t" text-anchor="middle">乙</text></svg><span class="cap">① 兩個圖形分開放</span></div></div><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="14,136 150,136 14,34" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="154.0" class="tri-t" text-anchor="middle">甲</text><polygon points="190,136 326,136 190,34" fill="var(--accent)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="174.0" y="154.0" class="tri-t" text-anchor="middle">乙</text></svg><span class="cap">② 把乙<b>移過去</b></span></div></div><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="16,143 184,143 16,17" fill="var(--accent)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="156.0" class="tri-t" text-anchor="middle">甲乙</text></svg><span class="cap">③ 完全疊合</span></div></div></div>
       <div class="takeaway-band" data-reveal>
         <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
         <span class="text">位置不一樣時，<b>移過去</b>就疊得起來</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="rotate" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="rotate" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="rotate-t" class="title">第二種：要轉一下</h2></div><div class="tri-grid"><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="148.2,71.7 51.8,16 106.5,144" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="168.1" y="75.3" class="tri-t" text-anchor="middle">乙</text></svg><span class="cap">① 乙躺的方向不一樣</span></div></div><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="130.9,144 165.1,16 34.9,118.3" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="138.4" y="156.0" class="tri-t" text-anchor="middle">乙</text></svg><span class="cap">② 慢慢<b>轉過來</b></span></div></div><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="16,143 184,143 16,17" fill="var(--accent)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="156.0" class="tri-t" text-anchor="middle">甲乙</text></svg><span class="cap">③ 轉到一樣，完全疊合</span></div></div></div>
       <div class="takeaway-band" data-reveal>
         <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
         <span class="text">方向不一樣時，<b>轉一轉</b>就疊得起來</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="flip" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="flip" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="flip-t" class="title">第三種：要翻過來</h2></div>
       <div class="two-col">
         <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="14,136 150,136 14,34" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="154.0" class="tri-t" text-anchor="middle">甲</text><polygon points="326,136 190,136 326,34" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="328.0" y="154.0" class="tri-t" text-anchor="middle">丙</text></svg><span class="cap">丙怎麼轉都疊不上甲——像照鏡子一樣</span></div>
@@ -2134,7 +2308,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">移、轉都不行時，還可以<b>翻過來</b>試試看</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="define" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="define" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="define-t" class="title">這樣的兩個圖形叫「全等」</h2></div>
       <div class="two-col">
         <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">甲</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">乙</text></svg><span class="cap">甲和乙全等</span></div>
@@ -2150,7 +2325,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">全等的意思就是<b>形狀一樣、大小也一樣</b></span>
       </div>
     </section>
-    <section class="slide" data-slide-id="non-example" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="non-example" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="non-example-t" class="title">這兩組就不是全等</h2></div>
       <div class="tri-grid c2">
         <div data-reveal><div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="29.7,124.2 134.3,124.2 29.7,45.8" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><polygon points="190,136 326,136 190,34" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/></svg><span class="cap">形狀一樣，<b>大小不同</b>：疊起來會多出一圈</span></div></div>
@@ -2161,14 +2337,16 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">少了任何一個「一樣」，就<b>不是全等</b></span>
       </div>
     </section>
-    <section class="slide" data-slide-id="divider-corr" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="divider-corr" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">疊合之後</div>
         <div id="divider-corr-t" class="headline">疊在一起的邊和角，有什麼關係？</div>
         <div class="sub">認識對應點、對應邊、對應角</div>
       </div>
     </section>
-    <section class="slide" data-slide-id="corr-point" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="corr-point" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="corr-point-t" class="title">對應點：疊合時碰在一起的頂點</h2></div>
       <div class="two-col wide-l">
         <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">A</text><text x="162.5" y="144.3" class="tri-t" text-anchor="middle">B</text><text x="12.0" y="28.1" class="tri-t" text-anchor="middle">C</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">D</text><text x="191.8" y="10.0" class="tri-t" text-anchor="middle">E</text><text x="266.5" y="166.0" class="tri-t" text-anchor="middle">F</text></svg><span class="cap">甲和乙全等（乙是甲轉過來的）</span></div>
@@ -2183,7 +2361,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">對應點是<b>疊起來才知道</b>的，不是照位置或順序猜的</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="corr-side" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="corr-side" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="corr-side-t" class="title">對應邊：疊合的兩條邊</h2></div>
       <div class="two-col wide-l">
         <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><line x1="82.0" y1="123.3" x2="82.0" y2="139.3" stroke="var(--ink)" stroke-width="2"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">A</text><text x="162.5" y="144.3" class="tri-t" text-anchor="middle">B</text><text x="12.0" y="28.1" class="tri-t" text-anchor="middle">C</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><line x1="254.0" y1="51.8" x2="262.0" y2="38.0" stroke="var(--ink)" stroke-width="2"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">D</text><text x="191.8" y="10.0" class="tri-t" text-anchor="middle">E</text><text x="266.5" y="166.0" class="tri-t" text-anchor="middle">F</text></svg><span class="cap">AB 疊在 DE 上</span></div>
@@ -2199,7 +2378,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">對應點連起來，就是<b>對應邊</b></span>
       </div>
     </section>
-    <section class="slide" data-slide-id="corr-angle" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="corr-angle" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="corr-angle-t" class="title">對應角：疊合的兩個角</h2></div>
       <div class="two-col wide-l">
         <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><path d="M50.2,131.3 A30,30 0 0,0 20.2,101.3" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">A</text><text x="162.5" y="144.3" class="tri-t" text-anchor="middle">B</text><text x="12.0" y="28.1" class="tri-t" text-anchor="middle">C</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><path d="M285.5,60.8 A30,30 0 0,0 296.5,101.8" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">D</text><text x="191.8" y="10.0" class="tri-t" text-anchor="middle">E</text><text x="266.5" y="166.0" class="tri-t" text-anchor="middle">F</text></svg><span class="cap">∠A 疊在 ∠D 上</span></div>
@@ -2214,55 +2394,77 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text"><b>對應邊一樣長、對應角一樣大</b>——這是全等最好用的性質</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="quiz-corr" hidden>
-      <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="quiz-corr-t" class="title">換你找找看</h2></div>
-      <div class="two-col">
-        <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">A</text><text x="162.5" y="144.3" class="tri-t" text-anchor="middle">B</text><text x="12.0" y="28.1" class="tri-t" text-anchor="middle">C</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">D</text><text x="191.8" y="10.0" class="tri-t" text-anchor="middle">E</text><text x="266.5" y="166.0" class="tri-t" text-anchor="middle">F</text></svg><span class="cap">甲和乙全等，A↔D、B↔E、C↔F</span></div>
-        <div>      <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">BC 的對應邊是哪一條？</p>
-        <div class="q-options"><button class="q-opt" data-correct>EF</button><button class="q-opt">DE</button><button class="q-opt">DF</button><button class="q-opt">沒有對應邊</button></div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-3" data-cp-kp="全等與對應" data-cp-hash="ab02e2" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數L7-3 · 全等與對應</span><h2 id="cp1-t" class="title">換你找找看</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">甲和乙全等，A 對 D、B 對 E、C 對 F。BC 的對應邊是哪一條？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>EF</button>
+          <button class="q-opt">DE</button>
+          <button class="q-opt">DF</button>
+          <button class="q-opt">沒有對應邊</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
-      </div></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">B 對 E、C 對 F，所以 BC 的對應邊是 <b>EF</b></span>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">B 對 E、C 對 F，所以 BC 的對應邊是 EF</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="apply-side" hidden>
-      <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="apply-side-t" class="title">應用①：用對應邊求長度</h2></div>
-      <div class="two-col">
-        <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">A</text><text x="162.5" y="144.3" class="tri-t" text-anchor="middle">B</text><text x="12.0" y="28.1" class="tri-t" text-anchor="middle">C</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">D</text><text x="191.8" y="10.0" class="tri-t" text-anchor="middle">E</text><text x="266.5" y="166.0" class="tri-t" text-anchor="middle">F</text></svg><span class="cap">甲：AB＝8 公分、AC＝6 公分</span></div>
-        <div>      <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">甲和乙全等，那乙的 DE 是幾公分？</p>
-        <div class="q-options"><button class="q-opt">6 公分</button><button class="q-opt" data-correct>8 公分</button><button class="q-opt">10 公分</button><button class="q-opt">不知道</button></div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-3" data-cp-kp="全等與對應" data-cp-hash="dd470e" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L7-3 · 全等與對應</span><h2 id="cp2-t" class="title">應用①：用對應邊求長度</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">甲和乙全等，A 對 D、B 對 E、C 對 F。甲的 AB＝8 公分、AC＝6 公分，乙的 DE 是幾公分？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">6 公分</button>
+          <button class="q-opt" data-correct>8 公分</button>
+          <button class="q-opt">10 公分</button>
+          <button class="q-opt">不知道</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
-      </div></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">DE 是 AB 的對應邊 → <b>DE＝AB＝8 公分</b>，不用再量</span>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">DE 是 AB 的對應邊 → DE＝AB＝8 公分，不用再量</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="apply-angle" hidden>
-      <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="apply-angle-t" class="title">應用②：用對應角求角度</h2></div>
-      <div class="two-col">
-        <div class="tri-fig"><svg viewBox="0 0 340 170" class="tri" aria-hidden="true"><polygon points="20.2,131.3 143.8,131.3 20.2,38.7" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><polyline points="35.2,131.3 35.2,116.3 20.2,116.3" fill="none" stroke="var(--ink)" stroke-width="2"/><text x="12.0" y="149.3" class="tri-t" text-anchor="middle">A</text><text x="162.5" y="144.3" class="tri-t" text-anchor="middle">B</text><text x="12.0" y="28.1" class="tri-t" text-anchor="middle">C</text><polygon points="311.5,75.8 204.5,14 265.2,156" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><polyline points="298.5,68.3 291.0,81.3 304.0,88.8" fill="none" stroke="var(--ink)" stroke-width="2"/><text x="328.0" y="79.4" class="tri-t" text-anchor="middle">D</text><text x="191.8" y="10.0" class="tri-t" text-anchor="middle">E</text><text x="266.5" y="166.0" class="tri-t" text-anchor="middle">F</text></svg><span class="cap">甲：∠A＝90 度、∠B＝37 度</span></div>
-        <div>      <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">甲和乙全等，那 ∠E 是幾度？</p>
-        <div class="q-options"><button class="q-opt">90 度</button><button class="q-opt">53 度</button><button class="q-opt" data-correct>37 度</button><button class="q-opt">要量了才知道</button></div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-3" data-cp-kp="全等與對應" data-cp-hash="09e906" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 數L7-3 · 全等與對應</span><h2 id="cp3-t" class="title">應用②：用對應角求角度</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">甲和乙全等，A 對 D、B 對 E、C 對 F。甲的 ∠A＝90 度、∠B＝37 度，乙的 ∠E 是幾度？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">90 度</button>
+          <button class="q-opt">53 度</button>
+          <button class="q-opt" data-correct>37 度</button>
+          <button class="q-opt">要量了才知道</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
-      </div></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">∠E 是 ∠B 的對應角 → <b>∠E＝∠B＝37 度</b></span>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">∠E 是 ∠B 的對應角 → ∠E＝∠B＝37 度</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="trap" hidden>
+
+    <section class="slide" data-phase="learn" data-slide-id="trap" hidden>
       <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="trap-t" class="title">最容易錯的地方</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見迷思</div><div class="text">照順序配：A 配 D、B 配 E、C 配 F，<b>看名字就好</b>。</div></div>
@@ -2274,13 +2476,22 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <span class="text">先確定<b>對應點</b>，對應邊和對應角就跟著出來了</span>
       </div>
     </section>
-    <section class="slide" data-slide-id="summary" hidden>
-      <div class="page-head"><span class="label">7-3 認識全等</span><h2 id="summary-t" class="title">全等，記住三件事</h2></div><div class="tri-grid"><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="16,143 184,143 16,17" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/></svg><span class="cap">① 移／轉／翻之後<b>完全疊合</b>＝全等</span></div></div><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="16,143 184,143 16,17" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><line x1="100.0" y1="135.0" x2="100.0" y2="151.0" stroke="var(--ink)" stroke-width="2"/></svg><span class="cap">② 對應邊<b>一樣長</b></span></div></div><div data-reveal><div class="tri-fig sm"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="16,143 184,143 16,17" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><path d="M46.0,143.0 A30,30 0 0,0 16.0,113.0" fill="none" stroke="var(--accent)" stroke-width="3"/></svg><span class="cap">③ 對應角<b>一樣大</b></span></div></div></div>
+
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數L7-3</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>移過去、轉過來、翻過來後能完全疊合，就是全等：形狀、大小都一樣</div>
+        <div class="item" data-reveal>疊合時碰在一起的，是對應點、對應邊、對應角</div>
+        <div class="item" data-reveal>全等圖形的對應邊一樣長、對應角一樣大，不用量就知道</div>
+        <div class="item" data-reveal>要看實際疊起來誰碰到誰，不能只照字母順序配</div>
+      </div>
       <div class="takeaway-band" data-reveal>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">知道兩個圖形全等，就能<b>不用量</b>直接說出邊長和角度</span>
+        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
+        <span class="text">這一課的重點就是這四條——回家唸一遍</span>
       </div>
     </section>
+
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>17</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2292,6 +2503,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {
