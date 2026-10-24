@@ -2068,104 +2068,340 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .flow-steps.vertical > .step > .head { flex: 0 0 auto; min-width: 180px; }
 .flow-steps.vertical > .step > .body { flex: 1 1 auto; }
 
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
+<body data-lesson="數R1-4">
 <main class="deck" aria-label="數R1-4 期中總複習第4輪｜綜合模擬與疑難解答">
   <div class="stage" id="stage" tabindex="-1">
-
 
     <section class="slide is-active" data-slide-id="how" aria-labelledby="how-t">
       <div class="page-head"><span class="label">第 4 輪 · 怎麼上</span><h2 id="how-t" class="title">最後一輪：走一次，再把錯的補起來</h2></div><div class="action-list"><div class="item" data-reveal><b>前四節</b>　五個單元各走一次解法，然後考一次模擬卷</div><div class="item" data-reveal><b>後三節</b>　拿模擬卷的錯題來講，錯在第幾步講清楚</div><div class="item" data-reveal><b>每題都問一句</b>　「我是怎麼檢查的？」——會檢查才不會再錯</div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">第 2、3 輪練的是熟練，這一輪練的是<b>把錯抓出來</b></span></div>
     </section>
 
-    <section class="slide" data-slide-id="d1" aria-labelledby="d1-t" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">數R1-4 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">前節小考</div><div class="body">上一節的重點，五題<br>選擇・是非・簡答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝這一課的重點</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 數R1-3 的 summary.json next_quiz -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 前節小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">上一節學過的，還記得嗎？</div>
+        <div class="sub">範圍：數R1-3 的「重點總結」5 條（大數的位值與讀寫、假分數與帶分數互換、角度的測量與計算、長度的換算與比較、乘法直式計算）</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數R1-3" data-cp-kp="大數的位值與讀寫" data-cp-hash="fc453b" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 數R1-3 · 大數的位值與讀寫</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「五千零三萬六百」寫成數字是多少？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">5030600</button>
+          <button class="q-opt" data-correct>50030600</button>
+          <button class="q-opt">5003600</button>
+          <button class="q-opt">50300600</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">5003 個萬 → 50030000，後四位放 0600 → 50030600</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數R1-3" data-cp-kp="假分數與帶分數互換" data-cp-hash="0dc96e" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 數R1-3 · 假分數與帶分數互換</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">5 分之 17 換成帶分數是多少？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">2 又 5 分之 7</button>
+          <button class="q-opt">3 又 17 分之 2</button>
+          <button class="q-opt">2 又 5 分之 3</button>
+          <button class="q-opt" data-correct>3 又 5 分之 2</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">17 ÷ 5 ＝ 3 餘 2：整數 3、分子 2、分母不變是 5</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="是非" data-cp-src="數R1-3" data-cp-kp="角度的測量與計算" data-cp-hash="ac90c8" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 是非</span> 數R1-3 · 角度的測量與計算</span><h2 id="q3-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">一個周角分成兩個角，其中一個是 150°，另一個就是 30°。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！周角是 360°，360 － 150 ＝ 210°；30° 是把它當成平角了</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="數R1-3" data-cp-kp="長度的換算與比較" data-cp-hash="7350a2" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 數R1-3 · 長度的換算與比較</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">3 公里 25 公尺 ＝ 3025 公尺。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！公尺佔三位：25 寫成 025 → 3025 公尺</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="簡答" data-cp-src="數R1-3" data-cp-kp="乘法直式計算" data-cp-hash="e57397" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 簡答</span> 數R1-3 · 乘法直式計算</span><h2 id="q5-t" class="title">寫在小白板上</h2></div>
+      <p class="q-stem big">305 × 24 ＝ ？寫出答案，再用估算說說位數對不對。</p>
+      <div class="row center">
+        <button class="flip-card short-ans" data-flip>
+          <span class="inner"><span class="face front">老師翻牌看參考答案</span><span class="face back">答 7320；用 300 × 24 估約 7200，是四位數</span></span>
+        </button>
+      </div>
+      <div class="row center"><button class="ds-btn rec-open" type="button">📋 記錄本題</button></div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="d1" aria-labelledby="d1-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;"><div class="kicker">前四節 · W9</div><div id="d1-t" class="headline">再走一次，五個單元</div><div class="sub">一個單元三步驟：解法 → 錯法 → 馬上試試</div></div>
     </section>
 
-    <section class="slide" data-slide-id="u1" aria-labelledby="u1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u1" aria-labelledby="u1-t" hidden>
       <div class="page-head"><span class="label">步驟拆解 · 第一單元</span><h2 id="u1-t" class="title">「三千零四十萬零二百」怎麼寫</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">先切出「萬」這一節</div><div class="body">聽到「萬」就把前面獨立出來：三千零四十 → 3040 個萬</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">萬以下一定補滿四位</div><div class="body">3040 個萬 ＝ 3040 後面接四位 → 30400000</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">再把萬以下的數放進去</div><div class="body">零二百 ＝ 0200，對到最後四位 → 30400200</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">四位一組先切好，答案是 <b>30400200</b></span></div>
     </section>
 
-    <section class="slide" data-slide-id="m1" aria-labelledby="m1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m1" aria-labelledby="m1-t" hidden>
       <div class="page-head"><span class="label">錯在哪一步 · 第一單元</span><h2 id="m1-t" class="title">他卡在第 2 步</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">三千零四十萬零二百 → 3040200</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">「幾個萬」後面一定要接<strong>四位</strong>。3040 後面只接了三位，整個數少一位 → 正確是 <strong>30400200</strong>。</div></div></div>
     </section>
 
-    <section class="slide" data-slide-id="q1" aria-labelledby="q1-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 第一單元</span><h2 id="q1-t" class="title">「五百零六萬七千」是多少？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">把「五百零六萬七千」寫成數字，應該是下面哪一個？</p><div class="q-options"><button class="q-opt">50670000</button><button class="q-opt">5060700</button><button class="q-opt">506700</button><button class="q-opt" data-correct="true">5067000</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">506 個萬 → 506 後面接四位 ＝ 5060000，再放七千 → <b>5067000</b></span></div></div>
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數R1-4" data-cp-kp="大數的位值與讀寫" data-cp-hash="0a52b4" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數R1-4 · 大數的位值與讀寫</span><h2 id="cp1-t" class="title">「五百零六萬七千」是多少？</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">把「五百零六萬七千」寫成數字，應該是下面哪一個？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">50670000</button>
+          <button class="q-opt">5060700</button>
+          <button class="q-opt">506700</button>
+          <button class="q-opt" data-correct>5067000</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">506 個萬 → 506 後面接四位 ＝ 5060000，再放七千 → 5067000</span>
+      </div>
     </section>
 
-    <section class="slide" data-slide-id="u2" aria-labelledby="u2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u2" aria-labelledby="u2-t" hidden>
       <div class="page-head"><span class="label">步驟拆解 · 第二單元</span><h2 id="u2-t" class="title">508 × 36 拆成四步</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">先乘個位的 6</div><div class="body">508 × 6 ＝ 3048，寫在第一列</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">再乘十位的 3</div><div class="body">508 × 3 ＝ 1524，要對齊十位（往左退一位）</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">中間的 0 也要乘</div><div class="body">0 × 6、0 × 3 都要算，不能跳過</div></div><div class="step" data-reveal><div class="badge">4</div><div class="head">兩列相加</div><div class="body">3048 ＋ 15240 ＝ 18288</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">直式的每一位都要乘到，答案是 <b>18288</b></span></div>
     </section>
 
-    <section class="slide" data-slide-id="m2" aria-labelledby="m2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m2" aria-labelledby="m2-t" hidden>
       <div class="page-head"><span class="label">錯在哪一步 · 第二單元</span><h2 id="m2-t" class="title">他卡在第 2 步</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">508 × 36 → 3048 ＋ 1524 ＝ 4572</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">第二列乘的是<strong>十位</strong>的 3，代表 30，要往左退一位寫成 <strong>15240</strong>。沒對齊就少算了十倍 → 正確是 <strong>18288</strong>。</div></div></div>
     </section>
 
-    <section class="slide" data-slide-id="q2" aria-labelledby="q2-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 第二單元</span><h2 id="q2-t" class="title">估估看，答案大概多少？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">先不要算完：405 × 48 的答案最接近下面哪一個？</p><div class="q-options"><button class="q-opt" data-correct="true">約 20000</button><button class="q-opt">約 2000</button><button class="q-opt">約 200000</button><button class="q-opt">約 2000000</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">400 × 50 ＝ 20000。<b>先估再算</b>，答案差一個位數馬上看得出來</span></div></div>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數R1-4" data-cp-kp="乘法估算" data-cp-hash="369890" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數R1-4 · 乘法估算</span><h2 id="cp2-t" class="title">估估看，答案大概多少？</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">先不要算完：405 × 48 的答案最接近下面哪一個？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>約 20000</button>
+          <button class="q-opt">約 2000</button>
+          <button class="q-opt">約 200000</button>
+          <button class="q-opt">約 2000000</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">400 × 50 ＝ 20000。先估再算，答案差一個位數馬上看得出來</span>
+      </div>
     </section>
 
-    <section class="slide" data-slide-id="u3" aria-labelledby="u3-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u3" aria-labelledby="u3-t" hidden>
       <div class="page-head"><span class="label">步驟拆解 · 第三單元</span><h2 id="u3-t" class="title">平角分成四份，其中三份是幾度</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">先講整體是幾度</div><div class="body">平角 ＝ 180 度</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">分成幾份就除以幾</div><div class="body">180 ÷ 4 ＝ 45 度，一份是 45 度</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">要幾份就乘幾</div><div class="body">45 × 3 ＝ 135 度</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">先講整體、再分、再乘——答案是 <b>135 度</b></span></div>
     </section>
 
-    <section class="slide" data-slide-id="m3" aria-labelledby="m3-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m3" aria-labelledby="m3-t" hidden>
       <div class="page-head"><span class="label">錯在哪一步 · 第三單元</span><h2 id="m3-t" class="title">他卡在第 1 步</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">平角分成四份取三份 → 360 ÷ 4 × 3 ＝ 270 度</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">整體弄錯了：<strong>平角是 180 度</strong>，周角才是 360 度。第 1 步錯，後面全錯 → 正確是 <strong>135 度</strong>。</div></div></div>
     </section>
 
-    <section class="slide" data-slide-id="q3" aria-labelledby="q3-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 第三單元</span><h2 id="q3-t" class="title">量角器要先對準哪裡？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">用量角器量一個角，第一件要做的事是什麼？</p><div class="q-options"><button class="q-opt">先看外圈的數字</button><button class="q-opt" data-correct="true">把量角器的中心點對準角的頂點</button><button class="q-opt">先讀最靠近的刻度</button><button class="q-opt">把角描粗一點</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">中心對頂點、底線對一邊，再看<b>從 0 開始數</b>的那一圈刻度</span></div></div>
+    <section class="slide" data-phase="learn" data-slide-id="q3p" aria-labelledby="q3p-t" hidden>
+      <div class="page-head"><span class="label">馬上試試 · 第三單元</span><h2 id="q3p-t" class="title">量角器要先對準哪裡？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">用量角器量一個角，第一件要做的事是什麼？</p><div class="q-options"><button class="q-opt">先看外圈的數字</button><button class="q-opt" data-correct="true">把量角器的中心點對準角的頂點</button><button class="q-opt">先讀最靠近的刻度</button><button class="q-opt">把角描粗一點</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">中心對頂點、底線對一邊，再看<b>從 0 開始數</b>的那一圈刻度</span></div></div>
     </section>
 
-    <section class="slide" data-slide-id="u4" aria-labelledby="u4-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u4" aria-labelledby="u4-t" hidden>
       <div class="page-head"><span class="label">步驟拆解 · 第四單元</span><h2 id="u4-t" class="title">3 又 7 分之 4 換成假分數</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">整數換成幾個「七分之一」</div><div class="body">3 × 7 ＝ 21，也就是 21 個七分之一</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">再加上原本的分子</div><div class="body">21 ＋ 4 ＝ 25</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">分母不變</div><div class="body">答案是 7 分之 25</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">乘分母、加分子、<b>分母不變</b></span></div>
     </section>
 
-    <section class="slide" data-slide-id="m4" aria-labelledby="m4-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m4" aria-labelledby="m4-t" hidden>
       <div class="page-head"><span class="label">錯在哪一步 · 第四單元</span><h2 id="m4-t" class="title">他卡在第 3 步</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">3 又 7 分之 4 → 21 分之 25</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">換算時<strong>分母不會變</strong>，被換掉的只有整數部分。分母寫成 21，整份就被改小了 → 正確是 <strong>7 分之 25</strong>。</div></div></div>
     </section>
 
-    <section class="slide" data-slide-id="q4" aria-labelledby="q4-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 第四單元</span><h2 id="q4-t" class="title">9 分之 23 是幾又幾分之幾？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">把假分數 9 分之 23 換成帶分數，答案是哪一個？</p><div class="q-options"><button class="q-opt">2 又 5 分之 9</button><button class="q-opt">3 又 9 分之 4</button><button class="q-opt" data-correct="true">2 又 9 分之 5</button><button class="q-opt">23 又 9 分之 1</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">23 ÷ 9 ＝ 2 餘 5：商當整數、<b>餘數當分子</b>、分母不變</span></div></div>
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數R1-4" data-cp-kp="假分數與帶分數互換" data-cp-hash="1c1efb" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 數R1-4 · 假分數與帶分數互換</span><h2 id="cp3-t" class="title">9 分之 23 是幾又幾分之幾？</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">把假分數 9 分之 23 換成帶分數，答案是哪一個？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">2 又 5 分之 9</button>
+          <button class="q-opt">3 又 9 分之 4</button>
+          <button class="q-opt" data-correct>2 又 9 分之 5</button>
+          <button class="q-opt">23 又 9 分之 1</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">23 ÷ 9 ＝ 2 餘 5：商當整數、餘數當分子、分母不變</span>
+      </div>
     </section>
 
-    <section class="slide" data-slide-id="u5" aria-labelledby="u5-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u5" aria-labelledby="u5-t" hidden>
       <div class="page-head"><span class="label">步驟拆解 · 第五單元</span><h2 id="u5-t" class="title">2 公里 300 公尺 － 1 公里 800 公尺</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">公尺不夠減，先借</div><div class="body">300 不夠減 800，向公里借 1 → 變成 1 公里 1300 公尺</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">公尺相減</div><div class="body">1300 － 800 ＝ 500 公尺</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">公里相減</div><div class="body">1 － 1 ＝ 0 公里 → 答案是 500 公尺</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">借位是<b>1 公里換 1000 公尺</b>，不是換 100</span></div>
     </section>
 
-    <section class="slide" data-slide-id="m5" aria-labelledby="m5-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m5" aria-labelledby="m5-t" hidden>
       <div class="page-head"><span class="label">錯在哪一步 · 第五單元</span><h2 id="m5-t" class="title">他卡在第 1 步</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">2 公里 300 公尺 － 1 公里 800 公尺 ＝ 1 公里 500 公尺</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">公尺不夠減時要向公里<strong>借 1000</strong>，借走的那 1 公里也要扣掉。他只加了公尺沒扣公里 → 正確是 <strong>500 公尺</strong>。</div></div></div>
     </section>
 
-    <section class="slide" data-slide-id="q5" aria-labelledby="q5-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 第五單元</span><h2 id="q5-t" class="title">加起來要不要進位？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">1 公里 700 公尺 ＋ 600 公尺 ＝ ？</p><div class="q-options"><button class="q-opt">1 公里 1300 公尺</button><button class="q-opt">1 公里 300 公尺</button><button class="q-opt">2 公里 1300 公尺</button><button class="q-opt" data-correct="true">2 公里 300 公尺</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">公尺滿 <b>1000 就進位成 1 公里</b>：1300 公尺 ＝ 1 公里 300 公尺</span></div></div>
+    <section class="slide" data-phase="learn" data-slide-id="q5p" aria-labelledby="q5p-t" hidden>
+      <div class="page-head"><span class="label">馬上試試 · 第五單元</span><h2 id="q5p-t" class="title">加起來要不要進位？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">1 公里 700 公尺 ＋ 600 公尺 ＝ ？</p><div class="q-options"><button class="q-opt">1 公里 1300 公尺</button><button class="q-opt">1 公里 300 公尺</button><button class="q-opt">2 公里 1300 公尺</button><button class="q-opt" data-correct="true">2 公里 300 公尺</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">公尺滿 <b>1000 就進位成 1 公里</b>：1300 公尺 ＝ 1 公里 300 公尺</span></div></div>
     </section>
 
-    <section class="slide" data-slide-id="w9end" aria-labelledby="w9end-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="w9end" aria-labelledby="w9end-t" hidden>
       <div class="page-head"><span class="label">前四節 · 收尾</span><h2 id="w9end-t" class="title">等一下的模擬卷，這樣寫</h2></div><div class="action-list"><div class="item" data-reveal><b>配分和定期評量一樣</b>　題型、題數、時間都照正式卷</div><div class="item" data-reveal><b>每題留下算式</b>　下週要用你的算式找出錯在第幾步</div><div class="item" data-reveal><b>算完先估一次</b>　答案和估算差太多，通常是位數寫錯</div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-clock"></use></svg></span><span class="text">錯的題目<b>不要擦掉</b>——那是下週三節課的教材</span></div>
     </section>
 
-    <section class="slide" data-slide-id="d2" aria-labelledby="d2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d2" aria-labelledby="d2-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;"><div class="kicker">後三節 · W10</div><div id="d2-t" class="headline">疑難解答</div><div class="sub">錯在第幾步，講清楚再練一次</div></div>
     </section>
 
-    <section class="slide" data-slide-id="h1" aria-labelledby="h1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="h1" aria-labelledby="h1-t" hidden>
       <div class="page-head"><span class="label">疑難解答 1 / 3</span><h2 id="h1-t" class="title">最常錯的三種題型</h2></div><div class="action-list"><div class="item" data-reveal><b>大數少一位</b>　「幾個萬」後面沒補滿四位</div><div class="item" data-reveal><b>直式沒對齊</b>　乘十位那一列忘了往左退一位</div><div class="item" data-reveal><b>換算借錯</b>　把 1 公里當成 100 公尺去借</div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">三種錯法都不是「不會」，是<b>少了一個檢查動作</b></span></div>
     </section>
 
-    <section class="slide" data-slide-id="h2" aria-labelledby="h2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="h2" aria-labelledby="h2-t" hidden>
       <div class="page-head"><span class="label">疑難解答 2 / 3</span><h2 id="h2-t" class="title">三個檢查動作，寫完就做</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">位數對不對</div><div class="body">大數寫完數一次位數，四位一組畫線</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">對齊對不對</div><div class="body">直式第二列往左退一位，尾巴要空一格</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">單位對不對</div><div class="body">換算前先默唸「1 公里＝1000 公尺」</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">三個動作各花五秒，比整題重算快得多</span></div>
     </section>
 
-    <section class="slide" data-slide-id="h3" aria-labelledby="h3-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="h3" aria-labelledby="h3-t" hidden>
       <div class="page-head"><span class="label">疑難解答 3 / 3</span><h2 id="h3-t" class="title">找出錯在第幾步</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">小安算 3 又 5 分之 2 ＝ 5 分之 11，老師說錯了。他錯在哪一步？</p><div class="q-options"><button class="q-opt" data-correct="true">整數乘分母那一步（3 × 5 算錯）</button><button class="q-opt">加分子那一步（忘了加 2）</button><button class="q-opt">分母那一步（分母不該變）</button><button class="q-opt">沒有錯，答案是對的</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">3 × 5 ＝ 15，15 ＋ 2 ＝ 17 → 正確是 <b>5 分之 17</b>；他把 3 × 5 當成了 9</span></div></div>
     </section>
 
-    <section class="slide" data-slide-id="end" aria-labelledby="end-t" hidden>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數R1-4</span><h2 id="summary-t" class="title">今天帶走這五件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>讀大數：「萬」前面的數是萬的個數，後面四位一定補滿</div>
+        <div class="item" data-reveal>先估再算：取整十整百估一次，位數差太多就是算錯了</div>
+        <div class="item" data-reveal>量角器中心對頂點、底線對一邊，從 0 開始的那一圈讀</div>
+        <div class="item" data-reveal>帶分數換假分數：分母 × 整數 ＋ 分子，分母不變</div>
+        <div class="item" data-reveal>公尺滿 1000 進位成 1 公里；不夠減就向公里借 1000 公尺</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="end" aria-labelledby="end-t" hidden>
       <div class="page-head"><span class="label">收尾</span><h2 id="end-t" class="title">定期評量前，做這三件事</h2></div><div class="action-list"><div class="item" data-reveal><b>錯題回鍋卷再寫一次</b>　同一題錯兩次，考試很可能錯第三次</div><div class="item" data-reveal><b>三個檢查動作背起來</b>　位數、對齊、單位</div><div class="item" data-reveal><b>算完一定要估一次</b>　差一個位數馬上就看得出來</div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">四輪複習到這裡結束——<b>會檢查</b>比算得快更重要</span></div>
     </section>
+
 
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>17</span> <span data-reveal-meta></span></p>
@@ -2178,6 +2414,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {

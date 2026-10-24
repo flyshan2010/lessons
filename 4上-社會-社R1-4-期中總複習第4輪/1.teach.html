@@ -2021,13 +2021,54 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .flow-steps.vertical > .step > .head { flex: 0 0 auto; min-width: 180px; }
 .flow-steps.vertical > .step > .body { flex: 1 1 auto; }
 
+
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
+<body data-lesson="社R1-4">
 <main class="deck" aria-label="社R1-4 期中總複習第4輪｜生活實例與觀念澄清">
   <div class="stage" id="stage" tabindex="-1">
 
-<section class="slide" data-slide-id="how" aria-labelledby="how-t" hidden>
+    <section class="slide" data-slide-id="how" aria-labelledby="how-t" hidden>
       <div class="page-head"><span class="label">第 4 輪 · 怎麼上</span><h2 id="how-t" class="title">這一輪，用「生活裡的例子」複習</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>先講例子，再回課本</b>　從你家附近的事情，倒回去找那一課的觀念</div>
@@ -2040,7 +2081,150 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d1" aria-labelledby="d1-t" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">社R1-4 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">複習快問</div><div class="body">這一課要用到的舊經驗<br>五題</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝這一課的重點</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 本節 prereq_quiz（先備） -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 複習快問 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">這些還記得嗎？</div>
+        <div class="sub">範圍：地圖要素（圖名・方向標・圖例・比例尺）、地形特徵、人與環境（作物・產業・建築）、氣候與水資源、塑膠製品與環境保護</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="地圖要素（圖名・方向標・圖例・比例尺）" data-cp-hash="50fabe" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 地圖要素（圖名・方向標・圖例・比例尺）</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">甲圖的比例尺是 1 公分代表 100 公尺，乙圖是 1 公分代表 500 公尺。兩張圖上都量到 4 公分，下列何者正確？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt" data-correct>乙圖那段實際距離比較遠</button>
+          <button class="q-opt">兩段一樣遠</button>
+          <button class="q-opt">甲圖那段實際距離比較遠</button>
+          <button class="q-opt">無法比較</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「乙圖那段實際距離比較遠」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="地形特徵" data-cp-hash="f2cf4c" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 先備 · 地形特徵</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">下列哪一個描述最符合「台地」？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">四周高、中間低</button>
+          <button class="q-opt" data-correct>整片高起來，頂部卻很平坦</button>
+          <button class="q-opt">又低又平的一大片</button>
+          <button class="q-opt">起伏很大、坡度很陡</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「整片高起來，頂部卻很平坦」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="人與環境（作物・產業・建築）" data-cp-hash="a16dfa" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 選擇</span> 先備 · 人與環境（作物・產業・建築）</span><h2 id="q3-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">住在山區的人家，房子和農田常沿著坡度一層一層蓋。這說明了什麼？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">地形不會影響生活</button>
+          <button class="q-opt">山區沒有辦法種田</button>
+          <button class="q-opt" data-correct>人配合地形調整生活方式</button>
+          <button class="q-opt">坡地比平地容易蓋房子</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「人配合地形調整生活方式」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="氣候與水資源" data-cp-hash="ac9292" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 選擇</span> 先備 · 氣候與水資源</span><h2 id="q4-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">下列哪一句在描述「天氣」？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">這裡夏天多雨、冬天乾燥</button>
+          <button class="q-opt">我們這裡全年溫暖</button>
+          <button class="q-opt">這裡一年四季分明</button>
+          <button class="q-opt" data-correct>今天下午下了一場大雨</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「今天下午下了一場大雨」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="塑膠製品與環境保護" data-cp-hash="86634b" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 選擇</span> 先備 · 塑膠製品與環境保護</span><h2 id="q5-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">下列哪一個做法屬於 3R 中的「重複使用」？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">買飲料時不拿吸管</button>
+          <button class="q-opt">把寶特瓶丟進回收桶</button>
+          <button class="q-opt" data-correct>把洗乾淨的塑膠袋再拿去裝東西</button>
+          <button class="q-opt">把免洗筷折斷再丟</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「把洗乾淨的塑膠袋再拿去裝東西」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="d1" aria-labelledby="d1-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第一站 · 前兩節</div>
         <div id="d1-t" class="headline">把課本搬到生活裡</div>
@@ -2048,7 +2232,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="exA" aria-labelledby="exA-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="exA" aria-labelledby="exA-t" hidden>
       <div class="page-head"><span class="label">1-1 · 生活實例</span><h2 id="exA-t" class="title">外地的朋友問「你家在哪」，怎麼說？</h2></div>
       <div class="card-grid">
         <div class="concept-card" data-reveal>
@@ -2070,7 +2254,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qA" aria-labelledby="qA-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="qA" aria-labelledby="qA-t" hidden>
       <div class="page-head"><span class="label">馬上試試 · 位置</span><h2 id="qA-t" class="title">哪一句在講「相對位置」？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2091,7 +2275,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="exB" aria-labelledby="exB-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="exB" aria-labelledby="exB-t" hidden>
       <div class="page-head"><span class="label">1-2 · 生活實例</span><h2 id="exB-t" class="title">校外教學去兩個地方，路上差在哪？</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal>
@@ -2110,28 +2294,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qB" aria-labelledby="qB-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 地形</span><h2 id="qB-t" class="title">這是哪一種地形？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="地形特徵" data-cp-hash="16f577" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 社R1-4 · 地形特徵</span><h2 id="cp1-t" class="title">這是哪一種地形？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">阿嬤家四周都是高高的山，中間卻是一片平地，市區就蓋在中間。這裡最可能是什麼地形？</p>
-        <div class="q-options">
+        <div class="q-options abcd">
           <button class="q-opt">平原</button>
           <button class="q-opt">台地</button>
-          <button class="q-opt" data-correct="true">盆地</button>
+          <button class="q-opt" data-correct>盆地</button>
           <button class="q-opt">丘陵</button>
-      </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">「四周高、中間低」是盆地的判準；台地是<b>整片高起、頂部平坦</b></span>
-      </div>
+        <span class="text">「四周高、中間低」是盆地的判準；台地是整片高起、頂部平坦</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="exC" aria-labelledby="exC-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="exC" aria-labelledby="exC-t" hidden>
       <div class="page-head"><span class="label">1-3 · 生活實例</span><h2 id="exC-t" class="title">出門前那句話，是天氣還是氣候？</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal>
@@ -2150,28 +2336,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qC" aria-labelledby="qC-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 氣候與水</span><h2 id="qC-t" class="title">為什麼水庫蓋在中上游？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="氣候與水資源" data-cp-hash="143ffa" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 社R1-4 · 氣候與水資源</span><h2 id="cp2-t" class="title">為什麼水庫蓋在中上游？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">家鄉的雨集中在夏天，冬天河水變得很少。水庫蓋在河川中上游，最主要是為了什麼？</p>
-        <div class="q-options">
+        <div class="q-options abcd two">
           <button class="q-opt">讓下游的河水流得比較快</button>
           <button class="q-opt">把海水擋在外面</button>
           <button class="q-opt">讓魚比較容易長大</button>
-          <button class="q-opt" data-correct="true">把夏天多的水存起來，留到缺水的季節用</button>
-      </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+          <button class="q-opt" data-correct>存下夏天多的水，留到缺水時用</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">雨量<b>集中在夏天</b>，才需要水庫把水留下來調節</span>
-      </div>
+        <span class="text">雨量集中在夏天，才需要水庫把水留下來調節</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="exD" aria-labelledby="exD-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="exD" aria-labelledby="exD-t" hidden>
       <div class="page-head"><span class="label">2-1 · 生活實例</span><h2 id="exD-t" class="title">老照片裡的房子，看得出材料從哪來</h2></div>
       <div class="card-grid">
         <div class="concept-card" data-reveal>
@@ -2193,28 +2381,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qD" aria-labelledby="qD-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 住屋</span><h2 id="qD-t" class="title">為什麼房子要往下挖？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R1-4" data-cp-kp="傳統住屋（三合院・原住民住屋）" data-cp-hash="d3aaca" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 社R1-4 · 傳統住屋（三合院・原住民住屋）</span><h2 id="cp3-t" class="title">為什麼房子要往下挖？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">蘭嶼的傳統住屋蓋得比地面低。這樣做最主要是為了因應當地的什麼環境？</p>
-        <div class="q-options">
-          <button class="q-opt" data-correct="true">風大</button>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>風大</button>
           <button class="q-opt">地震多</button>
           <button class="q-opt">缺水</button>
           <button class="q-opt">土太硬</button>
-      </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">住屋題先問一句：<b>當地最麻煩的自然條件是什麼？</b></span>
-      </div>
+        <span class="text">住屋題先問一句：當地最麻煩的自然條件是什麼？</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="exE" aria-labelledby="exE-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="exE" aria-labelledby="exE-t" hidden>
       <div class="page-head"><span class="label">2-2 · 生活實例</span><h2 id="exE-t" class="title">一個便當袋，看見器物的改變</h2></div>
       <div class="flow-steps vertical">
         <div class="step" data-reveal><div class="badge">1</div><div class="head">以前</div><div class="body">竹編提籃、木製飯盒，壞了可以修。</div></div>
@@ -2227,7 +2417,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qE" aria-labelledby="qE-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="qE" aria-labelledby="qE-t" hidden>
       <div class="page-head"><span class="label">馬上試試 · 器物</span><h2 id="qE-t" class="title">哪一個做法是「減量」？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2248,7 +2438,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="w9end" aria-labelledby="w9end-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="w9end" aria-labelledby="w9end-t" hidden>
       <div class="page-head"><span class="label">前兩節 · 收尾</span><h2 id="w9end-t" class="title">等一下的模擬卷，這樣寫</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>題型和定期評量一樣</b>　選擇、填充、簡答，配分也一樣</div>
@@ -2261,7 +2451,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d2" aria-labelledby="d2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d2" aria-labelledby="d2-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二站 · 後三節</div>
         <div id="d2-t" class="headline">考前觀念澄清</div>
@@ -2269,7 +2459,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="m1" aria-labelledby="m1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m1" aria-labelledby="m1-t" hidden>
       <div class="page-head"><span class="label">對照卡 1 / 6 · 1-1</span><h2 id="m1-t" class="title">地圖的上面就是北方？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見說法</div><div class="text">紙的上面就是北方，所以誰畫在上面就在北邊。</div></div>
@@ -2278,7 +2468,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="m2" aria-labelledby="m2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m2" aria-labelledby="m2-t" hidden>
       <div class="page-head"><span class="label">對照卡 2 / 6 · 1-1</span><h2 id="m2-t" class="title">圖上一樣長，實際就一樣遠？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見說法</div><div class="text">兩張地圖上都量到 5 公分，代表這兩段路一樣遠。</div></div>
@@ -2287,7 +2477,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="m3" aria-labelledby="m3-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m3" aria-labelledby="m3-t" hidden>
       <div class="page-head"><span class="label">對照卡 3 / 6 · 1-2</span><h2 id="m3-t" class="title">看起來高高的就是山地？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見說法</div><div class="text">圖上畫得高，就是山地；畫得矮，就是丘陵。</div></div>
@@ -2296,7 +2486,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="m4" aria-labelledby="m4-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m4" aria-labelledby="m4-t" hidden>
       <div class="page-head"><span class="label">對照卡 4 / 6 · 1-3</span><h2 id="m4-t" class="title">今天很熱，就是這裡氣候熱？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見說法</div><div class="text">今天特別熱、昨天下大雨，所以我們這裡氣候又熱又多雨。</div></div>
@@ -2305,7 +2495,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="m5" aria-labelledby="m5-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m5" aria-labelledby="m5-t" hidden>
       <div class="page-head"><span class="label">對照卡 5 / 6 · 2-1</span><h2 id="m5-t" class="title">三合院的左邊＝我的左邊？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見說法</div><div class="text">我站在門口往裡面看，我的左手邊就是左護龍。</div></div>
@@ -2314,7 +2504,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="m6" aria-labelledby="m6-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m6" aria-labelledby="m6-t" hidden>
       <div class="page-head"><span class="label">對照卡 6 / 6 · 2-2</span><h2 id="m6-t" class="title">垃圾記得回收就好？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見說法</div><div class="text">只要有丟進回收桶，用多少塑膠都沒關係。</div></div>
@@ -2323,7 +2513,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qF" aria-labelledby="qF-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="qF" aria-labelledby="qF-t" hidden>
       <div class="page-head"><span class="label">快問快答 1 / 2</span><h2 id="qF-t" class="title">哪一句說的是氣候？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2344,7 +2534,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qG" aria-labelledby="qG-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="qG" aria-labelledby="qG-t" hidden>
       <div class="page-head"><span class="label">快問快答 2 / 2</span><h2 id="qG-t" class="title">左護龍在哪一邊？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2365,7 +2555,19 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="end" aria-labelledby="end-t" hidden>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 社R1-4</span><h2 id="summary-t" class="title">今天帶走這五件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>地圖先看方向標才知道北方；圖上一樣長，要看比例尺才知道實際多遠</div>
+        <div class="item" data-reveal>判斷地形看高度與起伏：四周高中間低是盆地，高起而頂部平是台地</div>
+        <div class="item" data-reveal>某一天的冷熱晴雨是天氣，很多年的季節規律才是氣候</div>
+        <div class="item" data-reveal>三合院的左右，以站在正廳往外看為準</div>
+        <div class="item" data-reveal>3R 先減量：一開始就不拿，比用完再回收更好</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="end" aria-labelledby="end-t" hidden>
       <div class="page-head"><span class="label">收尾</span><h2 id="end-t" class="title">定期評量前，做這三件事</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>六張對照卡帶回家</b>　睡前唸一次，說得出正確說法就過關</div>
@@ -2378,6 +2580,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
+
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>0</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2389,6 +2592,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {

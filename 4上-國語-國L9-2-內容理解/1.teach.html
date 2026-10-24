@@ -2009,13 +2009,52 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .prince-card .body { font-size:24px; line-height:1.45; margin-top:auto; }
 @media (max-width:900px){ .prince-grid { grid-template-columns:repeat(2,1fr); }
   .prince-card .portrait { height:260px; } }
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
-<main class="deck" aria-label="王子折箭 內容理解課程教學">
+<body data-lesson="國L9-2">
+<main class="deck" aria-label="內容理解｜課程教學 · 四上國語 國L9-2">
   <div class="stage" id="stage" tabindex="-1">
 
-    <!-- 1 封面 -->
     <section class="slide" data-slide-id="cover" aria-labelledby="cover-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第九課 王子折箭 · 第二節</div>
@@ -2024,8 +2063,134 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 2 人物與場景總覽 -->
-    <section class="slide" data-slide-id="cast" aria-labelledby="cast-t" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">國L9-2 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">前節小考</div><div class="body">上一節的重點，五題<br>選擇・是非・簡答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝下一節小考範圍</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 國L9-1 的 summary.json next_quiz -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 前節小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">上一節學過的，還記得嗎？</div>
+        <div class="sub">範圍：國L9-1 的「重點總結」4 條（部首、大意、語詞、字形）</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L9-1" data-cp-kp="部首" data-cp-hash="4794b3" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 國L9-1 · 部首</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「上課前，先（ㄈㄨˋ）習昨天的生字。」空格應該填哪一個字？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">復</button>
+          <button class="q-opt" data-correct>複</button>
+          <button class="q-opt">腹</button>
+          <button class="q-opt">覆</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">複習是衣部的「複」；康復才是彳部的「復」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L9-1" data-cp-kp="大意" data-cp-hash="ee6abc" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 國L9-1 · 大意</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">〈王子折箭〉三幕的順序，哪一個才對？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">王子的爭吵 → 國王的煩惱 → 折箭的道理</button>
+          <button class="q-opt">國王的煩惱 → 折箭的道理 → 王子的爭吵</button>
+          <button class="q-opt">折箭的道理 → 王子的爭吵 → 國王的煩惱</button>
+          <button class="q-opt" data-correct>國王的煩惱 → 王子的爭吵 → 折箭的道理</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">先煩惱、再爭吵、最後用折箭讓王子想通</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="是非" data-cp-src="國L9-1" data-cp-kp="語詞" data-cp-hash="9c50f6" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 是非</span> 國L9-1 · 語詞</span><h2 id="q3-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「異口同聲」是說大家說出一樣的話，意見相同。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！王子們異口同聲說：「孩兒明白了。」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="國L9-1" data-cp-kp="部首" data-cp-hash="55cf1a" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 國L9-1 · 部首</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「祈福」的「祈」和「折箭」的「折」，部首都是手部。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！祈是示部（求神保佑），折才是手部</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="簡答" data-cp-src="國L9-1" data-cp-kp="字形" data-cp-hash="24e930" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 簡答</span> 國L9-1 · 字形</span><h2 id="q5-t" class="title">寫在小白板上</h2></div>
+      <p class="q-stem big">「建」的最後一筆，是什麼筆畫？</p>
+      <div class="row center">
+        <button class="flip-card short-ans" data-flip>
+          <span class="inner"><span class="face front">老師翻牌看參考答案</span><span class="face back">豎鉤（不是豎）</span></span>
+        </button>
+      </div>
+      <div class="row center"><button class="ds-btn rec-open" type="button">📋 記錄本題</button></div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="cast" aria-labelledby="cast-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 讀劇前先認人</span><h2 id="cast-t" class="title">誰在這齣戲裡？在哪裡演？</h2></div>
       <div class="concept-grid">
         <div class="concept-card" data-reveal><div class="head">國王・王后</div><div class="body">國王勇敢善戰，受人民敬愛，如今病重；王后在床前陪伴，也是父王計畫的幫手。</div></div>
@@ -2038,8 +2203,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 3 第一幕情節 -->
-    <section class="slide" data-slide-id="act1" aria-labelledby="act1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="act1" aria-labelledby="act1-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 第一幕</span><h2 id="act1-t" class="title">國王的煩惱</h2></div>
       <div class="flow-steps">
         <div class="step" data-reveal><div class="badge">1</div><div class="head">病重</div><div class="body">「這個冬天特別寒冷，我恐怕撐不到明年春天了。」</div></div>
@@ -2054,31 +2218,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 4 第一幕句意 quiz -->
-    <section class="slide" data-slide-id="act1-q" aria-labelledby="act1-q-t" hidden>
-      <div class="page-head"><span class="label">國L9-2 · 讀出話中話</span><h2 id="act1-q-t" class="title">為什麼要說「冬天特別寒冷」？</h2></div>
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國L9-2" data-cp-kp="推論" data-cp-hash="8c37fe" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 國L9-2 · 推論</span><h2 id="cp1-t" class="title">為什麼要說「冬天特別寒冷」？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">國王說「這個冬天特別寒冷，我恐怕撐不到明年春天了」，這句話真正想表達的是？</p>
-        <div class="q-options">
+        <div class="q-options abcd two">
           <button class="q-opt">今年天氣異常，農作物會收成不好</button>
-          <button class="q-opt" data-correct>病情很嚴重，可能等不到身體康復的日子</button>
+          <button class="q-opt" data-correct>病情很嚴重，可能等不到康復</button>
           <button class="q-opt">希望王后幫他多拿一件被子</button>
           <button class="q-opt">他打算搬到南方比較溫暖的地方</button>
         </div>
         <div class="row">
           <button class="ds-btn primary" data-quiz-check>對答案</button>
           <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">用「冬天寒冷」暗示病重，也暗示國家該早點決定繼承人——這是劇本常見的寫法</span>
+        <span class="text">用「冬天寒冷」暗示病重——劇本常見的寫法</span>
       </div>
     </section>
 
-    <!-- 5 第二幕情節 -->
-    <section class="slide" data-slide-id="act2" aria-labelledby="act2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="act2" aria-labelledby="act2-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 第二幕</span><h2 id="act2-t" class="title">門外的爭吵</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>可強</b>：「我排第一，最有力氣；我當國王，大家都服氣。」</div>
@@ -2089,8 +2252,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 6 四位王子性格卡 -->
-    <section class="slide" data-slide-id="princes" aria-labelledby="princes-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="princes" aria-labelledby="princes-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 人物分析</span><h2 id="princes-t" class="title">四位王子，各有長處也各有短處</h2></div>
       <div class="prince-grid">
         <div class="prince-card" data-reveal>
@@ -2116,16 +2278,15 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
       <div class="takeaway-band" data-reveal>
         <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">名字就是提示：強、忠、仁、智——王后說的「各有各的長處」正好對上四個名字</span>
+        <span class="text">名字就是提示：強、忠、仁、智，正好對上四人的長處</span>
       </div>
     </section>
 
-    <!-- 7 誰說的話 quiz -->
-    <section class="slide" data-slide-id="who-q" aria-labelledby="who-q-t" hidden>
-      <div class="page-head"><span class="label">國L9-2 · 換你試試</span><h2 id="who-q-t" class="title">這句話是誰說的？</h2></div>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國L9-2" data-cp-kp="提取" data-cp-hash="9ba23d" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 國L9-2 · 提取</span><h2 id="cp2-t" class="title">這句話是誰說的？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">「（說到誰就把手指向誰）父王說過，大哥力氣大，但是心眼小……」這句話是誰說的？</p>
-        <div class="q-options">
+        <div class="q-options abcd">
           <button class="q-opt">可強</button>
           <button class="q-opt">可忠</button>
           <button class="q-opt" data-correct>可智</button>
@@ -2134,17 +2295,17 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="row">
           <button class="ds-btn primary" data-quiz-check>對答案</button>
           <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">可智一次說完三位哥哥的優缺點，也顯示他觀察最仔細——第三幕最先看懂父王用意的也是他</span>
+        <span class="text">可智一次說完三位哥哥的優缺點，觀察最仔細</span>
       </div>
     </section>
 
-    <!-- 8 第三幕情節 -->
-    <section class="slide" data-slide-id="act3" aria-labelledby="act3-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="act3" aria-labelledby="act3-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 第三幕</span><h2 id="act3-t" class="title">折箭：一堂課</h2></div>
       <div class="flow-steps">
         <div class="step" data-reveal><div class="badge">1</div><div class="head">折一枝</div><div class="body">可強輕鬆折斷一枝箭：「這太容易了！」</div></div>
@@ -2159,8 +2320,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 9 一枝 vs 一把 -->
-    <section class="slide" data-slide-id="compare-arrow" aria-labelledby="compare-arrow-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="compare-arrow" aria-labelledby="compare-arrow-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 關鍵對比</span><h2 id="compare-arrow-t" class="title">一枝箭 vs 一把箭</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal>
@@ -2181,31 +2341,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 10 國王的用意 quiz -->
-    <section class="slide" data-slide-id="why-q" aria-labelledby="why-q-t" hidden>
-      <div class="page-head"><span class="label">國L9-2 · 換你想想</span><h2 id="why-q-t" class="title">國王為什麼要他們「動手折」？</h2></div>
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國L9-2" data-cp-kp="推論" data-cp-hash="ee5b57" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 國L9-2 · 推論</span><h2 id="cp3-t" class="title">國王為什麼要他們「動手折」？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">國王大可以直接說「你們要團結」，為什麼要準備箭讓王子們折？</p>
-        <div class="q-options">
-          <button class="q-opt">想比看看誰的力氣最大，力氣大的就傳位給他</button>
-          <button class="q-opt">因為家裡剛好有很多用不到的箭</button>
-          <button class="q-opt">想讓王子們練習射箭的本領</button>
-          <button class="q-opt" data-correct>親手做過才會相信，道理也記得更牢</button>
+        <div class="q-options abcd two">
+          <button class="q-opt">比比看誰的力氣最大</button>
+          <button class="q-opt">家裡剛好有很多用不到的箭</button>
+          <button class="q-opt">想讓王子們練習射箭</button>
+          <button class="q-opt" data-correct>親手做過才會相信，記得更牢</button>
         </div>
         <div class="row">
           <button class="ds-btn primary" data-quiz-check>對答案</button>
           <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">國王說「要給你們上一堂課」——他要的不是誰折得斷，而是四個人自己想通</span>
+        <span class="text">國王要的不是誰折得斷，而是四個人自己想通</span>
       </div>
     </section>
 
-    <!-- 11 首尾呼應 -->
-    <section class="slide" data-slide-id="echo" aria-labelledby="echo-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="echo" aria-labelledby="echo-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 首尾呼應</span><h2 id="echo-t" class="title">從「煩惱多」到「福氣多」</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal>
@@ -2226,8 +2385,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 12 閱讀理解提問 -->
-    <section class="slide" data-slide-id="questions" aria-labelledby="questions-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="questions" aria-labelledby="questions-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 讀完想一想</span><h2 id="questions-t" class="title">三種層次的問題</h2></div>
       <div class="question-frame">
         <div class="q tier-1" data-reveal><span class="tier">提取</span><span class="text">國王遇到什麼問題？四位王子各有什麼特點？</span></div>
@@ -2240,8 +2398,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 13 開放討論 -->
-    <section class="slide" data-slide-id="debate" aria-labelledby="debate-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="debate" aria-labelledby="debate-t" hidden>
       <div class="page-head"><span class="label">國L9-2 · 全班討論</span><h2 id="debate-t" class="title">如果你是國王，會傳位給誰？</h2></div>
       <div class="task-card" data-reveal>
         <div class="mission">選一位王子，說出你的理由</div>
@@ -2258,20 +2415,21 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <!-- 14 本節回顧 -->
-    <section class="slide" data-slide-id="recap" aria-labelledby="recap-t" hidden>
-      <div class="page-head"><span class="label">國L9-2 · 本節回顧</span><h2 id="recap-t" class="title">這一節我們學了什麼</h2></div>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 國L9-2</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
       <div class="action-list">
-        <div class="item is-done" data-reveal>三幕的情節：國王的煩惱 → 門外的爭吵 → 折箭的一堂課</div>
-        <div class="item is-done" data-reveal>四位王子的長處與短處，名字就藏著提示（強、忠、仁、智）</div>
-        <div class="item is-done" data-reveal>關鍵對比：一枝箭容易折斷、一把箭折不斷＝團結才有力量</div>
-        <div class="item is-done" data-reveal>首尾呼應：王子多，煩惱多 → 王子多，福氣多</div>
+        <div class="item" data-reveal>三幕情節：國王的煩惱 → 門外的爭吵 → 折箭的一堂課<span class="next-tag">下節考 是非</span></div>
+        <div class="item" data-reveal>四位王子名字藏著特點：可強力氣大、可忠忠心、可仁善良、可智博學<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>一枝箭容易折斷、一把箭折不斷＝團結才有力量<span class="next-tag">下節考 選擇・簡答</span></div>
+        <div class="item" data-reveal>首尾呼應：「王子多，煩惱多」→「王子多，福氣多」<span class="next-tag">下節考 是非</span></div>
       </div>
       <div class="takeaway-band" data-reveal>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">下一節：研究這齣戲「怎麼寫」——劇本的格式、四種修辭，還有兩種複句</span>
+        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
+        <span class="text">下一節開頭的小考，就考這四條——今天回家唸一遍</span>
       </div>
     </section>
+
 <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>14</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2283,6 +2441,92 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
+
 <script>
 (() => {
   const STAGE_W = 1600, STAGE_H = 900;
@@ -2406,5 +2650,6 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   render(slideFromHash(), false);
 })();
 </script>
+
 </body>
 </html>
