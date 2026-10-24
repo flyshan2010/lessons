@@ -2009,10 +2009,50 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   border-radius: var(--r-md); padding: var(--s4); font-size: var(--t4); line-height: var(--lh-normal);
 }
 .paper-note .ico { width: 1.4em; height: 1.4em; flex: none; color: var(--accent); }
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
-<main class="deck" aria-label="寧靜的音樂會 綜合整理與寫作課程教學">
+<body data-lesson="國L12-4">
+<main class="deck" aria-label="綜合整理與寫作｜課程教學 · 四上國語 國L12-4">
   <div class="stage" id="stage" tabindex="-1">
 
     <section class="slide" data-slide-id="cover" aria-labelledby="cover-t" hidden>
@@ -2023,17 +2063,134 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="recap" aria-labelledby="recap-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 全課整理</span><h2 id="recap-t" class="title">三節課，我們走過什麼</h2></div>
-      <div class="concept-grid">
-        <div class="concept-card" data-reveal><div class="head">第一節 字詞語詞及大意</div><div class="body">14 生字、7 組形近字、多音字「載」、三段結構</div></div>
-        <div class="concept-card" data-reveal><div class="head">第二節 內容理解</div><div class="body">五句句意、有教養的行為、「寧靜」的兩層意思、主旨</div></div>
-        <div class="concept-card" data-reveal><div class="head">第三節 形式深究</div><div class="body">譬喻 1 處、轉化 3 處、斷句分行、兩種短語結構</div></div>
-        <div class="concept-card" data-reveal><div class="head">第四節（今天）</div><div class="body">多義詞「教養」、生活中的詩句、寫一封來自深海的邀請信</div></div>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">國L12-4 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">前節小考</div><div class="body">上一節的重點，五題<br>選擇・是非・簡答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝這一課的重點</div></div>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="duoyi" aria-labelledby="duoyi-t" hidden>
+    <!-- ① 小考：題目出自 國L12-3 的 summary.json next_quiz -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 前節小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">上一節學過的，還記得嗎？</div>
+        <div class="sub">範圍：國L12-3 的「重點總結」4 條（修辭、結構、句型）</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L12-3" data-cp-kp="修辭" data-cp-hash="a6b783" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 國L12-3 · 修辭</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「甜美的歌聲感動珊瑚。」這句話用了哪一種修辭？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">譬喻</button>
+          <button class="q-opt" data-correct>轉化</button>
+          <button class="q-opt">類疊</button>
+          <button class="q-opt">映襯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">被感動是人才有的感受——轉化（擬人）</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="國L12-3" data-cp-kp="修辭" data-cp-hash="73ed8b" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 國L12-3 · 修辭</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">下列哪一句是譬喻？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">魚兒在海裡游來游去</button>
+          <button class="q-opt">珊瑚被歌聲感動了</button>
+          <button class="q-opt">大家一齊載歌載舞</button>
+          <button class="q-opt" data-correct>魚的歌聲是甜美的語言</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">把歌聲（A）說成甜美的語言（B）</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="是非" data-cp-src="國L12-3" data-cp-kp="結構" data-cp-hash="b6b10e" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 是非</span> 國L12-3 · 結構</span><h2 id="q3-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">詩人在句子中間換行，是因為紙的寬度不夠。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！是要製造停頓，凸顯想強調的語詞</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="國L12-3" data-cp-kp="句型" data-cp-hash="4e83e1" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 國L12-3 · 句型</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「每年都舉辦嗎？」是全詩唯一的問句，作者是在擔心海洋。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！問了不答，讓讀者自己去想</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="簡答" data-cp-src="國L12-3" data-cp-kp="結構" data-cp-hash="c04478" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 簡答</span> 國L12-3 · 結構</span><h2 id="q5-t" class="title">寫在小白板上</h2></div>
+      <p class="q-stem big">念「我讀牠們／微笑的嘴脣」時，換行的地方要怎麼念？</p>
+      <div class="row center">
+        <button class="flip-card short-ans" data-flip>
+          <span class="inner"><span class="face front">老師翻牌看參考答案</span><span class="face back">停頓一下，強調「微笑的嘴脣」</span></span>
+        </button>
+      </div>
+      <div class="row center"><button class="ds-btn rec-open" type="button">📋 記錄本題</button></div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="duoyi" aria-labelledby="duoyi-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 語詞運用</span><h2 id="duoyi-t" class="title">多義詞：同一個語詞，不只一個意思</h2></div>
       <div class="action-list">
         <div class="item" data-reveal>同樣的語詞，放在不同的句子裡，意思<b>會不一樣</b></div>
@@ -2046,7 +2203,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="jiaoyang" aria-labelledby="jiaoyang-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="jiaoyang" aria-labelledby="jiaoyang-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 多義詞「教養」</span><h2 id="jiaoyang-t" class="title">「教養」的兩個意思</h2></div>
       <div class="compare-pair">
         <div class="side is-focus" data-reveal>
@@ -2067,11 +2224,11 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="quiz-duoyi" aria-labelledby="quiz-duoyi-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 隨堂練習</span><h2 id="quiz-duoyi-t" class="title">這裡的「教養」是哪一個意思？</h2></div>
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國L12-4" data-cp-kp="語詞" data-cp-hash="6bd725" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 國L12-4 · 語詞</span><h2 id="cp1-t" class="title">這裡的「教養」是哪一個意思？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">「爺爺奶奶辛苦教養了五個孩子。」這句話裡的「教養」是什麼意思？</p>
-        <div class="q-options">
+        <div class="q-options abcd">
           <button class="q-opt">品德涵養（形容人）</button>
           <button class="q-opt" data-correct>教導養育（動作）</button>
           <button class="q-opt">教室的養護</button>
@@ -2080,16 +2237,17 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="row">
           <button class="ds-btn primary" data-quiz-check>對答案</button>
           <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">看上下文：「爺爺奶奶」在做、後面接「五個孩子」——是<b>動作</b>，所以是教導養育</span>
+        <span class="text">有人在做、後面接孩子——是動作</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="zhengli" aria-labelledby="zhengli-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="zhengli" aria-labelledby="zhengli-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 全課統整</span><h2 id="zhengli-t" class="title">整課一頁看完</h2></div>
       <div class="concept-grid">
         <div class="concept-card" data-reveal><div class="head">文體與主旨</div><div class="body">詩歌／林煥彰<br>友善的面對所有生物，要做一個有教養的人</div></div>
@@ -2099,7 +2257,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="shiju" aria-labelledby="shiju-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="shiju" aria-labelledby="shiju-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 統整活動四 · 語文應用</span><h2 id="shiju-t" class="title">生活中的詩句</h2></div>
       <div class="concept-card">
         <div class="head">課本這樣說</div>
@@ -2111,7 +2269,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="shiju-cases" aria-labelledby="shiju-cases-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="shiju-cases" aria-labelledby="shiju-cases-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 找找看</span><h2 id="shiju-cases-t" class="title">生活中可以看到哪些詩句？</h2></div>
       <div class="concept-grid">
         <div class="concept-card" data-reveal><div class="head">海洋生物博物館 展館詩句</div><div class="body">臺灣水域館牆面展出余光中詩句，讓遊客體會詩中海洋美景。</div></div>
@@ -2121,7 +2279,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="shiju-why" aria-labelledby="shiju-why-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="shiju-why" aria-labelledby="shiju-why-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 學習便利貼</span><h2 id="shiju-why-t" class="title">為什麼要把詩放進生活裡？</h2></div>
       <div class="action-list">
         <div class="item" data-reveal>詩的<b>自由與想像</b>，能讓人暫時脫離現實環境</div>
@@ -2135,7 +2293,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="shiju-task" aria-labelledby="shiju-task-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="shiju-task" aria-labelledby="shiju-task-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 小試身手</span><h2 id="shiju-task-t" class="title">校園哪裡可以放上詩句？</h2></div>
       <div class="question-frame">
         <div class="q tier-1"><span class="tier">想想</span><span class="text">在校園中，哪一個地方可以放上詩句，讓大家享受美感呢？</span></div>
@@ -2148,7 +2306,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-divider" aria-labelledby="write-divider-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="write-divider" aria-labelledby="write-divider-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">國L12-4 · 寫作教學</div>
         <div id="write-divider-t" class="headline" style="font-size:var(--t1);">來自深海的邀請信</div>
@@ -2156,7 +2314,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-task" aria-labelledby="write-task-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="write-task" aria-labelledby="write-task-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 寫作任務</span><h2 id="write-task-t" class="title">這一次要寫什麼</h2></div>
       <div class="task-card" data-reveal>
         <div class="mission">用<b>海洋動物</b>的身分，寫一封邀請信給人類，邀請他們來參加寧靜的音樂會</div>
@@ -2172,7 +2330,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-5w" aria-labelledby="write-5w-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="write-5w" aria-labelledby="write-5w-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 寫作步驟 1</span><h2 id="write-5w-t" class="title">邀請要說清楚五件事（注意事項最重要）</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>誰邀請</b>：我是誰？（一隻章魚？一群海豚？珊瑚礁的居民？）</div>
@@ -2183,7 +2341,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-format" aria-labelledby="write-format-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="write-format" aria-labelledby="write-format-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 寫作步驟 2</span><h2 id="write-format-t" class="title">書信的五個格式，一格都不能少</h2></div>
       <div class="flow-steps">
         <div class="step" data-reveal><div class="badge">1</div><div class="head">稱謂</div><div class="body">親愛的人類朋友：（頂格寫，加冒號）</div></div>
@@ -2199,7 +2357,28 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-style" aria-labelledby="write-style-t" hidden>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="是非" data-cp-src="國L12-4" data-cp-kp="書信" data-cp-hash="03930f" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 國L12-4 · 書信</span><h2 id="cp2-t" class="title">署名寫在哪裡？</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">寫邀請信時，署名和日期要寫在信的最開頭。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！開頭是稱謂和問候，署名與日期在最後</span>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="write-style" aria-labelledby="write-style-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 寫作步驟 3</span><h2 id="write-style-t" class="title">怎麼寫得像這一課？</h2></div>
       <div class="action-list">
         <div class="item" data-reveal>用<b>轉化</b>：讓珊瑚會招手、讓海流會唱歌、讓月光會走路</div>
@@ -2213,7 +2392,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-example" aria-labelledby="write-example-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="write-example" aria-labelledby="write-example-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 起步範例</span><h2 id="write-example-t" class="title">開頭這樣寫（只給前半，剩下自己寫）</h2></div>
       <div class="concept-card" data-reveal>
         <div class="head">範例</div>
@@ -2225,7 +2404,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-rubric" aria-labelledby="write-rubric-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="write-rubric" aria-labelledby="write-rubric-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 評分規準</span><h2 id="write-rubric-t" class="title">老師會看這四件事</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>格式（25%）</b>：稱謂、問候、正文、祝福語、署名日期五格式完整</div>
@@ -2239,7 +2418,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="write-do" aria-labelledby="write-do-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="write-do" aria-labelledby="write-do-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 動筆</span><h2 id="write-do-t" class="title">現在換你寫</h2></div>
       <div class="task-card" data-reveal>
         <div class="mission">在稿紙上完成〈來自深海的邀請信〉</div>
@@ -2254,19 +2433,21 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="recap2" aria-labelledby="recap2-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 本課結束</span><h2 id="recap2-t" class="title">第十二課，我們完成了</h2></div>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 國L12-4</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
       <div class="action-list">
-        <div class="item is-done" data-reveal>14 個生字、7 組形近字、多音字「載」、多義詞「教養」</div>
-        <div class="item is-done" data-reveal>讀懂三段結構與主旨：友善的面對所有生物，做一個有教養的人</div>
-        <div class="item is-done" data-reveal>學會分辨譬喻與轉化，也讀懂詩歌的斷句分行</div>
-        <div class="item is-done" data-reveal>把詩帶進生活，並寫出一封來自深海的邀請信</div>
+        <div class="item" data-reveal>多義詞「教養」：「有教養」＝品德涵養；「教養孩子」＝教導養育</div>
+        <div class="item" data-reveal>生活中的詩句：擷取下來，放在和詩意相呼應的地方</div>
+        <div class="item" data-reveal>邀請信五要素：誰邀請、邀請誰、什麼活動、時間地點、注意事項</div>
+        <div class="item" data-reveal>書信五格式：稱謂、問候、正文、祝福語、署名與日期</div>
       </div>
       <div class="takeaway-band" data-reveal>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">下次去海邊，記得自己是<b>嘉賓</b>——安靜的來，什麼都不帶走</span>
+        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
+        <span class="text">這一課的重點就是這四條——回家唸一遍</span>
       </div>
     </section>
+
 <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>19</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2278,6 +2459,92 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
+
 <script>
 (() => {
   const STAGE_W = 1600, STAGE_H = 900;
@@ -2401,5 +2668,6 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   render(slideFromHash(), false);
 })();
 </script>
+
 </body>
 </html>
