@@ -2193,6 +2193,16 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
 
 </style>
 </head>
@@ -2656,6 +2666,14 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     </section>
 
     <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">數L6-1 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：由大到小一位一位分，不夠分記 0</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/ULcVzuzJXbI?rel=0" title="數6-1除以一位數總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分二十秒）</summary><ol><li>剛剛這節課，我們學了除以一位數。八千九百七十二元，平分給六個人，每人分到幾元？剩下幾元？</li><li>直式除法，就是照單位一種一種分。由大到小，先分千，再分百，再分十，最後分一。</li><li>八張千元分給六人，每人一張，還剩兩張。剩下的千元換成二十張百元，加上原本九張，就是二十九張百元，再繼續分。</li><li>用同樣的方法分十元，分一元。商是一千四百九十五，餘數是二。</li><li>有時候會不夠分。一千八百四十五除以九，四個十不夠分九份，十位要記零。最後剛好分完，餘數零也要寫。</li><li>算完記得驗算。商乘除數，加上餘數，等於被除數，就對了！一千四百九十五乘六，加二，剛好是八千九百七十二。</li><li>下一節小考前，想一想：四千八百一十八除以六，商是多少？餘數是多少？</li></ol></details>
+      </div>
+    </section>
+
     <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數L6-1</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
       <div class="action-list">
