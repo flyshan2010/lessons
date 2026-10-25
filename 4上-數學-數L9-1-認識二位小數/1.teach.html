@@ -2167,6 +2167,8 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
    「第 N 頁 · 揭露 x/y」。這裡把底部留白補足，讓 HUD 永遠讀得到。 */
 .deck .slide { padding-bottom: 72px; }
 
+
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2598,6 +2600,225 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* ===== 數L9 二位小數 專用互動元件 ===== */
+(() => {
+  const fmt = (cents) => {
+    const s = (cents / 100).toFixed(2);
+    return s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+  };
+
+  /* ── 1. 可點選塗色的百格板 ───────────────────────────── */
+  document.querySelectorAll('[data-hgrid]').forEach((wrap) => {
+    const grid = wrap.querySelector('.hgrid');
+    if (!grid) return;
+    const whole = Number(wrap.dataset.whole || 0);
+    const target = wrap.dataset.target ? Number(wrap.dataset.target) : null;
+    const preset = Number(wrap.dataset.preset || 0);
+    const locked = wrap.hasAttribute('data-locked');
+    const readout = wrap.querySelector('.hg-readout');
+
+    for (let i = 0; i < 100; i++) {
+      const c = document.createElement('div');
+      c.className = 'cell';
+      if (i < preset) c.classList.add('is-on');
+      grid.appendChild(c);
+    }
+    if (locked) grid.classList.add('locked');
+
+    const cells = [...grid.children];
+    let hit = false;
+    const paint = () => {
+      const n = cells.filter((c) => c.classList.contains('is-on')).length;
+      const cents = whole * 100 + n;
+      if (readout) {
+        let html = `塗色 <span class="num">${n}</span> 格`;
+        html += `<span class="sub">${whole ? `${whole} 張又 ` : ''}${n} 個 0.01 張　＝　`;
+        html += `<b>${fmt(cents)}</b> 張</span>`;
+        if (target !== null) {
+          if (n === target) html += `<span class="sub ok">✓ 答對了！${fmt(whole * 100 + target)} 張</span>`;
+          else html += `<span class="sub">目標：塗出 ${fmt(whole * 100 + target)} 張</span>`;
+        }
+        readout.innerHTML = html;
+      }
+      if (target !== null && n === target && !hit) {
+        hit = true;
+        wrap.dispatchEvent(new CustomEvent('tds:answered', { bubbles: true, detail: { correct: true } }));
+      }
+    };
+    if (!locked) {
+      grid.addEventListener('click', (e) => {
+        const c = e.target.closest('.cell');
+        if (!c) return;
+        c.classList.toggle('is-on');
+        paint();
+      });
+    }
+    wrap.querySelector('[data-hg-clear]')?.addEventListener('click', () => {
+      cells.forEach((c) => c.classList.remove('is-on'));
+      hit = false;
+      paint();
+    });
+    wrap.querySelector('[data-hg-row]')?.addEventListener('click', () => {
+      const n = cells.filter((c) => c.classList.contains('is-on')).length;
+      const to = Math.min(100, (Math.floor(n / 10) + 1) * 10);
+      cells.forEach((c, i) => c.classList.toggle('is-on', i < to));
+      paint();
+    });
+    paint();
+  });
+
+  /* ── 2. 直式計算逐步動畫（進位／退位＋小數點對齊） ────── */
+  const UNITS = ['0.01', '0.1', '1', '10', '100'];
+  document.querySelectorAll('[data-vcalc]').forEach((box) => {
+    const op = box.dataset.op === '-' ? '-' : '+';
+    const A = Math.round(Number(box.dataset.a) * 100);
+    const B = Math.round(Number(box.dataset.b) * 100);
+    const RES = op === '+' ? A + B : A - B;
+    const intLen = Math.max(String(Math.floor(A / 100)).length, String(Math.floor(B / 100)).length,
+                            String(Math.floor(Math.abs(RES) / 100)).length);
+    const nd = intLen + 2;                       // 總位數（含兩位小數）
+    const digits = (v) => {                      // 由右至左，idx0＝百分位
+      const s = String(v).padStart(nd, '0');
+      return [...s].reverse().map(Number);
+    };
+    const a = digits(A), b = digits(B);
+    const top = a.slice();                       // 被減數（退位會被改寫）
+    const ans = new Array(nd).fill(null);
+    const carry = new Array(nd + 1).fill(null);
+    const struck = new Array(nd).fill(false);
+    const borrowVal = new Array(nd).fill(null);
+
+    const cols = 1 + intLen + 1 + 2;             // 運算符欄 ＋ 整數欄 ＋ 小數點欄 ＋ 兩位小數
+    const dotCol = 1 + intLen;
+    const colOf = (idx) => (idx < 2 ? cols - 1 - idx : cols - 1 - idx - 1);
+    const sig = (v) => 2 + String(Math.floor(Math.abs(v) / 100)).length;   // 有效位數（含兩位小數）
+    const sigA = sig(A), sigB = sig(B), sigR = sig(RES);
+    const show = (d, idx, lim) => (idx >= lim ? '' : String(d));
+
+    const board = document.createElement('div');
+    board.className = 'vc-board';
+    board.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+    box.prepend(board);
+    const say = box.querySelector('.vc-say');
+
+    const cell = (txt, cls) => {
+      const d = document.createElement('div');
+      d.className = 'c' + (cls ? ' ' + cls : '');
+      d.textContent = txt;
+      return d;
+    };
+
+    let lit = -1, step = 0;
+    const draw = () => {
+      board.innerHTML = '';
+      // 進位／借位列
+      for (let c = 0; c < cols; c++) {
+        let t = '', cls = op === '+' ? 'carry' : 'borrow';
+        for (let i = 0; i < nd; i++) {
+          if (colOf(i) !== c) continue;
+          if (op === '+' && carry[i] != null && i > 0) t = String(carry[i]);
+          if (op === '-' && borrowVal[i] != null) t = String(borrowVal[i]);
+        }
+        board.appendChild(cell(t, cls));
+      }
+      // 被加數／被減數
+      board.appendChild(cell('', ''));
+      for (let c = 1; c < cols; c++) {
+        if (c === dotCol) { board.appendChild(cell('.', 'dot' + (step === 0 ? ' dotlit' : ''))); continue; }
+        const idx = [...Array(nd).keys()].find((i) => colOf(i) === c);
+        const cls = (idx === lit ? ' lit' : '') + (struck[idx] ? ' strike' : '');
+        board.appendChild(cell(show(a[idx], idx, sigA), cls.trim()));
+      }
+      // 運算符＋加數／減數
+      board.appendChild(cell(op === '+' ? '＋' : '－', 'op'));
+      for (let c = 1; c < cols; c++) {
+        if (c === dotCol) { board.appendChild(cell('.', 'dot' + (step === 0 ? ' dotlit' : ''))); continue; }
+        const idx = [...Array(nd).keys()].find((i) => colOf(i) === c);
+        board.appendChild(cell(show(b[idx], idx, sigB), idx === lit ? 'lit' : ''));
+      }
+      const rule = document.createElement('div');
+      rule.className = 'rule';
+      board.appendChild(rule);
+      // 答案列
+      board.appendChild(cell('', ''));
+      for (let c = 1; c < cols; c++) {
+        if (c === dotCol) {
+          const shown = ans.some((v) => v != null);
+          board.appendChild(cell('.', 'dot' + (shown ? '' : ' blank') + (step === 0 ? ' dotlit' : '')));
+          continue;
+        }
+        const idx = [...Array(nd).keys()].find((i) => colOf(i) === c);
+        board.appendChild(cell(ans[idx] == null ? '' : show(ans[idx], idx, sigR), 'ans' + (idx === lit ? ' lit' : '')));
+      }
+    };
+
+    const steps = [];
+    steps.push(() => {
+      lit = -1;
+      say && (say.innerHTML = '先把 <b>小數點對齊</b>：小數點標的是個位的位置，對齊了，個位對個位、十分位對十分位、百分位對百分位。');
+    });
+    if (op === '+') {
+      let cr = 0;
+      for (let i = 0; i < nd; i++) {
+        const da = a[i], db = b[i], ci = cr;
+        const s = da + db + ci, d = s % 10, co = Math.floor(s / 10);
+        cr = co;
+        steps.push(() => {
+          lit = i; ans[i] = d;
+          if (co && i + 1 < nd) carry[i + 1] = co;
+          const eq = ci ? `${da}＋${db}＋${ci}（進位）＝${s}` : `${da}＋${db}＝${s}`;
+          const u = UNITS[Math.min(i, UNITS.length - 1)];
+          let t = `算幾個 <b>${u}</b>：${eq}。`;
+          if (co) t += `${s} 個 ${u} 可以換成 1 個 ${UNITS[Math.min(i + 1, UNITS.length - 1)]} 和 ${d} 個 ${u}，<b>進位</b>寫在左邊。`;
+          else t += `剩 ${d} 個 ${u}。`;
+          say && (say.innerHTML = t);
+        });
+      }
+    } else {
+      for (let i = 0; i < nd; i++) {
+        steps.push(() => {
+          lit = i;
+          const u = UNITS[Math.min(i, UNITS.length - 1)];
+          let note = '';
+          if (top[i] < b[i]) {
+            let j = i + 1;
+            while (j < nd && top[j] === 0) { top[j] = 9; struck[j] = true; borrowVal[j] = 9; j++; }
+            if (j < nd) { top[j] -= 1; struck[j] = true; borrowVal[j] = top[j]; }
+            top[i] += 10;
+            note = `不夠減，先<b>退位</b>：把 1 個 ${UNITS[Math.min(j, UNITS.length - 1)]} 換成 10 個 ${UNITS[Math.min(j - 1, UNITS.length - 1)]}。`;
+          }
+          const d = top[i] - b[i];
+          ans[i] = d;
+          say && (say.innerHTML = `算幾個 <b>${u}</b>：${note}${top[i]}－${b[i]}＝${d}，剩 ${d} 個 ${u}。`);
+        });
+      }
+    }
+    steps.push(() => {
+      lit = -1;
+      const shown = fmt(RES);
+      const raw = (RES / 100).toFixed(2);
+      let t = `答案的小數點，對齊上面的小數點寫下來 → <b>${raw}</b>。`;
+      if (shown !== raw) t += `　${raw} 和 ${shown} 一樣大，可以改記成 <b>${shown}</b>。`;
+      say && (say.innerHTML = t);
+      box.dispatchEvent(new CustomEvent('tds:answered', { bubbles: true, detail: { correct: true } }));
+    });
+
+    const go = () => { if (step < steps.length) { steps[step](); step++; draw(); } };
+    const reset = () => {
+      step = 0; lit = -1;
+      ans.fill(null); carry.fill(null); struck.fill(false); borrowVal.fill(null);
+      for (let i = 0; i < nd; i++) top[i] = a[i];
+      draw();
+      say && (say.innerHTML = '按「算下一步」，一步一步把直式算出來。');
+    };
+    box.querySelector('[data-vc-next]')?.addEventListener('click', go);
+    box.querySelector('[data-vc-reset]')?.addEventListener('click', reset);
+    reset();
+  });
+})();
+</script>
 
 <script>
 /* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
