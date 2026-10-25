@@ -2063,6 +2063,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   color:var(--surface); font-weight:700; display:flex; align-items:center; justify-content:center; }
 
 
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2100,6 +2101,19 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
 
 </style>
@@ -2142,11 +2156,13 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
         </div>
       </div>
     </section>
-    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="三角形的分類" data-cp-hash="25eef4" aria-labelledby="q1-t" hidden>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="三角形的分類" data-cp-hash="9220fd" aria-labelledby="q1-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 三角形的分類</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="qsplit">
+      <div class="tri-fig"><svg viewBox="0 0 200 130" class="tri" aria-hidden="true"><path d="M34.0,102.0 L184.0,102.0 M34.0,102.0 L-62.4,-12.9" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M68.0,102.0 A34,34 0 0,0 12.1,76.0" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="57.7" y="56.2" class="tri-t" text-anchor="middle">?</text></svg></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">一個角比直角大、比平角小，它是哪一種角？</p>
-        <div class="q-options abcd">
+        <p class="q-stem">這個角是哪一種角？</p>
+        <div class="q-options abcd two">
           <button class="q-opt">銳角</button>
           <button class="q-opt">直角</button>
           <button class="q-opt">平角</button>
@@ -2158,6 +2174,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
           <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
+      </div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
@@ -2333,11 +2350,13 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="三角形的分類" data-cp-hash="4ce808" aria-labelledby="cp1-t" hidden>
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="三角形的分類" data-cp-hash="dc1f46" aria-labelledby="cp1-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數L7-1 · 三角形的分類</span><h2 id="cp1-t" class="title">換你判斷</h2></div>
+      <div class="qsplit">
+      <div class="tri-fig"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="100,50.6 16,109.4 184,109.4" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><path d="M75.4,67.8 A30,30 0 0,0 124.6,67.8" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="100.0" y="82.3" class="tri-t" text-anchor="middle">110°</text></svg><span class="cap">量出來：最大角 110 度</span></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">量出一個三角形的最大角是 110 度，這是哪一種三角形？</p>
-        <div class="q-options abcd">
+        <p class="q-stem">這是哪一種三角形？</p>
+        <div class="q-options abcd two">
           <button class="q-opt">銳角三角形</button>
           <button class="q-opt">直角三角形</button>
           <button class="q-opt">量了才知道</button>
@@ -2349,6 +2368,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
           <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
+      </div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
@@ -2432,11 +2452,13 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="等腰三角形與正三角形的角" data-cp-hash="490221" aria-labelledby="cp2-t" hidden>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="等腰三角形與正三角形的角" data-cp-hash="149763" aria-labelledby="cp2-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L7-1 · 等腰三角形與正三角形的角</span><h2 id="cp2-t" class="title">等腰三角形的兩個底角</h2></div>
+      <div class="qsplit">
+      <div class="tri-fig"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="100,16 40.3,144 159.7,144" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><line x1="137.1" y1="76.6" x2="122.6" y2="83.4" stroke="var(--ink)" stroke-width="2"/><line x1="77.4" y1="83.4" x2="62.9" y2="76.6" stroke="var(--ink)" stroke-width="2"/><path d="M53.0,116.8 A30,30 0 0,1 70.3,144.0" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="73.4" y="127.9" class="tri-t" text-anchor="middle">65°</text><path d="M147.0,116.8 A30,30 0 0,0 129.7,144.0" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="126.6" y="127.9" class="tri-t" text-anchor="middle">?</text></svg><span class="cap">量角器量左邊的底角：65 度</span></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">等腰三角形左邊的底角量出來是 65 度，右邊的底角會是幾度？</p>
-        <div class="q-options abcd">
+        <p class="q-stem">右邊的底角量起來會是幾度？</p>
+        <div class="q-options abcd two">
           <button class="q-opt" data-correct>65 度</button>
           <button class="q-opt">50 度</button>
           <button class="q-opt">90 度</button>
@@ -2448,6 +2470,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
           <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
+      </div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
@@ -2526,11 +2549,13 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="等腰三角形與正三角形的角" data-cp-hash="11ea8a" aria-labelledby="cp3-t" hidden>
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-1" data-cp-kp="等腰三角形與正三角形的角" data-cp-hash="8c1119" aria-labelledby="cp3-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 數L7-1 · 等腰三角形與正三角形的角</span><h2 id="cp3-t" class="title">想一想（素養題）</h2></div>
+      <div class="qsplit">
+      <div class="tri-fig"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><polygon points="100,20 140,52 60,52" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><polyline points="90,30 100,40 110,30" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="50" width="140" height="86" rx="6" fill="var(--surface)" stroke="var(--ink)" stroke-width="3"/><path d="M30,50 L100,100 L170,50" fill="none" stroke="var(--ink)" stroke-width="3"/><text x="100" y="126" class="tri-t" text-anchor="middle">信封</text></svg><span class="cap">卡片只露出一個角，量起來是直角</span></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">一張三角形卡片只露出一個角，量起來是直角。這張卡片可能是正三角形嗎？</p>
-        <div class="q-options abcd two">
+        <p class="q-stem">這張卡片可能是正三角形嗎？</p>
+        <div class="q-options abcd">
           <button class="q-opt">可能，露出來的邊看起來一樣長</button>
           <button class="q-opt">要整張抽出來才知道</button>
           <button class="q-opt" data-correct>不可能</button>
@@ -2541,6 +2566,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
           <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
+      </div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>

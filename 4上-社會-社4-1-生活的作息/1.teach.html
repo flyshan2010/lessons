@@ -2015,6 +2015,21 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 [data-reveal]:not(.is-shown) { pointer-events: none; }
 
 /* ===== 本課專用 ===== */
+
+/* 引導影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
+
+
+
+/* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
 .phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
@@ -2051,18 +2066,20 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
-/* 引導影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
-.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
-.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
-.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
-.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
-.motion-offline summary { cursor: pointer; }
-.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
-.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
-/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
-.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
-
 
 </style>
 </head>
@@ -2222,6 +2239,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
         <details class="motion-offline"><summary>看不到影片？看旁白稿（一分半）</summary><ol><li>以前沒有手機，也沒有時鐘，人們怎麼安排一天、一年呢？這一節，我們來看傳統和現代的生活作息。</li><li>傳統的一天看太陽：太陽出來，就下田、捕魚、打獵；太陽下山，就回家休息，這就是日出而作，日入而息。</li><li>一年呢，跟著季節走。臺灣氣溫高、雨量多，漢人種稻，一年可以種兩期：插秧、除草、收割，再來一次。</li><li>蘭嶼的雅美族，也叫達悟族，跟著飛魚季過日子：招魚祭開始捕撈，收藏祭把魚晒乾收好，終食祭以後就不再吃。</li><li>原住民族靠口耳相傳，把規矩說給下一代聽。布農族還把一年要做的事，刻在木板上，一個三角形，就是一天。</li><li>漢人用農曆。注意，農曆是一套曆法；農民曆是一本書，印著農曆、農事，還有宜忌。</li><li>現在，我們改用陽曆和星期制，分成工作日和休息日，作息也更有彈性。</li><li>下一節小考前，想一想：爺爺想挑一個適合搬家的好日子，最可能翻哪一本書？</li></ol></details>
       </div>
     </section>
+
     <section class="slide" data-phase="learn" data-slide-id="ask" aria-labelledby="ask-t" hidden>
       <div class="page-head"><span class="label">4-1 生活的作息</span><h2 id="ask-t" class="title">今天早上，是誰叫你起床的？</h2></div>
       <div class="question-frame">
@@ -2438,14 +2456,27 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社4-1" data-cp-kp="農曆與農民曆" data-cp-hash="d066dc" aria-labelledby="cp3-t" hidden>
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社4-1" data-cp-kp="農曆與農民曆" data-cp-hash="60fd0b" aria-labelledby="cp3-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 社4-1 · 農曆與農民曆</span><h2 id="cp3-t" class="title">農民曆的一頁，寫了什麼？</h2></div>
+      <div class="qsplit">
+      <svg class="map-svg" viewBox="0 0 360 330" role="img" aria-label="農民曆單頁示意：標示國曆月分、日期星期、農曆日期、種植、漁撈、宜忌六個欄位">
+            <rect x="8" y="8" width="344" height="314" rx="12" fill="#fffaf0" stroke="#b08b4f" stroke-width="4"/>
+            <line x1="8" y1="72" x2="352" y2="72" stroke="#b08b4f" stroke-width="3"/>
+            <line x1="8" y1="136" x2="352" y2="136" stroke="#b08b4f" stroke-width="3"/>
+            <line x1="8" y1="200" x2="352" y2="200" stroke="#b08b4f" stroke-width="3"/>
+            <line x1="8" y1="262" x2="352" y2="262" stroke="#b08b4f" stroke-width="3"/>
+            <text x="26" y="48" font-size="26" fill="#8a3b12">❶ 國曆十二月</text>
+            <text x="26" y="112" font-size="26" fill="#333">❷ 一日　星期四</text>
+            <text x="26" y="176" font-size="26" fill="#333">❸ 農曆十一月初七</text>
+            <text x="26" y="238" font-size="25" fill="#2b6b3a">❹ 種植：冬瓜、南瓜、韭菜</text>
+            <text x="26" y="292" font-size="25" fill="#1f5f86">❺ 漁撈：旗魚　　❻ 宜嫁娶、入宅</text>
+          </svg>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">爺爺想幫叔叔挑一個結婚的好日子，他會看農民曆的哪一欄？</p>
-        <div class="q-options abcd">
-          <button class="q-opt">種植</button>
-          <button class="q-opt">漁撈</button>
-          <button class="q-opt" data-correct>宜忌</button>
+        <p class="q-stem">爺爺想幫叔叔挑一個結婚的好日子，他會看哪一欄？</p>
+        <div class="q-options abcd two">
+          <button class="q-opt">❹ 種植</button>
+          <button class="q-opt">❺ 漁撈</button>
+          <button class="q-opt" data-correct>❻ 宜忌</button>
         </div>
         <div class="row">
           <button class="ds-btn primary" data-quiz-check>對答案</button>
@@ -2453,6 +2484,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
           <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
+      </div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>

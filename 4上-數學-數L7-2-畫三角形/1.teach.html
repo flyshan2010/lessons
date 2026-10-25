@@ -2062,6 +2062,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .stepline .s .no { flex:none; width:38px; height:38px; border-radius:50%; background:var(--accent);
   color:var(--surface); font-weight:700; display:flex; align-items:center; justify-content:center; }
 
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2099,6 +2100,19 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
 
 </style>
@@ -2360,11 +2374,13 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-2" data-cp-kp="畫三角形" data-cp-hash="de626f" aria-labelledby="cp2-t" hidden>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L7-2" data-cp-kp="畫三角形" data-cp-hash="85dac0" aria-labelledby="cp2-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L7-2 · 畫三角形</span><h2 id="cp2-t" class="title">確認一下</h2></div>
+      <div class="qsplit">
+      <div class="tri-fig"><svg viewBox="0 0 200 160" class="tri" aria-hidden="true"><line x1="40.3" y1="144.0" x2="159.7" y2="144.0" stroke="var(--muted)" stroke-width="3" stroke-dasharray="7 6"/><line x1="100.0" y1="16.0" x2="40.3" y2="144.0" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/><line x1="100.0" y1="16.0" x2="159.7" y2="144.0" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/><path d="M87.3,43.2 A30,30 0 0,0 112.7,43.2" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="100.0" y="63.1" class="tri-t" text-anchor="middle">∠A</text><text x="100.0" y="10.0" class="tri-t" text-anchor="middle">A</text><text x="24.0" y="156.0" class="tri-t" text-anchor="middle">B</text><text x="176.0" y="156.0" class="tri-t" text-anchor="middle">C</text></svg><span class="cap">∠A 是頂角</span></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">要畫「頂角是 ∠A、兩腰 2 公分」的等腰三角形，2 公分要從哪裡開始量？</p>
-        <div class="q-options abcd two">
+        <p class="q-stem">題目說「兩腰 2 公分」，要從哪裡開始量？</p>
+        <div class="q-options abcd">
           <button class="q-opt">從底邊的中間量</button>
           <button class="q-opt">整個三角形一圈量 2 公分</button>
           <button class="q-opt" data-correct>從頂點 A 沿著兩條邊各量 2 公分</button>
@@ -2375,6 +2391,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
           <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
         <div class="ans-feedback"></div>
+      </div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>

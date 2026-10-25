@@ -2080,6 +2080,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   color:var(--surface); font-weight:700; display:flex; align-items:center; justify-content:center; }
 
 
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2117,6 +2118,19 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
 
 </style>
@@ -2342,11 +2356,13 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L8-3b" data-cp-kp="併式解題" data-cp-hash="c5670c" aria-labelledby="cp2-t" hidden>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L8-3b" data-cp-kp="併式解題" data-cp-hash="dc9c00" aria-labelledby="cp2-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L8-3b · 併式解題</span><h2 id="cp2-t" class="title">素養評量：這個算式解決哪一題？</h2></div>
+      <div class="qsplit">
+      <div class="calc-card"><span class="cap">算式</span><span class="calc">100÷<span class="br">（20÷5）</span>＝25</span></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">下面哪一個問題，可以用 100÷（20÷5）＝25 這個算式解決？</p>
-        <div class="q-options abcd two">
+        <p class="q-stem">下面哪一個問題，可以用左邊這個算式解決？</p>
+        <div class="q-options abcd">
           <button class="q-opt" data-correct>四年乙班分到 100 棵樹苗，班上 20 個小朋友每 5 人一組，每組分到幾棵？</button>
           <button class="q-opt">阿姨買 100 公克巧克力球，每 20 公克裝一袋，再平分給 5 個小孩，每人幾袋？</button>
         </div>
@@ -2357,9 +2373,10 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
         </div>
         <div class="ans-feedback"></div>
       </div>
+      </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">括號裡的 20÷5＝4 是組數，所以是「100 棵分給 4 組」。另一題要先算 100÷20 才對。</span>
+        <span class="text">20÷5＝4 是組數：100 棵平分給 4 組</span>
       </div>
     </section>
 
