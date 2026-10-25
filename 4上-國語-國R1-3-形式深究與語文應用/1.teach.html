@@ -2022,6 +2022,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 
 
 
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2059,6 +2060,11 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
 
 </style>
@@ -2210,6 +2216,22 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
+    <section class="slide" data-phase="learn" data-slide-id="d1" aria-labelledby="d1-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;"><div class="kicker">前四節 · W9</div><div id="d1-t" class="headline">形式深究</div><div class="sub">修辭與句型：先找判準，再下結論</div></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="r1" aria-labelledby="r1-t" hidden>
+      <div class="page-head"><span class="label">修辭 · 總覽</span><h2 id="r1-t" class="title">六種修辭，先分成兩大類</h2></div><div class="concept-grid"><div class="concept-card" data-reveal><div class="head">把甲說成乙</div><div class="body">譬喻（像、好像、彷彿）、轉化（把物當人寫）</div></div><div class="concept-card" data-reveal><div class="head">把甲和乙並排</div><div class="body">映襯（相反並列）、排比（同結構連用）</div></div><div class="concept-card" data-reveal><div class="head">把話說得有節奏</div><div class="body">頂真（前句尾接後句頭）、設問（問了再自答）</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">先看句子在做什麼事：<b>比、並排、還是造節奏</b></span></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="r2" aria-labelledby="r2-t" hidden>
+      <div class="page-head"><span class="label">修辭 · 最易混的三個</span><h2 id="r2-t" class="title">譬喻、轉化、映襯怎麼分</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">先找喻詞</div><div class="body">有「像、好像、如同、彷彿」→ 多半是譬喻</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">沒有喻詞，看有沒有把物當人</div><div class="body">會笑、會生氣、會招手 → 轉化</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">看有沒有把相反的並排</div><div class="body">黑與白、冷與熱同時出現 → 映襯</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">判準只有三句話：<b>找喻詞 → 看擬人 → 看相反</b></span></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="m1" aria-labelledby="m1-t" hidden>
+      <div class="page-head"><span class="label">錯在哪裡 · 修辭</span><h2 id="m1-t" class="title">「小河唱著歌」是譬喻嗎？</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">句子很生動，所以是譬喻。</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">句中<strong>沒有喻詞</strong>，而是把小河當人寫（會唱歌）→ 這是<strong>轉化</strong>。生動與否不是判準，喻詞和擬人才是。</div></div></div>
+    </section>
+
     <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國R1-3" data-cp-kp="修辭" data-cp-hash="529c62" aria-labelledby="cp1-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 國R1-3 · 修辭</span><h2 id="cp1-t" class="title">這一句用了哪一種修辭？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
@@ -2231,6 +2253,10 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
         <span class="text">出現喻詞「像」，把安靜比成空山 → 譬喻</span>
       </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="r3" aria-labelledby="r3-t" hidden>
+      <div class="page-head"><span class="label">句型 · 五種</span><h2 id="r3-t" class="title">看關聯詞，就知道是哪一種句型</h2></div><div class="concept-grid"><div class="concept-card" data-reveal><div class="head">並列</div><div class="body">一邊……一邊……</div></div><div class="concept-card" data-reveal><div class="head">因果</div><div class="body">因為……所以……</div></div><div class="concept-card" data-reveal><div class="head">轉折</div><div class="body">雖然……但是……</div></div><div class="concept-card" data-reveal><div class="head">條件</div><div class="body">只要……就……</div></div><div class="concept-card" data-reveal><div class="head">假設</div><div class="body">如果……就……</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">關聯詞是句型的<b>身分證</b>，先圈起來再判斷</span></div>
     </section>
 
     <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國R1-3" data-cp-kp="句型" data-cp-hash="5dfce9" aria-labelledby="cp2-t" hidden>
@@ -2256,6 +2282,26 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
+    <section class="slide" data-phase="learn" data-slide-id="d2" aria-labelledby="d2-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;"><div class="kicker">前四節 · W9</div><div id="d2-t" class="headline">語文應用</div><div class="sub">統整一、二：書信、六何法、詩句與讀報</div></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="a1" aria-labelledby="a1-t" hidden>
+      <div class="page-head"><span class="label">統整一 · 書信</span><h2 id="a1-t" class="title">一封信，四個位置不能亂</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">稱謂</div><div class="body">寫在第一行最上面，後面加冒號：「親愛的奶奶：」</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">正文</div><div class="body">空兩格開始寫，說清楚一件事就好</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">祝候語</div><div class="body">「敬祝　身體健康」——「敬祝」在正文後另起一行，祝福的話再抬高一行</div></div><div class="step" data-reveal><div class="badge">4</div><div class="head">署名與日期</div><div class="body">寫在右下角，署名下面寫日期</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">回信要<b>先回應對方問的事</b>，再說自己的事</span></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="m2" aria-labelledby="m2-t" hidden>
+      <div class="page-head"><span class="label">錯在哪裡 · 書信</span><h2 id="m2-t" class="title">祝候語可以直接接在正文後面嗎？</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">「……我下次再去看您敬祝身體健康」</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">祝候語不能黏在正文後面。<strong>「敬祝」另起一行、祝福的話再抬高一行</strong>，位置錯了就算格式不對，這是最常被扣分的地方。</div></div></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="q3p" aria-labelledby="q3p-t" hidden>
+      <div class="page-head"><span class="label">馬上試試 · 書信</span><h2 id="q3p-t" class="title">署名和日期寫在哪裡？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">寫信給爺爺，署名和日期應該寫在信的哪個位置？</p><div class="q-options"><button class="q-opt" data-correct="true">右下角，署名在上、日期在下</button><button class="q-opt">左上角</button><button class="q-opt">正文中間</button><button class="q-opt">稱謂的旁邊</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">順序固定：稱謂 → 正文 → 祝候 → <b>右下角署名與日期</b></span></div></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="a2" aria-labelledby="a2-t" hidden>
+      <div class="page-head"><span class="label">統整二 · 六何法</span><h2 id="a2-t" class="title">六何法：用來讀，也用來檢查</h2></div><div class="concept-grid"><div class="concept-card" data-reveal><div class="head">人、事</div><div class="body">誰做了什麼——先找主角與事件</div></div><div class="concept-card" data-reveal><div class="head">時、地</div><div class="body">什麼時候、在哪裡發生</div></div><div class="concept-card" data-reveal><div class="head">如何、為何</div><div class="body">怎麼做、為什麼——文章裡沒寫就不能自己加</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">六何法只找<b>文章裡有的訊息</b>，加了自己的想法就答錯了</span></div>
+    </section>
+
     <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國R1-3" data-cp-kp="提取" data-cp-hash="fe6ce2" aria-labelledby="cp3-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 國R1-3 · 提取</span><h2 id="cp3-t" class="title">哪一個不是文章說的？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
@@ -2277,46 +2323,6 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
         <span class="text">「喜歡幫助別人」是推論，文章沒寫。六何法只抓寫出來的事實</span>
       </div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="d1" aria-labelledby="d1-t" hidden>
-      <div class="section-divider" style="height:100%;justify-content:center;"><div class="kicker">前四節 · W9</div><div id="d1-t" class="headline">形式深究</div><div class="sub">修辭與句型：先找判準，再下結論</div></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="r1" aria-labelledby="r1-t" hidden>
-      <div class="page-head"><span class="label">修辭 · 總覽</span><h2 id="r1-t" class="title">六種修辭，先分成兩大類</h2></div><div class="concept-grid"><div class="concept-card" data-reveal><div class="head">把甲說成乙</div><div class="body">譬喻（像、好像、彷彿）、轉化（把物當人寫）</div></div><div class="concept-card" data-reveal><div class="head">把甲和乙並排</div><div class="body">映襯（相反並列）、排比（同結構連用）</div></div><div class="concept-card" data-reveal><div class="head">把話說得有節奏</div><div class="body">頂真（前句尾接後句頭）、設問（問了再自答）</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">先看句子在做什麼事：<b>比、並排、還是造節奏</b></span></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="r2" aria-labelledby="r2-t" hidden>
-      <div class="page-head"><span class="label">修辭 · 最易混的三個</span><h2 id="r2-t" class="title">譬喻、轉化、映襯怎麼分</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">先找喻詞</div><div class="body">有「像、好像、如同、彷彿」→ 多半是譬喻</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">沒有喻詞，看有沒有把物當人</div><div class="body">會笑、會生氣、會招手 → 轉化</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">看有沒有把相反的並排</div><div class="body">黑與白、冷與熱同時出現 → 映襯</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">判準只有三句話：<b>找喻詞 → 看擬人 → 看相反</b></span></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="m1" aria-labelledby="m1-t" hidden>
-      <div class="page-head"><span class="label">錯在哪裡 · 修辭</span><h2 id="m1-t" class="title">「小河唱著歌」是譬喻嗎？</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">句子很生動，所以是譬喻。</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">句中<strong>沒有喻詞</strong>，而是把小河當人寫（會唱歌）→ 這是<strong>轉化</strong>。生動與否不是判準，喻詞和擬人才是。</div></div></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="r3" aria-labelledby="r3-t" hidden>
-      <div class="page-head"><span class="label">句型 · 五種</span><h2 id="r3-t" class="title">看關聯詞，就知道是哪一種句型</h2></div><div class="concept-grid"><div class="concept-card" data-reveal><div class="head">並列</div><div class="body">一邊……一邊……</div></div><div class="concept-card" data-reveal><div class="head">因果</div><div class="body">因為……所以……</div></div><div class="concept-card" data-reveal><div class="head">轉折</div><div class="body">雖然……但是……</div></div><div class="concept-card" data-reveal><div class="head">條件</div><div class="body">只要……就……</div></div><div class="concept-card" data-reveal><div class="head">假設</div><div class="body">如果……就……</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">關聯詞是句型的<b>身分證</b>，先圈起來再判斷</span></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="d2" aria-labelledby="d2-t" hidden>
-      <div class="section-divider" style="height:100%;justify-content:center;"><div class="kicker">前四節 · W9</div><div id="d2-t" class="headline">語文應用</div><div class="sub">統整一、二：書信、六何法、詩句與讀報</div></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="a1" aria-labelledby="a1-t" hidden>
-      <div class="page-head"><span class="label">統整一 · 書信</span><h2 id="a1-t" class="title">一封信，四個位置不能亂</h2></div><div class="flow-steps vertical"><div class="step" data-reveal><div class="badge">1</div><div class="head">稱謂</div><div class="body">寫在第一行最上面，後面加冒號：「親愛的奶奶：」</div></div><div class="step" data-reveal><div class="badge">2</div><div class="head">正文</div><div class="body">空兩格開始寫，說清楚一件事就好</div></div><div class="step" data-reveal><div class="badge">3</div><div class="head">祝候語</div><div class="body">「敬祝　身體健康」——「敬祝」在正文後另起一行，祝福的話再抬高一行</div></div><div class="step" data-reveal><div class="badge">4</div><div class="head">署名與日期</div><div class="body">寫在右下角，署名下面寫日期</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">回信要<b>先回應對方問的事</b>，再說自己的事</span></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="m2" aria-labelledby="m2-t" hidden>
-      <div class="page-head"><span class="label">錯在哪裡 · 書信</span><h2 id="m2-t" class="title">祝候語可以直接接在正文後面嗎？</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">「……我下次再去看您敬祝身體健康」</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">祝候語不能黏在正文後面。<strong>「敬祝」另起一行、祝福的話再抬高一行</strong>，位置錯了就算格式不對，這是最常被扣分的地方。</div></div></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="q3p" aria-labelledby="q3p-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 書信</span><h2 id="q3p-t" class="title">署名和日期寫在哪裡？</h2></div><div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;"><div class="quiz" data-quiz data-mode="single"><p class="q-stem">寫信給爺爺，署名和日期應該寫在信的哪個位置？</p><div class="q-options"><button class="q-opt" data-correct="true">右下角，署名在上、日期在下</button><button class="q-opt">左上角</button><button class="q-opt">正文中間</button><button class="q-opt">稱謂的旁邊</button></div><div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div><div class="ans-feedback"></div></div><div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">順序固定：稱謂 → 正文 → 祝候 → <b>右下角署名與日期</b></span></div></div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="a2" aria-labelledby="a2-t" hidden>
-      <div class="page-head"><span class="label">統整二 · 六何法</span><h2 id="a2-t" class="title">六何法：用來讀，也用來檢查</h2></div><div class="concept-grid"><div class="concept-card" data-reveal><div class="head">人、事</div><div class="body">誰做了什麼——先找主角與事件</div></div><div class="concept-card" data-reveal><div class="head">時、地</div><div class="body">什麼時候、在哪裡發生</div></div><div class="concept-card" data-reveal><div class="head">如何、為何</div><div class="body">怎麼做、為什麼——文章裡沒寫就不能自己加</div></div></div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">六何法只找<b>文章裡有的訊息</b>，加了自己的想法就答錯了</span></div>
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="a3" aria-labelledby="a3-t" hidden>
