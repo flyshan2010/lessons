@@ -2013,13 +2013,66 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 @media (max-width: 768px) { .split-2 { grid-template-columns:1fr; } }
 /* 尚未揭露的內容不可點——避免老師誤觸還沒出現的翻牌或選項 */
 [data-reveal]:not(.is-shown) { pointer-events: none; }
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
+<body data-lesson="社R1-3">
 <main class="deck" aria-label="期中總複習第3輪｜課程教學 · 社會四上 第1～2單元">
   <div class="stage" id="stage" tabindex="-1">
 
-<section class="slide is-active" data-slide-id="cover" aria-labelledby="cover-t">
+    <section class="slide is-active" data-slide-id="cover" aria-labelledby="cover-t">
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第一、二單元 · 期中總複習第 3 輪</div>
         <div id="cover-t" class="headline" style="font-size:var(--t1);">圖，會自己說話</div>
@@ -2027,7 +2080,134 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="how" aria-labelledby="how-t" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">社R1-3 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">前節小考</div><div class="body">上一節的重點，五題<br>選擇・是非・簡答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝這一課的重點</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 社R1-2 的 summary.json next_quiz -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 前節小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">上一節學過的，還記得嗎？</div>
+        <div class="sub">範圍：社R1-2 的「重點總結」5 條（地形特徵、地圖要素（圖名・方向標・圖例・比例尺）、氣候與水資源、塑膠製品與環境保護、人與環境（作物・產業・建築））</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R1-2" data-cp-kp="地形特徵" data-cp-hash="6bd664" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 社R1-2 · 地形特徵</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">臺北市四周都是山，市區蓋在中間的平地上。這是哪一種地形？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">平原</button>
+          <button class="q-opt">台地</button>
+          <button class="q-opt">丘陵</button>
+          <button class="q-opt" data-correct>盆地</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">四周高、中間低，就是盆地</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R1-2" data-cp-kp="地圖要素（圖名・方向標・圖例・比例尺）" data-cp-hash="cb402d" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 社R1-2 · 地圖要素（圖名・方向標・圖例・比例尺）</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">想知道地圖上「▲」代表什麼，要看哪一個要素？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>圖例</button>
+          <button class="q-opt">比例尺</button>
+          <button class="q-opt">方向標</button>
+          <button class="q-opt">圖名</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">圖例說明符號；比例尺是用來算距離的</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="是非" data-cp-src="社R1-2" data-cp-kp="氣候與水資源" data-cp-hash="3685b9" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 是非</span> 社R1-2 · 氣候與水資源</span><h2 id="q3-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「恆春一年四季都很溫暖」是在描述氣候。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！講的是很多年累積的特色，就是氣候</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="社R1-2" data-cp-kp="塑膠製品與環境保護" data-cp-hash="beebac" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 社R1-2 · 塑膠製品與環境保護</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">把寶特瓶壓扁丟進回收桶，是 3R 裡最有效的做法。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！回收仍要耗能處理；一開始就不用（減量）最有效</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="簡答" data-cp-src="社R1-2" data-cp-kp="人與環境（作物・產業・建築）" data-cp-hash="1f6c66" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 簡答</span> 社R1-2 · 人與環境（作物・產業・建築）</span><h2 id="q5-t" class="title">寫在小白板上</h2></div>
+      <p class="q-stem big">「山坡地被整理成一階一階的茶園」說明了人和環境的什麼關係？</p>
+      <div class="row center">
+        <button class="flip-card short-ans" data-flip>
+          <span class="inner"><span class="face front">老師翻牌看參考答案</span><span class="face back">人也會改變環境（配合地形調整）</span></span>
+        </button>
+      </div>
+      <div class="row center"><button class="ds-btn rec-open" type="button">📋 記錄本題</button></div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="how" aria-labelledby="how-t" hidden>
       <div class="page-head"><span class="label">第 3 輪 · 怎麼上</span><h2 id="how-t" class="title">今天用「讀圖」來複習</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>一種圖，一套步驟</b>　地圖、剖面圖、氣溫雨量圖、平面圖、長條圖各有讀法</div>
@@ -2040,7 +2220,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d1" aria-labelledby="d1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d1" aria-labelledby="d1-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第一站</div>
         <div id="d1-t" class="headline">地圖</div>
@@ -2048,7 +2228,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="figA" aria-labelledby="figA-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="figA" aria-labelledby="figA-t" hidden>
       <div class="page-head"><span class="label">1-1 · 讀圖示範</span><h2 id="figA-t" class="title">這張圖上，四要素在哪裡？</h2></div>
       <div class="figure-block" style="display:block">
         <svg viewBox="0 0 900 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="社區周邊圖，含圖名、方向標、比例尺與圖例" style="width:100%;height:auto;max-height:520px"><rect x="40" y="30" width="620" height="300" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="2"/><text x="50" y="22" text-anchor="start" font-size="22" fill="currentColor" font-weight="bold">圖名：崑山社區周邊圖</text><path d="M40 200 L660 170" stroke="currentColor" stroke-opacity="0.5" stroke-width="8" fill="none"/><path d="M300 30 L330 330" stroke="currentColor" stroke-opacity="0.5" stroke-width="8" fill="none"/><circle cx="150" cy="130" r="12" fill="#2f7d6f"/><text x="168" y="137" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">學校</text><circle cx="470" cy="250" r="12" fill="#2f7d6f"/><text x="488" y="257" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">車站</text><circle cx="200" cy="280" r="12" fill="#2f7d6f"/><text x="218" y="287" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">公園</text><circle cx="600" cy="90" r="42" fill="none" stroke="#c46a2f" stroke-width="2"/><line x1="600" y1="90" x2="622" y2="64" stroke="#c46a2f" stroke-width="5"/><polygon points="622,64 613,77 633,73" fill="#c46a2f"/><text x="630" y="56" text-anchor="start" font-size="22" fill="#c46a2f" font-weight="bold">北</text><line x1="430" y1="308" x2="570" y2="308" stroke="currentColor" stroke-width="4"/><line x1="430" y1="300" x2="430" y2="316" stroke="currentColor" stroke-width="4"/><line x1="500" y1="300" x2="500" y2="316" stroke="currentColor" stroke-width="4"/><line x1="570" y1="300" x2="570" y2="316" stroke="currentColor" stroke-width="4"/><text x="430" y="292" text-anchor="start" font-size="18" fill="currentColor" font-weight="normal">0</text><text x="570" y="292" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">400 公尺</text><rect x="680" y="150" width="200" height="150" rx="8" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="2"/><text x="694" y="178" text-anchor="start" font-size="20" fill="currentColor" font-weight="bold">圖例</text><circle cx="706" cy="210" r="10" fill="#2f7d6f"/><text x="726" y="217" text-anchor="start" font-size="18" fill="currentColor" font-weight="normal">重要地標</text><line x1="694" y1="248" x2="720" y2="248" stroke="currentColor" stroke-opacity="0.5" stroke-width="8"/><text x="730" y="255" text-anchor="start" font-size="18" fill="currentColor" font-weight="normal">道路</text></svg>
@@ -2056,7 +2236,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="stepA" aria-labelledby="stepA-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="stepA" aria-labelledby="stepA-t" hidden>
       <div class="page-head"><span class="label">1-1 · 讀地圖四步驟</span><h2 id="stepA-t" class="title">拿到一張地圖，照這個順序看</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>① 看圖名</b>　先確定這張圖在講哪裡、講什麼主題</div>
@@ -2066,7 +2246,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="mA" aria-labelledby="mA-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="mA" aria-labelledby="mA-t" hidden>
       <div class="page-head"><span class="label">迷思澄清 · 1-1</span><h2 id="mA-t" class="title">地圖的上面就是北方？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見迷思</div><div class="text">紙的上方一定是北方，所以車站在學校的正上方就是在正北方。</div></div>
@@ -2075,7 +2255,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qA" aria-labelledby="qA-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="qA" aria-labelledby="qA-t" hidden>
       <div class="page-head"><span class="label">馬上試試 · 地圖</span><h2 id="qA-t" class="title">要判斷方位，先看什麼？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2096,7 +2276,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="figB" aria-labelledby="figB-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="figB" aria-labelledby="figB-t" hidden>
       <div class="page-head"><span class="label">1-1 · 讀圖示範</span><h2 id="figB-t" class="title">比例尺尺標怎麼用</h2></div>
       <div class="figure-block" style="display:block">
         <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="比例尺尺標與圖上兩點距離示意" style="width:100%;height:auto;max-height:520px"><text x="40" y="40" text-anchor="start" font-size="22" fill="currentColor" font-weight="bold">比例尺尺標</text><line x1="60" y1="80" x2="480" y2="80" stroke="currentColor" stroke-width="6"/><line x1="60" y1="66" x2="60" y2="94" stroke="currentColor" stroke-width="6"/><text x="60" y="122" text-anchor="middle" font-size="20" fill="currentColor" font-weight="normal">0</text><line x1="200" y1="66" x2="200" y2="94" stroke="currentColor" stroke-width="6"/><text x="200" y="122" text-anchor="middle" font-size="20" fill="currentColor" font-weight="normal">300</text><line x1="340" y1="66" x2="340" y2="94" stroke="currentColor" stroke-width="6"/><text x="340" y="122" text-anchor="middle" font-size="20" fill="currentColor" font-weight="normal">600</text><line x1="480" y1="66" x2="480" y2="94" stroke="currentColor" stroke-width="6"/><text x="480" y="122" text-anchor="middle" font-size="20" fill="currentColor" font-weight="normal">900</text><text x="500" y="88" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">公尺</text><text x="60" y="160" text-anchor="start" font-size="18" fill="currentColor" font-weight="normal">（尺標上每 1 段＝圖上 1 公分＝實際 300 公尺）</text><line x1="60" y1="250" x2="620" y2="250" stroke="currentColor" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="8 8"/><circle cx="60" cy="250" r="12" fill="#2f7d6f"/><text x="60" y="292" text-anchor="middle" font-size="20" fill="currentColor" font-weight="normal">學校</text><circle cx="620" cy="250" r="12" fill="#2f7d6f"/><text x="620" y="292" text-anchor="middle" font-size="20" fill="currentColor" font-weight="normal">圖書館</text><text x="340" y="228" text-anchor="middle" font-size="22" fill="#c46a2f" font-weight="bold">圖上量得 4 公分</text></svg>
@@ -2104,7 +2284,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="mB" aria-labelledby="mB-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="mB" aria-labelledby="mB-t" hidden>
       <div class="page-head"><span class="label">迷思澄清 · 1-1</span><h2 id="mB-t" class="title">兩張圖上一樣長，實際就一樣遠？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見迷思</div><div class="text">兩張地圖上都量到 5 公分，那實際距離一定一樣遠。</div></div>
@@ -2113,7 +2293,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qB" aria-labelledby="qB-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="qB" aria-labelledby="qB-t" hidden>
       <div class="page-head"><span class="label">馬上試試 · 比例尺</span><h2 id="qB-t" class="title">用剛剛那張尺標算算看</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2134,7 +2314,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d2" aria-labelledby="d2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d2" aria-labelledby="d2-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二站</div>
         <div id="d2-t" class="headline">地形剖面圖</div>
@@ -2142,7 +2322,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="figC" aria-labelledby="figC-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="figC" aria-labelledby="figC-t" hidden>
       <div class="page-head"><span class="label">1-2 · 讀圖示範</span><h2 id="figC-t" class="title">從左到右，地面越來越高</h2></div>
       <div class="figure-block" style="display:block">
         <svg viewBox="0 0 900 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="地形剖面圖，標出甲乙丙丁戊五個位置與 100、1000 公尺分界線" style="width:100%;height:auto;max-height:520px"><line x1="160" y1="283" x2="860" y2="283" stroke="#c46a2f" stroke-width="2" stroke-dasharray="6 6"/><text x="152" y="276.6666666666667" text-anchor="end" font-size="18" fill="#c46a2f" font-weight="normal">100 公尺</text><line x1="160" y1="127" x2="860" y2="127" stroke="#c46a2f" stroke-width="2" stroke-dasharray="6 6"/><text x="152" y="120.66666666666669" text-anchor="end" font-size="18" fill="#c46a2f" font-weight="normal">1000 公尺</text><path d="M 160 300 L 250 293 L 310 290 L 350 262 L 410 258 L 455 257 L 520 290 L 600 213 L 660 144 L 720 83 L 800 57 L 860 66" fill="none" stroke="currentColor" stroke-width="4"/><path d="M 160 300 L 250 293 L 310 290 L 350 262 L 410 258 L 455 257 L 520 290 L 600 213 L 660 144 L 720 83 L 800 57 L 860 66 L 860 300 L 160 300 Z" fill="#2f7d6f" fill-opacity="0.12"/><line x1="160" y1="300" x2="860" y2="300" stroke="currentColor" stroke-width="3"/><line x1="210" y1="300" x2="210" y2="312" stroke="currentColor" stroke-width="3"/><text x="210" y="336" text-anchor="middle" font-size="22" fill="currentColor" font-weight="bold">甲</text><line x1="380" y1="300" x2="380" y2="312" stroke="currentColor" stroke-width="3"/><text x="380" y="336" text-anchor="middle" font-size="22" fill="currentColor" font-weight="bold">乙</text><line x1="640" y1="300" x2="640" y2="312" stroke="currentColor" stroke-width="3"/><text x="640" y="336" text-anchor="middle" font-size="22" fill="currentColor" font-weight="bold">丙</text><line x1="810" y1="300" x2="810" y2="312" stroke="currentColor" stroke-width="3"/><text x="810" y="336" text-anchor="middle" font-size="22" fill="currentColor" font-weight="bold">丁</text><text x="40" y="24" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">地形剖面圖（縱軸＝高度）</text></svg>
@@ -2150,7 +2330,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="stepC" aria-labelledby="stepC-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="stepC" aria-labelledby="stepC-t" hidden>
       <div class="page-head"><span class="label">1-2 · 讀剖面圖三步驟</span><h2 id="stepC-t" class="title">看剖面圖，先看數字再看形狀</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>① 看縱軸</b>　確認一格代表幾公尺，找出 100 和 1000 兩條分界線</div>
@@ -2163,7 +2343,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="mC" aria-labelledby="mC-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="mC" aria-labelledby="mC-t" hidden>
       <div class="page-head"><span class="label">迷思澄清 · 1-2</span><h2 id="mC-t" class="title">圖上看起來很高，就是山地？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見迷思</div><div class="text">丙的位置在圖上看起來已經很高了，所以是山地。</div></div>
@@ -2172,28 +2352,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qC" aria-labelledby="qC-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 剖面圖</span><h2 id="qC-t" class="title">乙是哪一種地形？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R1-3" data-cp-kp="地形特徵" data-cp-hash="408d62" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 社R1-3 · 地形特徵</span><h2 id="cp1-t" class="title">乙是哪一種地形？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">剖面圖上，乙的高度約 230 公尺，頂部平坦，右側邊緣是一段陡坡。乙是哪一種地形？</p>
-        <div class="q-options">
+        <div class="q-options abcd">
           <button class="q-opt">平原</button>
           <button class="q-opt">丘陵</button>
-          <button class="q-opt" data-correct="true">台地</button>
+          <button class="q-opt" data-correct>台地</button>
           <button class="q-opt">山地</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">超過 100 公尺（不是平原）＋ 頂部平（不是丘陵）＋ 邊緣陡 ＝ <b>台地</b></span>
-      </div>
+        <span class="text">超過 100 公尺（不是平原）＋ 頂部平（不是丘陵）＋ 邊緣陡 ＝ 台地</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d3" aria-labelledby="d3-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d3" aria-labelledby="d3-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第三站</div>
         <div id="d3-t" class="headline">氣溫雨量圖</div>
@@ -2201,7 +2383,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="figD" aria-labelledby="figD-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="figD" aria-labelledby="figD-t" hidden>
       <div class="page-head"><span class="label">1-3 · 讀圖示範</span><h2 id="figD-t" class="title">長條看雨量，折線看氣溫</h2></div>
       <div class="figure-block" style="display:block">
         <svg viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="甲地氣溫雨量圖，長條為雨量、折線為氣溫" style="width:100%;height:auto;max-height:520px"><line x1="90" y1="300" x2="830" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="80" y="307.0" text-anchor="end" font-size="18" fill="currentColor" font-weight="normal">0</text><line x1="90" y1="217" x2="830" y2="217" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="80" y="223.66666666666669" text-anchor="end" font-size="18" fill="currentColor" font-weight="normal">150</text><line x1="90" y1="133" x2="830" y2="133" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="80" y="140.33333333333334" text-anchor="end" font-size="18" fill="currentColor" font-weight="normal">300</text><line x1="90" y1="50" x2="830" y2="50" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="80" y="57.0" text-anchor="end" font-size="18" fill="currentColor" font-weight="normal">450</text><text x="842" y="307.0" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">10</text><text x="842" y="207.0" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">20</text><text x="842" y="107.0" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">30</text><rect x="102" y="288" width="37" height="12" fill="#2f7d6f" fill-opacity="0.75"/><rect x="164" y="283" width="37" height="17" fill="#2f7d6f" fill-opacity="0.75"/><rect x="226" y="275" width="37" height="25" fill="#2f7d6f" fill-opacity="0.75"/><rect x="287" y="250" width="37" height="50" fill="#2f7d6f" fill-opacity="0.75"/><rect x="349" y="189" width="37" height="111" fill="#2f7d6f" fill-opacity="0.75"/><rect x="411" y="106" width="37" height="194" fill="#2f7d6f" fill-opacity="0.75"/><rect x="472" y="117" width="37" height="183" fill="#2f7d6f" fill-opacity="0.75"/><rect x="534" y="67" width="37" height="233" fill="#2f7d6f" fill-opacity="0.75"/><rect x="596" y="178" width="37" height="122" fill="#2f7d6f" fill-opacity="0.75"/><rect x="657" y="283" width="37" height="17" fill="#2f7d6f" fill-opacity="0.75"/><rect x="719" y="290" width="37" height="10" fill="#2f7d6f" fill-opacity="0.75"/><rect x="781" y="292" width="37" height="8" fill="#2f7d6f" fill-opacity="0.75"/><polyline points="121,220 182,210 244,180 306,150 367,130 429,110 491,100 552,110 614,120 676,150 738,180 799,210" fill="none" stroke="#c46a2f" stroke-width="4"/><circle cx="121" cy="220" r="5" fill="#c46a2f"/><circle cx="182" cy="210" r="5" fill="#c46a2f"/><circle cx="244" cy="180" r="5" fill="#c46a2f"/><circle cx="306" cy="150" r="5" fill="#c46a2f"/><circle cx="367" cy="130" r="5" fill="#c46a2f"/><circle cx="429" cy="110" r="5" fill="#c46a2f"/><circle cx="491" cy="100" r="5" fill="#c46a2f"/><circle cx="552" cy="110" r="5" fill="#c46a2f"/><circle cx="614" cy="120" r="5" fill="#c46a2f"/><circle cx="676" cy="150" r="5" fill="#c46a2f"/><circle cx="738" cy="180" r="5" fill="#c46a2f"/><circle cx="799" cy="210" r="5" fill="#c46a2f"/><line x1="90" y1="300" x2="830" y2="300" stroke="currentColor" stroke-width="3"/><text x="120.83333333333333" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">1</text><text x="182.5" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">2</text><text x="244.16666666666666" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">3</text><text x="305.8333333333333" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">4</text><text x="367.49999999999994" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">5</text><text x="429.16666666666663" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">6</text><text x="490.8333333333333" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">7</text><text x="552.5" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">8</text><text x="614.1666666666666" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">9</text><text x="675.8333333333334" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">10</text><text x="737.5" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">11</text><text x="799.1666666666666" y="326" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">12</text><text x="80" y="36" text-anchor="end" font-size="18" fill="currentColor" font-weight="normal">雨量（毫米）</text><text x="890" y="36" text-anchor="end" font-size="18" fill="#c46a2f" font-weight="normal">氣溫（℃）</text><text x="90" y="24" text-anchor="start" font-size="20" fill="currentColor" font-weight="bold">甲地氣溫雨量圖</text><text x="90" y="352" text-anchor="start" font-size="18" fill="currentColor" font-weight="normal">月份</text></svg>
@@ -2209,7 +2391,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="stepD" aria-labelledby="stepD-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="stepD" aria-labelledby="stepD-t" hidden>
       <div class="page-head"><span class="label">1-3 · 讀氣溫雨量圖三步驟</span><h2 id="stepD-t" class="title">兩條軸，先分清楚誰配誰</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>① 看標題</b>　這是哪一個地方的圖，換一個地方答案就不一樣</div>
@@ -2218,7 +2400,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="mD" aria-labelledby="mD-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="mD" aria-labelledby="mD-t" hidden>
       <div class="page-head"><span class="label">迷思澄清 · 1-3</span><h2 id="mD-t" class="title">看到最高點就是「最熱」？</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見迷思</div><div class="text">圖上最高的那根長條，就是氣溫最高的月份。</div></div>
@@ -2227,28 +2409,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qD" aria-labelledby="qD-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 氣溫雨量圖</span><h2 id="qD-t" class="title">甲地的雨，集中在什麼時候？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R1-3" data-cp-kp="氣候與水資源" data-cp-hash="90a681" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 社R1-3 · 氣候與水資源</span><h2 id="cp2-t" class="title">甲地的雨，集中在什麼時候？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">甲地的長條在 5～9 月明顯變高，10 月以後又降下來。這代表什麼？</p>
-        <div class="q-options">
+        <div class="q-options abcd">
           <button class="q-opt">氣溫集中在夏季</button>
           <button class="q-opt">冬天比夏天熱</button>
           <button class="q-opt">全年雨量都一樣多</button>
-          <button class="q-opt" data-correct="true">雨量集中在夏季</button>
+          <button class="q-opt" data-correct>雨量集中在夏季</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">長條＝雨量。5～9 月長條特別高，就是<b>夏季多雨</b>——這也是為什麼颱風季常淹水</span>
-      </div>
+        <span class="text">長條＝雨量。5～9 月長條特別高，就是夏季多雨——這也是為什麼颱風季常淹水</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d4" aria-labelledby="d4-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d4" aria-labelledby="d4-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第四站</div>
         <div id="d4-t" class="headline">平面圖與統計圖</div>
@@ -2256,7 +2440,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="figE" aria-labelledby="figE-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="figE" aria-labelledby="figE-t" hidden>
       <div class="page-head"><span class="label">2-1 · 讀圖示範</span><h2 id="figE-t" class="title">三合院平面圖：誰是左護龍？</h2></div>
       <div class="figure-block" style="display:block">
         <svg viewBox="0 0 900 410" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三合院平面圖，標出正廳、稻埕與甲乙兩側護龍" style="width:100%;height:auto;max-height:520px"><rect x="250" y="60" width="400" height="90" fill="#2f7d6f" fill-opacity="0.18" stroke="currentColor" stroke-width="3"/><text x="450" y="112" text-anchor="middle" font-size="24" fill="currentColor" font-weight="bold">正廳</text><rect x="160" y="150" width="90" height="180" fill="currentColor" fill-opacity="0.10" stroke="currentColor" stroke-width="3"/><text x="205" y="250" text-anchor="middle" font-size="24" fill="currentColor" font-weight="bold">甲</text><rect x="650" y="150" width="90" height="180" fill="currentColor" fill-opacity="0.10" stroke="currentColor" stroke-width="3"/><text x="695" y="250" text-anchor="middle" font-size="24" fill="currentColor" font-weight="bold">乙</text><rect x="250" y="150" width="400" height="180" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="2" stroke-dasharray="8 8"/><text x="450" y="250" text-anchor="middle" font-size="22" fill="currentColor" font-weight="normal">稻埕</text><polygon points="450,352 438,376 462,376" fill="#c46a2f"/><text x="450" y="398" text-anchor="middle" font-size="18" fill="#c46a2f" font-weight="normal">從正廳往外看的方向</text><text x="160" y="44" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">三合院平面圖（上方為正廳）</text></svg>
@@ -2264,7 +2448,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qE" aria-labelledby="qE-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="qE" aria-labelledby="qE-t" hidden>
       <div class="page-head"><span class="label">馬上試試 · 平面圖</span><h2 id="qE-t" class="title">平面圖上的左右，怎麼定？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2285,7 +2469,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="figF" aria-labelledby="figF-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="figF" aria-labelledby="figF-t" hidden>
       <div class="page-head"><span class="label">2-2 · 讀圖示範</span><h2 id="figF-t" class="title">這張長條圖在說什麼？</h2></div>
       <div class="figure-block" style="display:block">
         <svg viewBox="0 0 900 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="淨灘垃圾種類長條圖，前四項皆為塑膠製品" style="width:100%;height:auto;max-height:520px"><line x1="200" y1="50" x2="200" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="200.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">0%</text><line x1="360" y1="50" x2="360" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="360.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">10%</text><line x1="520" y1="50" x2="520" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="520.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">20%</text><line x1="680" y1="50" x2="680" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="680.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">30%</text><line x1="840" y1="50" x2="840" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="840.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">40%</text><rect x="200" y="58" width="608" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="76.51666666666667" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">寶特瓶</text><text x="818.0" y="76.51666666666667" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">38%</text><rect x="200" y="100" width="352" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="118.18333333333332" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">塑膠袋</text><text x="562.0" y="118.18333333333332" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">22%</text><rect x="200" y="141" width="272" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="159.84999999999997" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">免洗餐具</text><text x="482.0" y="159.84999999999997" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">17%</text><rect x="200" y="183" width="224" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="201.51666666666665" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">吸管</text><text x="434.0" y="201.51666666666665" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">14%</text><rect x="200" y="225" width="80" height="26" fill="currentColor" fill-opacity="0.75"/><text x="188" y="243.1833333333333" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">玻璃瓶</text><text x="290.0" y="243.1833333333333" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">5%</text><rect x="200" y="266" width="64" height="26" fill="currentColor" fill-opacity="0.75"/><text x="188" y="284.85" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">金屬罐</text><text x="274.0" y="284.85" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">4%</text><line x1="200" y1="50" x2="200" y2="300" stroke="currentColor" stroke-width="3"/><text x="60" y="30" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">某次淨灘撿到的垃圾種類（佔全部件數的百分比）</text></svg>
@@ -2293,28 +2477,45 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="qF" aria-labelledby="qF-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 統計圖</span><h2 id="qF-t" class="title">從這張圖能得到什麼結論？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R1-3" data-cp-kp="塑膠製品與環境保護" data-cp-hash="0bd7e8" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 社R1-3 · 塑膠製品與環境保護</span><h2 id="cp3-t" class="title">從這張圖能得到什麼結論？</h2></div>
+      <div class="qsplit">
+      <div class="figure-block" style="display:block"><svg viewBox="0 0 900 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="淨灘垃圾種類長條圖，前四項皆為塑膠製品" style="width:100%;height:auto;max-height:520px"><line x1="200" y1="50" x2="200" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="200.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">0%</text><line x1="360" y1="50" x2="360" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="360.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">10%</text><line x1="520" y1="50" x2="520" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="520.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">20%</text><line x1="680" y1="50" x2="680" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="680.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">30%</text><line x1="840" y1="50" x2="840" y2="300" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/><text x="840.0" y="328" text-anchor="middle" font-size="18" fill="currentColor" font-weight="normal">40%</text><rect x="200" y="58" width="608" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="76.51666666666667" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">寶特瓶</text><text x="818.0" y="76.51666666666667" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">38%</text><rect x="200" y="100" width="352" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="118.18333333333332" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">塑膠袋</text><text x="562.0" y="118.18333333333332" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">22%</text><rect x="200" y="141" width="272" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="159.84999999999997" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">免洗餐具</text><text x="482.0" y="159.84999999999997" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">17%</text><rect x="200" y="183" width="224" height="26" fill="#2f7d6f" fill-opacity="0.75"/><text x="188" y="201.51666666666665" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">吸管</text><text x="434.0" y="201.51666666666665" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">14%</text><rect x="200" y="225" width="80" height="26" fill="currentColor" fill-opacity="0.75"/><text x="188" y="243.1833333333333" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">玻璃瓶</text><text x="290.0" y="243.1833333333333" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">5%</text><rect x="200" y="266" width="64" height="26" fill="currentColor" fill-opacity="0.75"/><text x="188" y="284.85" text-anchor="end" font-size="19" fill="currentColor" font-weight="normal">金屬罐</text><text x="274.0" y="284.85" text-anchor="start" font-size="18" fill="#c46a2f" font-weight="normal">4%</text><line x1="200" y1="50" x2="200" y2="300" stroke="currentColor" stroke-width="3"/><text x="60" y="30" text-anchor="start" font-size="20" fill="currentColor" font-weight="normal">某次淨灘撿到的垃圾種類（佔全部件數的百分比）</text></svg></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">看這張淨灘長條圖，哪一個說法最站得住腳？</p>
-        <div class="q-options">
+        <p class="q-stem">哪一個說法最站得住腳？</p>
+        <div class="q-options abcd">
           <button class="q-opt">玻璃瓶傷害最大</button>
-          <button class="q-opt" data-correct="true">塑膠最多，減量最有效</button>
+          <button class="q-opt" data-correct>塑膠最多，減量最有效</button>
           <button class="q-opt">回收就不會有垃圾</button>
           <button class="q-opt">金屬罐最多</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
+      </div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">結論要<b>從圖上的數字推出來</b>：前四名都是塑膠，所以答案指向「少用塑膠」</span>
-      </div>
+        <span class="text">前四名都是塑膠，結論指向少用塑膠</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="wrap" aria-labelledby="wrap-t" hidden>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 社R1-3</span><h2 id="summary-t" class="title">今天帶走這五件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>讀地圖先照方向標定北方，不一定是紙的上方；距離用尺標：段數 × 每段</div>
+        <div class="item" data-reveal>剖面圖先讀縱軸數字，看落在 100、1000 公尺哪兩條線之間，再看頂部和邊緣</div>
+        <div class="item" data-reveal>氣溫雨量圖：長條配左軸看雨量，折線配右軸看氣溫</div>
+        <div class="item" data-reveal>三合院平面圖站在正廳前朝外定左右，左護龍為尊</div>
+        <div class="item" data-reveal>統計圖的結論要從圖上的數字推出來，不能用印象</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="wrap" aria-labelledby="wrap-t" hidden>
       <div class="page-head"><span class="label">收尾</span><h2 id="wrap-t" class="title">看到圖就照這四步做</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>① 讀標題</b>　這張圖在講哪裡、講什麼</div>
@@ -2323,6 +2524,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         <div class="item" data-reveal><b>④ 再下結論</b>　結論要能從圖上找到根據，不能用印象猜</div>
       </div>
     </section>
+
 
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>0</span> <span data-reveal-meta></span></p>
@@ -2335,6 +2537,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {
