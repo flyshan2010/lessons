@@ -2223,10 +2223,55 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .tri-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s3); }
 @media (max-width:768px) { .tri-grid { grid-template-columns:1fr; } }
 
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 
 </head>
-<body>
+<body data-lesson="數L10-3">
 <main class="deck" aria-label="報讀折線圖｜課程教學 · 四上數學 10-3">
   <div class="stage" id="stage" tabindex="-1">
 
@@ -2238,7 +2283,134 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="intro" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">數L10-3 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">前節小考</div><div class="body">上一節的重點，五題<br>選擇・是非・簡答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝這一課的重點</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 數L10-2 的 summary.json next_quiz -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 前節小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">上一節學過的，還記得嗎？</div>
+        <div class="sub">範圍：數L10-2 的「重點總結」3 條（製作長條圖）</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L10-2" data-cp-kp="製作長條圖" data-cp-hash="b22a50" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 數L10-2 · 製作長條圖</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">長條圖的標題要寫在哪裡？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>圖的下方</button>
+          <button class="q-opt">圖的上方</button>
+          <button class="q-opt">縱軸旁邊</button>
+          <button class="q-opt">不用寫</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">課本的長條圖，標題都寫在圖的下方</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數L10-2" data-cp-kp="製作長條圖" data-cp-hash="b6ebd6" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 數L10-2 · 製作長條圖</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">五個得票數是 520、610、580、640、550 票。用省略符號畫圖，省略哪一段最適當？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">600 票以下</button>
+          <button class="q-opt" data-correct>500 票以下</button>
+          <button class="q-opt">550 票以下</button>
+          <button class="q-opt">不能省略</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">省略處要比最小的 520 還小，500 以下最適當</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="是非" data-cp-src="數L10-2" data-cp-kp="製作長條圖" data-cp-hash="1f5a7a" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 是非</span> 數L10-2 · 製作長條圖</span><h2 id="q3-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">長條圖的項目可以不照數量大小排，只要每一條都對準刻度。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！順序沒有規定，數量對到刻度就好</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="數L10-2" data-cp-kp="製作長條圖" data-cp-hash="6ae13e" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 數L10-2 · 製作長條圖</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">有省略符號的長條圖，甲條的長度是乙條的 2 倍，甲的數量就是乙的 2 倍。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！下面一段被省略了，要看實際數量</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="簡答" data-cp-src="數L10-2" data-cp-kp="製作長條圖" data-cp-hash="451bd1" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 簡答</span> 數L10-2 · 製作長條圖</span><h2 id="q5-t" class="title">寫在小白板上</h2></div>
+      <p class="q-stem big">調查結果最多的一項是 27 人，一小格代表 5 人。縱軸至少要畫到幾人？</p>
+      <div class="row center">
+        <button class="flip-card short-ans" data-flip>
+          <span class="inner"><span class="face front">老師翻牌看參考答案</span><span class="face back">30 人（放得下 27 的最小刻度）</span></span>
+        </button>
+      </div>
+      <div class="row center"><button class="ds-btn rec-open" type="button">📋 記錄本題</button></div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="intro" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">阿里山這一天的氣溫</h2></div>
       <figure class="chartbox" data-chart><script type="application/json">
       {"type":"line","title":"阿里山 6 月 15 日 8 時到 17 時氣溫折線圖","xLabel":"時刻","yLabel":"氣溫（度）","yUnit":"度",
@@ -2249,7 +2421,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">用直線把相鄰的點連起來，就叫做<b>折線圖</b>。點一下可以看度數。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="parts" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="parts" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">折線圖有四個地方要先看</h2></div>
       <div class="flow-steps">
         <div class="step" data-reveal><div class="badge">1</div><div class="head">標題</div><div class="body">在圖的下方</div></div>
@@ -2260,7 +2432,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">先往上找到點，再往左看刻度，就讀得出那一刻的氣溫。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="dir" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="dir" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">折線往哪邊斜？</h2><span class="step">關鍵</span></div>
       <div class="flow-steps">
         <div class="step" data-reveal><div class="badge">↗</div><div class="head">右斜上</div><div class="body">數量上升（8→9 時：19→20 度）</div></div>
@@ -2270,7 +2442,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-warn"></use></svg></span><span class="text">水平不是「沒有資料」，是<b>數量沒有改變</b>。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="steep" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="steep" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">越陡，變化越大</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal><div class="head">比較陡</div><div class="item">11→12 時上升 2 度</div><div class="item">同樣一格時間，變化多</div></div>
@@ -2280,18 +2452,37 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">不用讀數字，光看<b>斜度</b>就知道哪一段變化最大。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="q1" hidden>
-      <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">哪兩個時刻之間下降最多？</h2></div>
-      <div class="quiz row-opts" data-quiz data-mode="single">
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L10-3" data-cp-kp="報讀折線圖" data-cp-hash="c79360" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數L10-3 · 報讀折線圖</span><h2 id="cp1-t" class="title">哪兩個時刻之間下降最多？</h2></div>
+      <div class="qsplit">
+      <figure class="chartbox sm" data-chart><script type="application/json">
+      {"type":"line","title":"阿里山 6 月 15 日 8 時到 17 時氣溫折線圖","xLabel":"時刻","yLabel":"氣溫（度）","yUnit":"度",
+       "categories":["8時","9時","10時","11時","12時","13時","14時","15時","16時","17時"],
+       "series":[{"values":[19,20,21,21,23,20,19,18,18,17]}],
+       "major":5,"minorPer":5,"max":25,"height":420,"readout":true}
+      </script></figure>
+      <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">氣溫：12 時 23 度、13 時 20 度、14 時 19 度、15 時 18 度。</p>
-        <div class="q-options"><button class="q-opt">13 時到 14 時</button><button class="q-opt">14 時到 15 時</button><button class="q-opt" data-correct>12 時到 13 時</button></div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="q-options abcd">
+          <button class="q-opt">13 時到 14 時</button>
+          <button class="q-opt">14 時到 15 時</button>
+          <button class="q-opt" data-correct>12 時到 13 時</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
-      <div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">下降 3 度，是全天最陡的一段（其他段都只降 1 度）。</span></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">下降 3 度，是全天最陡的一段（其他段都只降 1 度）。</span>
+      </div>
     </section>
 
-    <section class="slide" data-slide-id="apply1" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="apply1" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">看圖做決定：幾點上戶外課</h2><span class="step">應用</span></div>
       <div class="question-frame">
         <div class="q tier-1" data-reveal><span class="tier">看見</span><span class="text">一天中最熱是幾點？最涼是幾點？</span></div>
@@ -2301,7 +2492,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">折線圖能幫我們<b>看出趨勢、做出安排</b>。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="divider2" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="divider2" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二部分</div>
         <div class="headline">折線圖也能省略、也能放兩條</div>
@@ -2309,7 +2500,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="height" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="height" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">妹妹從出生到 7 歲的身高</h2></div>
       <figure class="chartbox" data-chart><script type="application/json">
       {"type":"line","title":"妹妹從出生到 7 歲的身高折線圖","xLabel":"年齡","yLabel":"身高（公分）","yUnit":"公分",
@@ -2320,7 +2511,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">身高都超過 45 公分 → 45 以下用<b>省略符號</b>折起來。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="grow" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="grow" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">哪一年長得最多？</h2></div>
       <div class="stepline">
         <div class="s" data-reveal><span class="no">1</span><span class="calc">找<b>最陡</b>的那一段折線</span></div>
@@ -2330,18 +2521,37 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">越後面越平緩——長高的速度慢下來了。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="between" hidden>
-      <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">3 歲半大約幾公分？</h2><span class="step">應用</span></div>
-      <div class="quiz row-opts" data-quiz data-mode="single">
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L10-3" data-cp-kp="報讀折線圖" data-cp-hash="8fca16" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數L10-3 · 報讀折線圖</span><h2 id="cp2-t" class="title">3 歲半大約幾公分？</h2></div>
+      <div class="qsplit">
+      <figure class="chartbox sm" data-chart><script type="application/json">
+      {"type":"line","title":"妹妹從出生到 7 歲的身高折線圖","xLabel":"年齡","yLabel":"身高（公分）","yUnit":"公分",
+       "categories":["0歲","1歲","2歲","3歲","4歲","5歲","6歲","7歲"],
+       "series":[{"values":[48,75,90,96,103,110,117,125]}],
+       "major":10,"minorPer":10,"max":130,"breakAt":45,"height":420,"readout":true}
+      </script></figure>
+      <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">3 歲是 96 公分、4 歲是 103 公分。3 歲 6 個月大約是——</p>
-        <div class="q-options"><button class="q-opt" data-correct>102 公分</button><button class="q-opt">95 公分</button><button class="q-opt">107 公分</button></div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="q-options abcd two">
+          <button class="q-opt" data-correct>102 公分</button>
+          <button class="q-opt">95 公分</button>
+          <button class="q-opt">107 公分</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
-      <div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">在 3 歲和 4 歲<b>中間</b>找，答案要落在 96 和 103 之間。</span></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">在 3 歲和 4 歲中間找，答案要落在 96 和 103 之間。</span>
+      </div>
     </section>
 
-    <section class="slide" data-slide-id="multi" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="multi" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">三條折線放同一張圖</h2><span class="step">黑面琵鷺普查</span></div>
       <figure class="chartbox" data-chart><script type="application/json">
       {"type":"line","title":"民國 105 年到 109 年三縣市黑面琵鷺普查數量折線圖","xLabel":"年分","yLabel":"數量（隻）","yUnit":"隻",
@@ -2354,18 +2564,39 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">兩條折線<b>靠得越近</b>，表示兩地的數量越接近。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="q2" hidden>
-      <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">哪一個縣市變化最大？</h2></div>
-      <div class="quiz row-opts" data-quiz data-mode="single">
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數L10-3" data-cp-kp="報讀折線圖" data-cp-hash="374596" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 數L10-3 · 報讀折線圖</span><h2 id="cp3-t" class="title">哪一個縣市變化最大？</h2></div>
+      <div class="qsplit">
+      <figure class="chartbox sm" data-chart><script type="application/json">
+      {"type":"line","title":"民國 105 年到 109 年三縣市黑面琵鷺普查數量折線圖","xLabel":"年分","yLabel":"數量（隻）","yUnit":"隻",
+       "categories":["105年","106年","107年","108年","109年"],
+       "series":[{"name":"臺南市","values":[1528,1810,1265,1572,1839]},
+                 {"name":"嘉義縣","values":[305,513,559,488,550]},
+                 {"name":"高雄市","values":[186,247,257,245,241]}],
+       "major":500,"minorPer":5,"max":2000,"height":420,"readout":true}
+      </script></figure>
+      <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">看三條折線的陡緩程度。</p>
-        <div class="q-options"><button class="q-opt">嘉義縣</button><button class="q-opt" data-correct>臺南市</button><button class="q-opt">高雄市</button></div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="q-options abcd two">
+          <button class="q-opt">嘉義縣</button>
+          <button class="q-opt" data-correct>臺南市</button>
+          <button class="q-opt">高雄市</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
-      <div class="takeaway-band" data-reveal data-after-answer><span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span><span class="text">臺南市的折線起伏最大：106→107 年就少了 <b>545 隻</b>。</span></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">臺南市的折線起伏最大：106→107 年就少了 545 隻。</span>
+      </div>
     </section>
 
-    <section class="slide" data-slide-id="vs" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="vs" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">長條圖和折線圖，怎麼選？</h2></div>
       <div class="compare-pair">
         <div class="side" data-reveal><div class="head">長條圖</div><div class="item">比較<b>各項目多少</b></div><div class="item">項目<b>沒有</b>先後順序</div></div>
@@ -2375,7 +2606,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-warn"></use></svg></span><span class="text">把時刻的順序打亂，折線就看不出上升下降了。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="apply2" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="apply2" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">看圖做決定：保育有沒有效</h2><span class="step">應用</span></div>
       <div class="action-list">
         <div class="item" data-reveal>臺南市 107 年掉到 1265 隻，是五年最低</div>
@@ -2385,7 +2616,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">折線圖能看出<b>什麼時候出問題</b>——這就是統計圖的用處。</span></div>
     </section>
 
-    <section class="slide" data-slide-id="end" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="end" hidden>
       <div class="page-head"><span class="label">10-3 報讀折線圖</span><h2 class="title">第十單元，一句話總結</h2></div>
       <div class="data-focus stacked">
         <div class="figure-num"><span class="num">↗</span><span class="unit">看的是變化</span></div>
@@ -2395,6 +2626,20 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
         </div>
       </div>
       <div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-clock"></use></svg></span><span class="text">五年級會學到<b>製作折線圖</b>，用的還是這一套刻度與省略符號。</span></div>
+    </section>
+
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數L10-3</span><h2 id="summary-t" class="title">今天帶走這三件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>折線右斜上是上升、右斜下是下降、水平是沒有改變</div>
+        <div class="item" data-reveal>越陡變化越大；兩點中間可以估計，如 3 歲半落在 96 和 103 公分之間</div>
+        <div class="item" data-reveal>比較各項多少用長條圖；看隨時間的變化用折線圖，順序不能調換</div>
+      </div>
+      <div class="takeaway-band" data-reveal>
+        <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
+        <span class="text">這一課的重點就是這三條——回家唸一遍</span>
+      </div>
     </section>
 
     <div class="hud">
@@ -2694,6 +2939,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
   };
 
   document.querySelectorAll('[data-chart]').forEach(build);
+})();
+
+</script>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
 })();
 
 </script>
