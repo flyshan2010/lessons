@@ -2053,13 +2053,67 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .flow-steps.vertical > .step > .head { flex: 0 0 auto; min-width: 300px; }
 .flow-steps.vertical > .step > .body { flex: 1 1 auto; }
 
+
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
+<body data-lesson="社R2-4">
 <main class="deck" aria-label="社R2-4 課程教學｜觀念澄清與考前對照卡 期末總複習第4輪">
   <div class="stage" id="stage" tabindex="-1">
 
-<section class="slide" data-slide-id="cover" aria-labelledby="cover-t" hidden>
+    <section class="slide" data-slide-id="cover" aria-labelledby="cover-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第三、四單元 · 期末總複習 第 4 輪</div>
         <div id="cover-t" class="headline" style="font-size:var(--t1);">觀念澄清與考前對照卡</div>
@@ -2067,7 +2121,134 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="how" aria-labelledby="how-t" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">社R2-4 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">前節小考</div><div class="body">上一節的重點，五題<br>選擇・是非・簡答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝這一課的重點</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 社R2-3 的 summary.json next_quiz -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 前節小考 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">上一節學過的，還記得嗎？</div>
+        <div class="sub">範圍：社R2-3 的「重點總結」5 條（老街的變遷、老街的形成與街屋、傳統節慶與現代節日的比較）</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R2-3" data-cp-kp="老街的變遷" data-cp-hash="c71a4b" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 社R2-3 · 老街的變遷</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">某條老街沒落了。下列哪一個是「最主要」的原因？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">老房子太舊</button>
+          <button class="q-opt" data-correct>道路改道，人不再經過</button>
+          <button class="q-opt">店家招牌不好看</button>
+          <button class="q-opt">街道太窄</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">先發生道路改道，人才不再經過，選因果線的起點</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="社R2-3" data-cp-kp="老街的形成與街屋" data-cp-hash="c80e05" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 社R2-3 · 老街的形成與街屋</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「前面是店面、後面是住家」說的是哪一種房子？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>街屋</button>
+          <button class="q-opt">三合院</button>
+          <button class="q-opt">透天厝</button>
+          <button class="q-opt">石板屋</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">圈出「前店後住」，就想到老街的街屋</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="是非" data-cp-src="社R2-3" data-cp-kp="傳統節慶與現代節日的比較" data-cp-hash="171961" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 是非</span> 社R2-3 · 傳統節慶與現代節日的比較</span><h2 id="q3-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">「傳統節慶全部都依農曆決定日期。」這句話是對的。</p>
+        <div class="q-options tf">
+          <button class="q-opt">⭕ 對</button>
+          <button class="q-opt" data-correct>❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">錯！清明是節氣、依太陽；看到「全部」先找例外</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="是非" data-cp-src="社R2-3" data-cp-kp="老街的變遷" data-cp-hash="0a1612" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 是非</span> 社R2-3 · 老街的變遷</span><h2 id="q4-t" class="title">比出 ⭕ 或 ❌</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">圖表題的答案要從圖上的標題和數量讀出來，不能自己猜原因。</p>
+        <div class="q-options tf">
+          <button class="q-opt" data-correct>⭕ 對</button>
+          <button class="q-opt">❌ 錯</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">對！圖上讀不到的，都不能當答案</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="簡答" data-cp-src="社R2-3" data-cp-kp="老街的形成與街屋" data-cp-hash="b69179" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 簡答</span> 社R2-3 · 老街的形成與街屋</span><h2 id="q5-t" class="title">寫在小白板上</h2></div>
+      <p class="q-stem big">「請說明騎樓和天井各解決了什麼問題（4 分）」要寫幾點？各寫什麼？</p>
+      <div class="row center">
+        <button class="flip-card short-ans" data-flip>
+          <span class="inner"><span class="face front">老師翻牌看參考答案</span><span class="face back">兩點：騎樓遮陽避雨、天井採光通風</span></span>
+        </button>
+      </div>
+      <div class="row center"><button class="ds-btn rec-open" type="button">📋 記錄本題</button></div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="how" aria-labelledby="how-t" hidden>
       <div class="page-head"><span class="label">第 4 輪 · 怎麼上</span><h2 id="how-t" class="title">這一輪只做一件事</h2></div>
       <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="concept-card" data-reveal><div class="head">看錯的說法</div><div class="body">先讀一次<b>大家最常講錯</b>的那句話</div></div>
@@ -2080,7 +2261,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="d1" aria-labelledby="d1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d1" aria-labelledby="d1-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第一組</div>
         <div id="d1-t" class="headline">信仰與聚落</div>
@@ -2088,7 +2269,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c1" aria-labelledby="c1-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c1" aria-labelledby="c1-t" hidden>
       <div class="page-head"><span class="label">對照卡 1 / 8</span><h2 id="c1-t" class="title">廟宇只能拜拜嗎</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「廟宇就是拜拜的地方，跟生活沒什麼關係。」</div></div>
@@ -2101,7 +2282,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c2" aria-labelledby="c2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c2" aria-labelledby="c2-t" hidden>
       <div class="page-head"><span class="label">對照卡 2 / 8</span><h2 id="c2-t" class="title">老街變安靜就是失敗嗎</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「老街沒落，代表那個地方失敗了。」</div></div>
@@ -2114,7 +2295,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c3" aria-labelledby="c3-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c3" aria-labelledby="c3-t" hidden>
       <div class="page-head"><span class="label">對照卡 3 / 8</span><h2 id="c3-t" class="title">先有街還是先有廟</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「先蓋好一條街，廟才蓋在旁邊。」</div></div>
@@ -2127,7 +2308,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c4" aria-labelledby="c4-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c4" aria-labelledby="c4-t" hidden>
       <div class="page-head"><span class="label">對照卡 4 / 8</span><h2 id="c4-t" class="title">騎樓和天井一樣嗎</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「騎樓和天井都是為了好看。」</div></div>
@@ -2140,28 +2321,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="q1" aria-labelledby="q1-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 第一組</span><h2 id="q1-t" class="title">哪一句才是對的</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
-        <div class="quiz" data-quiz data-mode="single">
-          <p class="q-stem">下列哪一句話說得正確？</p>
-          <div class="q-options">
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R2-4" data-cp-kp="廟宇與居民生活" data-cp-hash="dadb77" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 社R2-4 · 廟宇與居民生活</span><h2 id="cp1-t" class="title">哪一句才是對的</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">下列哪一句話說得正確？</p>
+        <div class="q-options abcd two">
           <button class="q-opt">老街沒落就是那個地方失敗了</button>
-          <button class="q-opt" data-correct="true">廟宇除了信仰，也是聚落的集會與休閒中心</button>
+          <button class="q-opt" data-correct>廟宇除了信仰，也是聚落的集會與休閒中心</button>
           <button class="q-opt">街道先蓋好，廟才跟著蓋</button>
           <button class="q-opt">騎樓和天井解決的是同一個問題</button>
-          </div>
-          <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
-          <div class="ans-feedback"></div>
         </div>
-        <div class="takeaway-band" data-reveal data-after-answer style="margin-top:0">
-          <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-          <span class="text">其餘三句分別對應對照卡 2、3、4 的錯誤說法。</span>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">其餘三句分別對應對照卡 2、3、4 的錯誤說法。</span>
       </div>
     </section>
 
-<section class="slide" data-slide-id="d2" aria-labelledby="d2-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d2" aria-labelledby="d2-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二組</div>
         <div id="d2-t" class="headline">曆法與節慶</div>
@@ -2169,7 +2352,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c5" aria-labelledby="c5-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c5" aria-labelledby="c5-t" hidden>
       <div class="page-head"><span class="label">對照卡 5 / 8</span><h2 id="c5-t" class="title">農曆和農民曆一樣嗎</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「農曆就是農民曆。」</div></div>
@@ -2182,7 +2365,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c6" aria-labelledby="c6-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c6" aria-labelledby="c6-t" hidden>
       <div class="page-head"><span class="label">對照卡 6 / 8</span><h2 id="c6-t" class="title">清明看農曆嗎</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「清明節和端午節一樣，都看農曆。」</div></div>
@@ -2195,7 +2378,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c7" aria-labelledby="c7-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c7" aria-labelledby="c7-t" hidden>
       <div class="page-head"><span class="label">對照卡 7 / 8</span><h2 id="c7-t" class="title">熱鬧放假就是傳統節慶嗎</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「只要熱鬧、會放假的日子，就是傳統節慶。」</div></div>
@@ -2208,7 +2391,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="c8" aria-labelledby="c8-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="c8" aria-labelledby="c8-t" hidden>
       <div class="page-head"><span class="label">對照卡 8 / 8</span><h2 id="c8-t" class="title">五年祭要辦五年嗎</h2></div>
       <div class="misconception">
         <div class="wrong-side"><div class="head"><span class="mark">✗</span> 常聽到的說法</div><div class="body">「排灣族的五年祭要連續辦五年；達悟族只捕飛魚是因為別的魚不好吃。」</div></div>
@@ -2221,28 +2404,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="q2" aria-labelledby="q2-t" hidden>
-      <div class="page-head"><span class="label">馬上試試 · 第二組</span><h2 id="q2-t" class="title">哪一句才是對的</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
-        <div class="quiz" data-quiz data-mode="single">
-          <p class="q-stem">下列哪一句話說得正確？</p>
-          <div class="q-options">
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="社R2-4" data-cp-kp="傳統節慶與現代節日的比較" data-cp-hash="f70d4a" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 社R2-4 · 傳統節慶與現代節日的比較</span><h2 id="cp2-t" class="title">哪一句才是對的</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">下列哪一句話說得正確？</p>
+        <div class="q-options abcd two">
           <button class="q-opt">農曆和農民曆是同一件事</button>
           <button class="q-opt">清明節的日期看農曆決定</button>
-          <button class="q-opt" data-correct="true">傳統節慶與現代節日看曆法和由來來分</button>
+          <button class="q-opt" data-correct>傳統節慶與現代節日看曆法和由來來分</button>
           <button class="q-opt">五年祭要連續舉行五年</button>
-          </div>
-          <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
-          <div class="ans-feedback"></div>
         </div>
-        <div class="takeaway-band" data-reveal data-after-answer style="margin-top:0">
-          <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-          <span class="text">其餘三句分別對應對照卡 5、6、8 的錯誤說法。</span>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
         </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">其餘三句分別對應對照卡 5、6、8 的錯誤說法。</span>
       </div>
     </section>
 
-<section class="slide" data-slide-id="sheet" aria-labelledby="sheet-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="sheet" aria-labelledby="sheet-t" hidden>
       <div class="page-head"><span class="label">考前 · 帶回家</span><h2 id="sheet-t" class="title">這八張卡，紙本也有一份</h2></div>
       <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="concept-card" data-reveal><div class="head">3a 對照卡</div><div class="body">A4 一頁三張，可以<b>剪下來</b>夾在課本裡</div></div>
@@ -2255,7 +2440,19 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-<section class="slide" data-slide-id="end" aria-labelledby="end-t" hidden>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 社R2-4</span><h2 id="summary-t" class="title">今天帶走這五件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>廟宇不只拜拜，也是集會、教育、休閒的地方；先有廟宇人潮，才成街</div>
+        <div class="item" data-reveal>老街沒落講的是人潮移走，不是失敗，老街仍有保存價值</div>
+        <div class="item" data-reveal>曆法看月亮、節氣看太陽；農民曆是一本書，清明是節氣</div>
+        <div class="item" data-reveal>分傳統節慶與現代節日看曆法和由來，熱鬧放假不是判準</div>
+        <div class="item" data-reveal>五年祭是每五年辦一次；祭典時間跟著自然節律</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="end" aria-labelledby="end-t" hidden>
       <div class="page-head"><span class="label">收尾 · 考前提醒</span><h2 id="end-t" class="title">進考場前，記得這四句</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>「只有／全部／一定」先找例外</b>　找得到就是錯</div>
@@ -2269,6 +2466,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
+
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>0</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2280,6 +2478,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {

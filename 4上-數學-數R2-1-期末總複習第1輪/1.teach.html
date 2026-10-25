@@ -2057,13 +2057,64 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .mfig { display: block; }
 .mfig svg { display: block; width: 100%; height: auto; max-height: 420px; }
 
+
+
+/* ===== 本課專用 ===== */
+/* v4-shell:start */
+/* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
+.phase { display: inline-block; padding: 2px 14px; border-radius: 999px; font-size: var(--t5); font-weight: var(--fw-bold); margin-right: 8px; }
+.phase-quiz { background: var(--warn-soft); color: var(--ink); }
+.phase-learn { background: var(--accent-soft); color: var(--ink); }
+.phase-sum { background: var(--correct-soft); color: var(--ink); }
+.answer-modes { display: flex; gap: var(--s4); margin-top: var(--s5); }
+.answer-modes .mode { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); font-size: var(--t4); display: flex; flex-direction: column; gap: 6px; }
+.answer-modes .mode b { font-size: var(--t3); }
+.q-options.abcd { counter-reset: opt; }
+.q-options.abcd .q-opt::before { counter-increment: opt; content: counter(opt, upper-alpha); display: inline-flex; width: 1.6em; height: 1.6em; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: var(--fw-bold); margin-right: 12px; font-size: .8em; }
+.q-options.tf { grid-template-columns: 1fr 1fr; }
+.q-stem.big { font-size: var(--t2); line-height: var(--lh-normal); text-align: center; margin: var(--s3) 0; }
+.row.center { justify-content: center; display: flex; gap: var(--s3); margin-top: var(--s3); }
+.flip-card.short-ans { width: 820px; height: 140px; }
+.flip-card.short-ans .face { font-size: var(--t3); }
+/* 「📋 記錄本題」：預設隱藏，JS 確認被同源電子白板嵌入才掛 body.is-embedded 顯示（RULE §4 feature flag） */
+.rec-open { display: none; border-style: dashed; }
+body.is-embedded .rec-open { display: inline-flex; }
+/* 嵌入電子白板時由白板負責滿版，簡報自己的「全螢幕」鈕拿掉（範本做法） */
+body.is-embedded .hud [data-action="fullscreen"] { display: none; }
+.next-tag { margin-left: auto; padding: 2px 12px; border-radius: 999px; background: var(--warn-soft); font-size: var(--t5); white-space: nowrap; }
+.action-list > .item { display: flex; align-items: center; gap: 12px; }
+.result-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s5); flex: 1; align-items: center; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 110px; align-items: center; gap: 16px; font-size: var(--t4); }
+.bar-track { height: 36px; border-radius: 18px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 18px; background: var(--correct); transition: width 300ms ease; }
+.bar-fill.low { background: var(--wrong); }
+.bar-row .pct { font-weight: var(--fw-bold); text-align: right; }
+.decision { font-size: var(--t4); background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); padding: var(--s4); line-height: var(--lh-normal); }
+/* 作答題頁：「對答案」列與回饋並排、長選項排 2×2——作答後判斷帶才不壓 HUD（2026-10-22 國L7 實測 943→798） */
+.slide .quiz { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s3); }
+.slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
+.slide .quiz > .ans-feedback { margin: 0; }
+.q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
+/* v4-shell:end */
+
 </style>
 </head>
-<body>
+<body data-lesson="數R2-1">
 <main class="deck" aria-label="數R2-1 課程教學｜第 6～10 單元總驗收">
-  <div class="stage" id="stage" tabindex="-1">
-
-<main class="deck" aria-label="數R2-1 期末總複習第1輪｜習作範圍總驗收與訂正">
   <div class="stage" id="stage" tabindex="-1">
 
     <section class="slide" data-slide-id="how" aria-labelledby="how-t" hidden>
@@ -2079,7 +2130,150 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d6" aria-labelledby="d6-t" hidden>
+    <!-- 本節流程 -->
+    <section class="slide" data-slide-id="flow" aria-labelledby="flow-t" hidden>
+      <div class="page-head"><span class="label">數R2-1 · 今天的 40 分鐘</span><h2 id="flow-t" class="title">今天這一節怎麼上</h2></div>
+      <div class="flow-steps">
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">複習快問</div><div class="body">這一課要用到的舊經驗<br>五題</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">30'</div><div class="head">學新的</div><div class="body">說明 → 範例 → 練習<br>中間穿插全班作答</div></div>
+        <div class="arrow" data-reveal>→</div>
+        <div class="step" data-reveal><div class="badge">5'</div><div class="head">重點總結</div><div class="body">今天帶走的重點<br>＝下一節小考範圍</div></div>
+      </div>
+    </section>
+
+    <!-- ① 小考：題目出自 本節 prereq_quiz（先備） -->
+    <section class="slide" data-slide-id="quiz-cover" data-phase="recall" aria-labelledby="quiz-cover-t" hidden>
+      <div class="section-divider" style="height:100%;justify-content:center;">
+        <div class="kicker"><span class="phase phase-quiz">① 複習快問 · 5 分鐘</span></div>
+        <div id="quiz-cover-t" class="headline">這些還記得嗎？</div>
+        <div class="sub">範圍：除以三位數、三角形的分類、先乘除後加減、長度與小數、報讀長條圖</div>
+        <div class="answer-modes">
+          <div class="mode"><b>選擇題</b>舉 A／B／C／D 卡</div>
+          <div class="mode"><b>是非題</b>雙手比 ⭕ 或 ❌</div>
+          <div class="mode"><b>簡答題</b>寫在小白板，聽口令舉起</div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q1" data-phase="recall" data-cp="Q1" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="除以三位數" data-cp-hash="7f2e86" aria-labelledby="q1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 1/5 · 選擇</span> 先備 · 除以三位數</span><h2 id="q1-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">4956 ÷ 200 的商和餘數是多少？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">商 24、餘 56</button>
+          <button class="q-opt">商 2、餘 956</button>
+          <button class="q-opt" data-correct>商 24、餘 156</button>
+          <button class="q-opt">商 25、餘 44</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「商 24、餘 156」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q2" data-phase="recall" data-cp="Q2" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="三角形的分類" data-cp-hash="d5297e" aria-labelledby="q2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 2/5 · 選擇</span> 先備 · 三角形的分類</span><h2 id="q2-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">一個三角形的三個角分別是 40°、60°、80°，它是什麼三角形？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">直角三角形</button>
+          <button class="q-opt">鈍角三角形</button>
+          <button class="q-opt">不可能存在</button>
+          <button class="q-opt" data-correct>銳角三角形</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「銳角三角形」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q3" data-phase="recall" data-cp="Q3" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="先乘除後加減" data-cp-hash="055ecf" aria-labelledby="q3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 3/5 · 選擇</span> 先備 · 先乘除後加減</span><h2 id="q3-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">75 ＋ 25 × 4 ＝ ？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">400</button>
+          <button class="q-opt" data-correct>175</button>
+          <button class="q-opt">500</button>
+          <button class="q-opt">125</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「175」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q4" data-phase="recall" data-cp="Q4" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="長度與小數" data-cp-hash="2c4d31" aria-labelledby="q4-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 4/5 · 選擇</span> 先備 · 長度與小數</span><h2 id="q4-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">1 公尺 8 公分等於幾公尺？</p>
+        <div class="q-options abcd">
+          <button class="q-opt" data-correct>1.08 公尺</button>
+          <button class="q-opt">1.8 公尺</button>
+          <button class="q-opt">18 公尺</button>
+          <button class="q-opt">1.008 公尺</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「1.08 公尺」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="q5" data-phase="recall" data-cp="Q5" data-cp-kind="小考" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="報讀長條圖" data-cp-hash="40658f" aria-labelledby="q5-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考 5/5 · 選擇</span> 先備 · 報讀長條圖</span><h2 id="q5-t" class="title">舉 A／B／C／D 卡</h2></div>
+      <div class="quiz" data-quiz data-mode="single">
+        <p class="q-stem">一張長條圖，一格代表 2 輛車。某個長條畫到第 7 格，代表幾輛車？</p>
+        <div class="q-options abcd">
+          <button class="q-opt">7 輛</button>
+          <button class="q-opt">9 輛</button>
+          <button class="q-opt" data-correct>14 輛</button>
+          <button class="q-opt">72 輛</button>
+        </div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
+        <div class="ans-feedback"></div>
+      </div>
+      <div class="takeaway-band" data-reveal data-after-answer>
+        <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
+        <span class="text">答案是「14 輛」</span>
+      </div>
+    </section>
+    <section class="slide" data-slide-id="quiz-result" data-phase="recall" aria-labelledby="quiz-result-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-quiz">小考結果</span> 全班答對率（只有人數，沒有座號）</span><h2 id="quiz-result-t" class="title">哪一題要回頭講？</h2></div>
+      <div class="result-wrap">
+        <div class="bars" id="quiz-bars"></div>
+        <div class="decision" id="quiz-decision">未在電子白板開啟，本節不記錄。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="d6" aria-labelledby="d6-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第一站 · 第六單元</div>
         <div id="d6-t" class="headline">除法：估商與去 0</div>
@@ -2087,7 +2281,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="u6" aria-labelledby="u6-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u6" aria-labelledby="u6-t" hidden>
       <div class="page-head"><span class="label">複習 · 第六單元</span><h2 id="u6-t" class="title">除法的三個關鍵</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>商從哪一位開始</b>　被除數由左取到「夠除」為止，那一位就是商的最高位</div>
@@ -2100,7 +2294,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="f-est" aria-labelledby="f-est-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="f-est" aria-labelledby="f-est-t" hidden>
       <div class="page-head"><span class="label">第六單元 · 步驟圖</span><h2 id="f-est-t" class="title">估商三步驟：790 ÷ 29</h2></div>
       <div class="mfig" data-reveal>
         <svg viewBox="0 0 1400 330" role="img" aria-label="790 除以 29 的估商三步驟直式圖">
@@ -2129,28 +2323,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="q6a" aria-labelledby="q6a-t" hidden>
-      <div class="page-head"><span class="label">試試看 · 第六單元</span><h2 id="q6a-t" class="title">估過頭了，怎麼辦？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="除以二位數（整十・估商）" data-cp-hash="cafada" aria-labelledby="cp1-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 1</span> 數R2-1 · 除以二位數（整十・估商）</span><h2 id="cp1-t" class="title">估過頭了，怎麼辦？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">算 92 ÷ 31，把 31 看成 30 估商 3。檢查 3 × 31 ＝ 93 比 92 大，怎麼辦？</p>
-        <div class="q-options">
+        <div class="q-options abcd">
           <button class="q-opt">商改成 4</button>
           <button class="q-opt">把 92 改成 93</button>
           <button class="q-opt">寫商 3、餘數 −1</button>
           <button class="q-opt" data-correct>商退成 2 再算一次</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">乘回去比被除數大＝<b>估過頭</b>，商退 1；餘數不可以是負的</span>
-      </div>
+        <span class="text">乘回去比被除數大＝估過頭，商退 1；餘數不可以是負的</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="f-zero" aria-labelledby="f-zero-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="f-zero" aria-labelledby="f-zero-t" hidden>
       <div class="page-head"><span class="label">第六單元 · 步驟圖</span><h2 id="f-zero-t" class="title">去 0 要成對：7200 ÷ 120</h2></div>
       <div class="mfig" data-reveal>
         <svg viewBox="0 0 1400 300" role="img" aria-label="7200 除以 120 去零的正確與錯誤對照">
@@ -2170,7 +2366,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="q6b" aria-labelledby="q6b-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="q6b" aria-labelledby="q6b-t" hidden>
       <div class="page-head"><span class="label">試試看 · 第六單元</span><h2 id="q6b-t" class="title">這一題可以去掉幾個 0？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2191,7 +2387,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d7" aria-labelledby="d7-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d7" aria-labelledby="d7-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第二站 · 第七單元</div>
         <div id="d7-t" class="headline">三角形與全等</div>
@@ -2199,7 +2395,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="u7" aria-labelledby="u7-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u7" aria-labelledby="u7-t" hidden>
       <div class="page-head"><span class="label">複習 · 第七單元</span><h2 id="u7-t" class="title">三角形與全等的三個關鍵</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>照角分三類</b>　三個角都小於 90° 是銳角三角形；有一個 90° 是直角；有一個大於 90° 是鈍角</div>
@@ -2212,7 +2408,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="q7" aria-labelledby="q7-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="q7" aria-labelledby="q7-t" hidden>
       <div class="page-head"><span class="label">試試看 · 第七單元</span><h2 id="q7-t" class="title">這兩個三角形全等嗎？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2233,7 +2429,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d8" aria-labelledby="d8-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d8" aria-labelledby="d8-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第三站 · 第八單元</div>
         <div id="d8-t" class="headline">兩步驟併式</div>
@@ -2241,7 +2437,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="u8" aria-labelledby="u8-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u8" aria-labelledby="u8-t" hidden>
       <div class="page-head"><span class="label">複習 · 第八單元</span><h2 id="u8-t" class="title">併式的三個關鍵</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>先乘除，後加減</b>　同一個算式裡，乘和除先算，加和減後算</div>
@@ -2254,7 +2450,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="m8" aria-labelledby="m8-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="m8" aria-labelledby="m8-t" hidden>
       <div class="page-head"><span class="label">觀念澄清</span><h2 id="m8-t" class="title">少一個括號，就是另一題了</h2></div>
       <div class="misconception">
         <div class="wrong-side" data-reveal><div class="mark">✗ 常見錯誤</div><div class="text">要先算 200 − 25，卻寫成 200 − 25 × 4，算出 100。</div></div>
@@ -2263,28 +2459,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="q8" aria-labelledby="q8-t" hidden>
-      <div class="page-head"><span class="label">試試看 · 第八單元</span><h2 id="q8-t" class="title">括號要加在哪裡？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="加減併式與括號" data-cp-hash="88c8fb" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 數R2-1 · 加減併式與括號</span><h2 id="cp2-t" class="title">括號要加在哪裡？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">每盒有 12 顆蛋，媽媽買了 5 盒，打破 3 顆。要算剩下幾顆，併式怎麼寫？</p>
-        <div class="q-options">
+        <div class="q-options abcd two">
           <button class="q-opt">12 × (5 − 3)</button>
           <button class="q-opt">(12 − 3) × 5</button>
           <button class="q-opt" data-correct>12 × 5 − 3</button>
           <button class="q-opt">12 − 3 × 5</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">先算總數（12 × 5），乘法本來就先算，<b>不必加括號</b></span>
-      </div>
+        <span class="text">先算總數（12 × 5），乘法本來就先算，不必加括號</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d9" aria-labelledby="d9-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d9" aria-labelledby="d9-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第四站 · 第九單元</div>
         <div id="d9-t" class="headline">二位小數</div>
@@ -2292,7 +2490,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="u9" aria-labelledby="u9-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u9" aria-labelledby="u9-t" hidden>
       <div class="page-head"><span class="label">複習 · 第九單元</span><h2 id="u9-t" class="title">二位小數的三個關鍵</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>位值要記牢</b>　小數點右邊第一位是十分位（0.1），第二位是百分位（0.01）</div>
@@ -2305,7 +2503,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="f-dec" aria-labelledby="f-dec-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="f-dec" aria-labelledby="f-dec-t" hidden>
       <div class="page-head"><span class="label">第九單元 · 步驟圖</span><h2 id="f-dec-t" class="title">小數加減：小數點一定要對齊</h2></div>
       <div class="mfig" data-reveal>
         <svg viewBox="0 0 1400 300" role="img" aria-label="小數點對齊的正確與錯誤直式對照">
@@ -2330,7 +2528,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="q9" aria-labelledby="q9-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="q9" aria-labelledby="q9-t" hidden>
       <div class="page-head"><span class="label">試試看 · 第九單元</span><h2 id="q9-t" class="title">這一題等於多少？</h2></div>
       <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
       <div class="quiz" data-quiz data-mode="single">
@@ -2351,7 +2549,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="d10" aria-labelledby="d10-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="d10" aria-labelledby="d10-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第五站 · 第十單元</div>
         <div id="d10-t" class="headline">長條圖與折線圖</div>
@@ -2359,7 +2557,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="u10" aria-labelledby="u10-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="u10" aria-labelledby="u10-t" hidden>
       <div class="page-head"><span class="label">複習 · 第十單元</span><h2 id="u10-t" class="title">統計圖的三個關鍵</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>先看四個地方</b>　標題、兩軸的項目與單位、<b>一格代表多少</b></div>
@@ -2372,28 +2570,30 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="q10" aria-labelledby="q10-t" hidden>
-      <div class="page-head"><span class="label">試試看 · 第十單元</span><h2 id="q10-t" class="title">哪一段下降最多？</h2></div>
-      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:var(--s3);align-items:start;">
+    <section class="slide" data-slide-id="cp3" data-phase="learn" data-cp="C3" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="數R2-1" data-cp-kp="報讀折線圖" data-cp-hash="c314fe" aria-labelledby="cp3-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 3</span> 數R2-1 · 報讀折線圖</span><h2 id="cp3-t" class="title">哪一段下降最多？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
         <p class="q-stem">一張氣溫折線圖，14 時到 16 時的線段特別陡且往下。這代表什麼？</p>
-        <div class="q-options">
+        <div class="q-options abcd two">
           <button class="q-opt" data-correct>這段時間氣溫下降得最快</button>
           <button class="q-opt">這段時間氣溫最高</button>
           <button class="q-opt">這段時間氣溫最低</button>
           <button class="q-opt">這段時間沒有測量</button>
         </div>
-        <div class="row"><button class="ds-btn primary" data-quiz-check>對答案</button><button class="ds-btn" data-quiz-reset>重做</button></div>
+        <div class="row">
+          <button class="ds-btn primary" data-quiz-check>對答案</button>
+          <button class="ds-btn" data-quiz-reset>重做</button>
+          <button class="ds-btn rec-open" type="button">📋 記錄本題</button>
+        </div>
         <div class="ans-feedback"></div>
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">陡不陡看<b>變化快慢</b>；最高最低要看點的<b>高度</b>，兩件事不要混在一起</span>
-      </div>
+        <span class="text">陡不陡看變化快慢；最高最低要看點的高度，兩件事不要混在一起</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="err" aria-labelledby="err-t" hidden>
+    <section class="slide" data-phase="learn" data-slide-id="err" aria-labelledby="err-t" hidden>
       <div class="page-head"><span class="label">總整理</span><h2 id="err-t" class="title">六個最容易失分的地方</h2></div>
       <div class="action-list" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);">
         <div class="item" data-reveal><b>估商不檢查</b>　乘回去比被除數大就要退 1</div>
@@ -2405,7 +2605,19 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
-    <section class="slide" data-slide-id="end" aria-labelledby="end-t" hidden>
+    <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數R2-1</span><h2 id="summary-t" class="title">今天帶走這五件事</h2></div>
+      <div class="action-list">
+        <div class="item" data-reveal>估商後乘回去比被除數大就退 1；去 0 要成對，除數有幾個 0 才去幾個<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>能完全疊合就是全等，翻面、旋轉也算<span class="next-tag">下節考 是非</span></div>
+        <div class="item" data-reveal>先乘除後加減；要先算的是加減，才加括號<span class="next-tag">下節考 是非</span></div>
+        <div class="item" data-reveal>小數加減先對齊小數點，位數不同先補 0<span class="next-tag">下節考 選擇</span></div>
+        <div class="item" data-reveal>讀統計圖先看一格代表多少，一格不一定是 1<span class="next-tag">下節考 簡答</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="end" aria-labelledby="end-t" hidden>
       <div class="page-head"><span class="label">這兩週 · 收尾</span><h2 id="end-t" class="title">接下來要做完的兩件事</h2></div>
       <div class="action-list">
         <div class="item" data-reveal><b>把習作訂正完</b>　第 6～10 單元所有錯的題目重寫一次，老師逐一檢核</div>
@@ -2421,6 +2633,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
       </div>
     </section>
 
+
     <div class="hud">
       <p class="pagemeta"><span data-current>1</span> / <span data-total>17</span> <span data-reveal-meta></span></p>
       <span class="spacer"></span>
@@ -2432,6 +2645,91 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
     <div class="progress-track"><div class="progress-bar" data-progress></div></div>
   </div>
 </main>
+
+<script>
+/* 單節課簡報 v4：簡報 ↔ 電子白板訊息協定 v1（SPEC_單節課簡報v4 §3.3）
+   - 只在「被同源頁面以 iframe 嵌入」時運作；單獨開時記錄鈕隱藏、不送任何訊息。
+   - 收發都驗 origin；targetOrigin 一律 location.origin（禁 '*'）。
+   - 白板只回傳人數 {ok,ng,na}，簡報不經手座號；不讀寫電子白板的本機暫存（同源讀得到，但不准碰）。 */
+(() => {
+  const ORIGIN = location.origin;
+  const lesson = document.body.dataset.lesson || '';
+  const embedded = (() => {
+    try { return window.parent !== window && window.parent.location.origin === ORIGIN; }
+    catch (e) { return false; }   // 跨源嵌入讀 parent.location 會丟錯＝不算嵌入
+  })();
+  const post = (msg) => { if (embedded) window.parent.postMessage(Object.assign({ v: 1 }, msg), ORIGIN); };
+  const saved = {};               // cp → {ok, ng, na}（只有人數）
+  const LOW = 0.6;
+  const QUIZ = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'];
+  const int = (x) => (Number.isInteger(x) && x >= 0 ? x : null);
+
+  const drawResult = () => {
+    const bars = document.querySelector('#quiz-bars');
+    const dec = document.querySelector('#quiz-decision');
+    if (!bars || !dec) return;
+    if (!embedded) { bars.innerHTML = ''; dec.textContent = '未在電子白板開啟，本節不記錄。'; return; }
+    bars.innerHTML = '';
+    const lows = [];
+    QUIZ.forEach((q) => {
+      const sec = document.querySelector(`.slide[data-cp="${q}"]`);
+      const type = sec ? sec.dataset.cpType : '';
+      const st = saved[q];
+      const ans = st ? st.ok + st.ng : 0;
+      const rate = ans ? st.ok / ans : null;     // 與白板面板同一算法：答對÷(答對＋答錯)
+      if (rate !== null && rate < LOW) lows.push(`${q}（${type}）`);
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const pct = rate === null ? null : Math.round(rate * 100);
+      row.innerHTML = `<span>${q}・${type}</span><div class="bar-track"><div class="bar-fill${rate !== null && rate < LOW ? ' low' : ''}" style="width:${pct ?? 0}%"></div></div><span class="pct">${pct === null ? '未記' : pct + '%'}</span>`;
+      bars.appendChild(row);
+    });
+    const done = QUIZ.filter((q) => saved[q]).length;
+    dec.innerHTML = done === 0
+      ? '還沒有記錄。每題按「📋 記錄本題」，在電子白板作答面板標完按「確認本題」。'
+      : `已記錄 ${done}/5 題。<br>${lows.length ? '⚠ 建議回頭講：<b>' + lows.join('、') + '</b>' : '✅ 每題都在 60% 以上，直接進新課。'}`;
+  };
+
+  if (embedded) {
+    document.body.classList.add('is-embedded');
+    addEventListener('message', (e) => {
+      if (e.origin !== ORIGIN || e.source !== window.parent) return;
+      const d = e.data || {};
+      if (d.v !== 1) return;
+      const take = (x) => {
+        const r = { ok: int(x && x.ok), ng: int(x && x.ng), na: int(x && x.na) };
+        return r.ok === null || r.ng === null || r.na === null ? null : r;   // 只收三個整數，其他欄位一律不存
+      };
+      if (d.type === 'cp-saved' && typeof d.cp === 'string' && /^(Q[1-5]|C[1-3])$/.test(d.cp)) {
+        const r = take(d); if (r) saved[d.cp] = r;
+      } else if (d.type === 'cp-state' && d.saved && typeof d.saved === 'object') {
+        Object.keys(d.saved).forEach((k) => {
+          if (!/^(Q[1-5]|C[1-3])$/.test(k)) return;
+          const r = take(d.saved[k]); if (r) saved[k] = r;
+        });
+      } else return;
+      drawResult();
+    });
+    document.addEventListener('click', (e) => {
+      const b = e.target && e.target.closest ? e.target.closest('.rec-open') : null;
+      if (!b) return;
+      e.stopPropagation();
+      const s = b.closest('.slide'); if (!s) return;
+      post({ type: 'cp-open', meta: { lesson, cp: s.dataset.cp, kind: s.dataset.cpKind, type: s.dataset.cpType, src: s.dataset.cpSrc, kp: s.dataset.cpKp } });
+    }, true);
+    // 換頁才送 slide-change（同頁逐步揭露只動子元件 class，不會觸發）
+    let lastId = null;
+    const watch = new MutationObserver(() => {
+      const act = document.querySelector('.slide.is-active');
+      const id = act ? act.dataset.slideId : null;
+      if (id && id !== lastId) { lastId = id; post({ type: 'slide-change', id }); }
+    });
+    document.querySelectorAll('.slide').forEach((s) => watch.observe(s, { attributes: true, attributeFilter: ['class'] }));
+    post({ type: 'deck-ready', lesson });
+  }
+  drawResult();
+})();
+
+</script>
 
 <script>
 (() => {
