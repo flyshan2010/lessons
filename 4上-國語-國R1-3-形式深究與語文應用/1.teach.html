@@ -2023,6 +2023,7 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 
 
 
+
 /* ===== 本課專用 ===== */
 /* v4-shell:start */
 /* 單節課簡報 v4 殼層（SPEC_單節課簡報v4 §3）：階段標籤、作答題頁、小考結果、重點總結 */
@@ -2060,7 +2061,15 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
-/* 看圖題圖左題右（.qsplit）：右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
 .qsplit .quiz { padding: var(--s3); gap: var(--s2); }
 .qsplit .quiz > .q-stem { font-size: var(--t4); }
 .qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
@@ -2229,7 +2238,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="m1" aria-labelledby="m1-t" hidden>
-      <div class="page-head"><span class="label">錯在哪裡 · 修辭</span><h2 id="m1-t" class="title">「小河唱著歌」是譬喻嗎？</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">句子很生動，所以是譬喻。</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">句中<strong>沒有喻詞</strong>，而是把小河當人寫（會唱歌）→ 這是<strong>轉化</strong>。生動與否不是判準，喻詞和擬人才是。</div></div></div>
+      <div class="page-head"><span class="label">錯在哪裡 · 修辭</span><h2 id="m1-t" class="title">「小河唱著歌」是譬喻嗎？</h2></div><div class="misconception" style="flex:none;"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">句子很生動，所以是譬喻。</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">句中<strong>沒有喻詞</strong>，而是把小河當人寫（會唱歌）→ 這是<strong>轉化</strong>。生動與否不是判準，喻詞和擬人才是。</div></div></div>
     </section>
 
     <section class="slide" data-slide-id="cp1" data-phase="learn" data-cp="C1" data-cp-kind="課中" data-cp-type="選擇" data-cp-src="國R1-3" data-cp-kp="修辭" data-cp-hash="529c62" aria-labelledby="cp1-t" hidden>
@@ -2291,7 +2300,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="m2" aria-labelledby="m2-t" hidden>
-      <div class="page-head"><span class="label">錯在哪裡 · 書信</span><h2 id="m2-t" class="title">祝候語可以直接接在正文後面嗎？</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">「……我下次再去看您敬祝身體健康」</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">祝候語不能黏在正文後面。<strong>「敬祝」另起一行、祝福的話再抬高一行</strong>，位置錯了就算格式不對，這是最常被扣分的地方。</div></div></div>
+      <div class="page-head"><span class="label">錯在哪裡 · 書信</span><h2 id="m2-t" class="title">祝候語可以直接接在正文後面嗎？</h2></div><div class="misconception" style="flex:none;"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">「……我下次再去看您敬祝身體健康」</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">祝候語不能黏在正文後面。<strong>「敬祝」另起一行、祝福的話再抬高一行</strong>，位置錯了就算格式不對，這是最常被扣分的地方。</div></div></div>
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="q3p" aria-labelledby="q3p-t" hidden>
@@ -2342,7 +2351,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="m3" aria-labelledby="m3-t" hidden>
-      <div class="page-head"><span class="label">錯在哪裡 · 選材</span><h2 id="m3-t" class="title">材料愈多愈好嗎？</h2></div><div class="misconception"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">題目「一次難忘的合作」，把整個學期的活動全寫進去。</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">材料要能<strong>證明你的立意</strong>。與「合作」無關的活動要捨棄；三則精準的材料，勝過十則湊數的。</div></div></div>
+      <div class="page-head"><span class="label">錯在哪裡 · 選材</span><h2 id="m3-t" class="title">材料愈多愈好嗎？</h2></div><div class="misconception" style="flex:none;"><div class="wrong-side" data-reveal><div class="mark">✗ 他這樣算</div><div class="text">題目「一次難忘的合作」，把整個學期的活動全寫進去。</div></div><div class="becomes" data-reveal>→</div><div class="right-side" data-reveal><div class="mark">✓ 錯在哪一步</div><div class="text">材料要能<strong>證明你的立意</strong>。與「合作」無關的活動要捨棄；三則精準的材料，勝過十則湊數的。</div></div></div>
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="q6" aria-labelledby="q6-t" hidden>
