@@ -2115,6 +2115,16 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
 .qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
 
 </style>
 
@@ -2571,6 +2581,14 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
         <span class="text">正三角形的三個角都是 60 度；露出來的是直角，所以不可能是正三角形</span>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">數L7-1 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：看角、看邊，幫三角形分類</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/9wWXhM21Jd4?rel=0" title="數7-1三角形的分類總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分十五秒）</summary><ol><li>剛剛這節課，我們用兩種標準，幫三角形分類：看角，和看邊。</li><li>先看角，找出最大的那個角。最大角是銳角，就是銳角三角形；是直角，就是直角三角形；是鈍角，就是鈍角三角形。</li><li>看起來像直角，不算數，要拿三角板的直角，比一比才知道。</li><li>再看邊。有兩條邊一樣長，是等腰三角形；三條邊都一樣長，是正三角形。正三角形，也是很特別的等腰三角形。</li><li>等腰三角形裡，兩條腰夾的是頂角，另外兩個是底角。兩個底角，一樣大。</li><li>正三角形的三個角，也一樣大，量出來都是六十度。</li><li>有一個直角，又有兩條邊一樣長，叫做等腰直角三角形。它的兩個底角，都是四十五度。</li><li>下一節小考前，想一想：三個角是三十度、五十度、一百度的三角形，是哪一種三角形？</li></ol></details>
       </div>
     </section>
 
