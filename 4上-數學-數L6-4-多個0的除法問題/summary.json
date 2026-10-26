@@ -1,0 +1,72 @@
+{
+  "schema": "lesson-summary/1",
+  "lesson": "數L6-4",
+  "folder": "4上-數學-數L6-4-多個0的除法問題",
+  "subject": "數學",
+  "prev": "數L6-3",
+  "next": null,
+  "points": [
+    {
+      "id": "P1",
+      "text": "被除數和除數末尾都有 0，同時去掉一樣多個 0，商不變",
+      "kp": "多個0的除法"
+    },
+    {
+      "id": "P2",
+      "text": "0 要成對去掉：除數只有一個 0，就只能各去一個",
+      "kp": "多個0的除法"
+    },
+    {
+      "id": "P3",
+      "text": "去 0 後算出的餘數，要把去掉的 0 補回去",
+      "kp": "餘數與驗算"
+    }
+  ],
+  "checkpoints": [
+    {
+      "cp": "C1",
+      "type": "選擇",
+      "kp": "多個0的除法",
+      "replace": "quiz1",
+      "title": "換你判斷：哪一個和 9100 ÷ 700 的商一樣？",
+      "stem": "9100 ÷ 700 和下面哪個算式的商一樣？",
+      "options": [
+        "91 ÷ 7",
+        "9100 ÷ 70",
+        "910 ÷ 700",
+        "91 ÷ 70"
+      ],
+      "answer": 0,
+      "why": "兩邊都去掉兩個 0 → 91 ÷ 7 ＝ 13。只去一邊的 0 商就變了"
+    },
+    {
+      "cp": "C2",
+      "type": "選擇",
+      "kp": "多個0的除法",
+      "replace": "quiz2",
+      "title": "換你算：8400 ÷ 120",
+      "stem": "8400 ÷ 120 ＝ ？",
+      "options": [
+        "7",
+        "70",
+        "700",
+        "60"
+      ],
+      "answer": 1,
+      "why": "120 只有一個 0 → 840 ÷ 12 ＝ 70"
+    }
+  ],
+  "media": [
+    {
+      "kind": "video",
+      "slide": "motion",
+      "url": "https://youtu.be/nvSQ77is4vU",
+      "start": 0,
+      "end": 80,
+      "embed": true,
+      "source": "自製動畫（lesson-motion）",
+      "credits": "旁白 edge-tts（zh-TW-HsiaoChenNeural）；字型 源石黑體（OFL 1.1）；畫面為程式排版，無外部圖片",
+      "offline": "旁白稿（頁內收合）"
+    }
+  ]
+}

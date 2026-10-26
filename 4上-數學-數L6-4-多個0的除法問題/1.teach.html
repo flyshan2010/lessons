@@ -2193,6 +2193,16 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
 
 </style>
 </head>
@@ -2543,6 +2553,14 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     </section>
 
     <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">數L6-4 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：兩邊同時去 0，餘數記得補回 0</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/nvSQ77is4vU?rel=0" title="數6-4多個0的除法問題總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分二十秒）</summary><ol><li>剛剛這節課，我們學了多個零的除法。招式只有一個：換一種單位，數字變小再算。</li><li>四百二十元，每六十元一包。換成十元來想，就是四十二個十，每六個十一包，四十二除以六，是七包。</li><li>看起來，就像把兩邊末尾的零，同時劃掉一個，商不變。</li><li>整百也一樣。二千七百除以三百，兩邊同時去掉兩個零，變成二十七除以三，商是九。</li><li>零要成對去掉。七千二百除以一百二十，一百二十只有一個零，只能各去一個，變成七百二十除以十二，商是六十。</li><li>有餘數要小心。四千五百除以二百，用四十五除以二來算，商二十二，餘一。這個一，是一個百，真正的餘數是一百。</li><li>整理一下：兩邊同時去零、看誰的零比較少、餘數記得補回零。</li><li>下一節小考前，想一想：五千三百除以四百，用五十三除以四來算，真正的餘數是多少？</li></ol></details>
+      </div>
+    </section>
+
     <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 數L6-4</span><h2 id="summary-t" class="title">今天帶走這三件事</h2></div>
       <div class="action-list">
