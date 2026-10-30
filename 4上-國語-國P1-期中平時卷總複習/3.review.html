@@ -2072,6 +2072,16 @@ html, body { overflow: auto; height: auto; background: var(--bg); }
 .sc{background:var(--surface);border:var(--line-mid) solid var(--line);border-radius:var(--r-md);padding:24px 28px}
 .sc-t{font-size:var(--t3);font-weight:var(--fw-bold);line-height:1.7}
 .sc-n{margin-top:10px;font-size:var(--t-min);color:var(--muted)}
+/* 臺灣示意圖（社會：地形・雨量・氣溫） */
+.tw-leg{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;font-size:var(--t-min);margin-top:8px}
+.tw-leg span{display:inline-flex;align-items:center;gap:8px}
+.tw-leg i{display:inline-block;width:28px;height:22px;border-radius:4px;border:2px solid var(--ink)}
+.tw-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tw-fig{margin:0;display:flex;flex-direction:column;align-items:center}
+.tw-fig figcaption{font-size:var(--t4);font-weight:var(--fw-bold);margin-bottom:4px}
+.tw-fig svg{width:100%;max-height:400px}
+.tw-two{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:var(--s4);align-items:start;margin-top:var(--s2)}
+.tw-row .tw-fig svg{max-height:330px}
 
 </style>
 </head>
