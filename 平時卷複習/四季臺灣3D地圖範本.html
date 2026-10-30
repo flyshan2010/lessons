@@ -1178,10 +1178,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 .mapw{grid-area:map;position:relative;overflow:hidden;min-height:0}
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 canvas:active{cursor:grabbing}
-.pin{position:absolute;left:0;top:0;display:flex;align-items:center;gap:6px;padding:0;border:0;background:none;white-space:nowrap;will-change:transform}
-.pin i{width:16px;height:16px;border-radius:50%;background:var(--ink);border:3px solid #fff;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.5)}
-.pin b{font-size:24px;line-height:1.15;font-weight:700;background:rgba(255,255,255,.93);border:1.5px solid rgba(0,0,0,.35);border-radius:8px;padding:1px 8px}
-.pin.west{flex-direction:row-reverse}
+.pin{position:absolute;left:0;top:0;width:16px;height:16px;padding:0;border:0;background:none;white-space:nowrap;will-change:transform}
+#leads{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#leads line{stroke:#1f1a14;stroke-width:1.5;stroke-opacity:.7}
+.pin i{display:block;width:16px;height:16px;border-radius:50%;background:var(--ink);border:3px solid #fff;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.pin b{position:absolute;left:0;top:0;font-size:24px;line-height:1.15;font-weight:700;background:rgba(255,255,255,.93);border:1.5px solid rgba(0,0,0,.35);border-radius:8px;padding:1px 8px}
 .pin[aria-pressed=true] b{background:var(--accent);color:#fff;border-color:var(--accent)}
 .pin[aria-pressed=true] i{background:var(--accent)}
 .legend{position:absolute;right:14px;bottom:8px;pointer-events:none;background:rgba(255,255,255,.93);border:1.5px solid rgba(0,0,0,.25);border-radius:10px;padding:6px 12px;font-size:24px;font-weight:700;max-width:330px}
@@ -1191,7 +1192,7 @@ canvas:active{cursor:grabbing}
 .legend .sw i{width:24px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,.3);flex:none}
 .tl{position:absolute;left:14px;top:8px;display:flex;flex-direction:column;gap:6px;align-items:flex-start;pointer-events:none}
 .mtitle{font-size:30px;font-weight:700;background:rgba(255,255,255,.95);border:2px solid var(--ink);border-radius:8px;padding:2px 12px}
-.north{position:absolute;left:14px;top:112px;width:92px;height:96px;background:rgba(255,255,255,.93);border:1.5px solid rgba(0,0,0,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.north{position:absolute;right:14px;top:8px;width:92px;height:96px;background:rgba(255,255,255,.93);border:1.5px solid rgba(0,0,0,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .north svg{display:block}.north b{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;pointer-events:none;transform-origin:50% 50%}
 .scale{position:absolute;left:14px;bottom:8px;background:rgba(255,255,255,.93);border:1.5px solid rgba(0,0,0,.25);border-radius:10px;padding:6px 12px;font-weight:700;font-size:24px;pointer-events:none}
 .sbar{height:12px;border:2px solid var(--ink);background:linear-gradient(90deg,var(--ink) 50%,#fff 50%);min-width:40px}
@@ -1227,7 +1228,7 @@ body.embedded .pane{font-size:24px}body.embedded .pane h2{font-size:30px;margin:
 .ans.show{opacity:1}
 .reveal{min-height:52px;width:100%;padding:6px 16px;background:var(--accent);color:#fff;border:0;border-radius:var(--r-md);font-weight:700}
 body.embedded .top h1{display:none}
-body.embedded .app{grid-template-columns:minmax(0,1fr) 510px}body.embedded .sea small,body.embedded .wind{display:none}body.embedded .sea{min-width:84px}body.embedded .ctl{padding:4px 12px 6px}body.embedded .top{padding:4px 12px}body.embedded .mtitle{font-size:26px}body.embedded .north{top:56px}body.embedded .pin b{padding:0 6px}body.embedded .chain li{grid-template-columns:172px 1fr}
+body.embedded .app{grid-template-columns:minmax(0,1fr) 510px}body.embedded .sea small,body.embedded .wind{display:none}body.embedded .sea{min-width:84px}body.embedded .ctl{padding:4px 12px 6px}body.embedded .top{padding:4px 12px}body.embedded .mtitle{font-size:26px}body.embedded .pin b{padding:0 6px}body.embedded .chain li{grid-template-columns:172px 1fr}
 .nogl{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-weight:700}
 @media (max-width:1100px){
  body{overflow:auto}
@@ -1260,6 +1261,7 @@ body.embedded .app{grid-template-columns:minmax(0,1fr) 510px}body.embedded .sea 
  </header>
  <div class="mapw" id="mapw">
   <canvas id="gl" aria-label="可拖曳旋轉的臺灣立體地圖"></canvas>
+  <svg id="leads" aria-hidden="true"></svg>
   <div id="pins"></div>
   <div class="tl"><div class="mtitle el" id="mtitle"></div><div class="wind"><span class="a" id="windA">↙</span><span id="windT"></span></div></div>
   <div class="north el" id="north" role="img" aria-label="方向標"><svg viewBox="0 0 60 60" id="northS" width="52" height="52"><polygon points="30,5 40,36 30,29 20,36" fill="#a4301f" stroke="#1f1a14" stroke-width="2"/><polygon points="30,55 40,36 30,29 20,36" fill="#fff" stroke="#1f1a14" stroke-width="2"/></svg><b id="northN">北</b></div>
@@ -1284,7 +1286,7 @@ body.embedded .app{grid-template-columns:minmax(0,1fr) 510px}body.embedded .sea 
   </div>
   <div class="pane" id="pCard"></div>
   <div class="pane" id="pTask" hidden></div>
-  <div class="disc">氣溫雨量：氣象署 2024 年 10 月至 2026 年 9 月每月資料，測站外的顏色為推估。物產：課本。地形：公開高程資料（高度放大）。比例尺在立體視角為約略值。</div>
+  <div class="disc">氣溫雨量：氣象署 2021 年 10 月至 2026 年 9 月每月資料（五年平均），測站外的顏色為推估。物產：課本。地形：公開高程資料（高度放大）。比例尺在立體視角為約略值。</div>
  </aside>
 </div>
 <script>
@@ -1307,8 +1309,8 @@ function heightAt(lo,la){return bil(DEM_H,lo,la)}
 /* 地形分類（與課本同：<100 平原、100–1000 丘陵、≥1000 山地；盆地台地另標） */
 function terrainClass(lo,la,h){const x=lo*KX;for(const F of FLATS){if(Math.hypot(x-F.lo*KX,la-F.la)/F.r<(F.k==="台地"?.95:.8))return F.k}return h<100?"平原":h<1000?"丘陵":"山地"}
 const TCOL={"平原":[.61,.80,.54],"丘陵":[.94,.88,.54],"台地":[.89,.65,.29],"盆地":[.44,.70,.66],"山地":[.66,.45,.25]};
-/* 中央氣象署「每月氣象」2024-10～2026-09 各曆月兩年平均，bake_cwa.py 產生；季＝3–5、6–8、9–11、12–2 月 */
-const CWA={"基隆":{"lo":121.73,"la":25.13,"e":27,"T":[16.0,16.7,18.2,22.5,25.3,27.6,29.3,29.2,28.0,26.2,21.9,18.1],"R":[168.5,252.0,321.5,250.0,343.0,337.0,134.8,174.3,374.8,845.5,603.5,321.0]},"臺北":{"lo":121.51,"la":25.04,"e":6,"T":[16.3,17.5,19.3,23.5,26.3,28.5,29.9,30.0,28.9,26.7,22.3,18.6],"R":[39.3,70.8,148.3,200.3,279.5,510.3,248.5,257.3,228.5,358.5,59.0,28.8]},"鞍部":{"lo":121.53,"la":25.18,"e":826,"T":[9.3,11.1,13.3,17.3,19.6,22.3,23.1,23.1,22.0,20.0,15.5,11.6],"R":[255.5,207.3,304.5,313.0,290.8,436.0,429.3,308.8,463.5,2328.3,804.0,335.3]},"竹子湖":{"lo":121.54,"la":25.17,"e":607,"T":[11.2,12.8,15.0,19.0,21.4,23.9,24.9,24.8,23.8,21.9,17.4,13.5],"R":[196.5,172.5,249.0,241.5,274.0,392.5,465.0,327.8,395.5,2131.0,670.3,248.3]},"淡水":{"lo":121.45,"la":25.16,"e":19,"T":[15.4,16.5,18.0,22.5,25.3,27.5,29.1,29.2,28.0,25.9,21.5,17.7],"R":[71.3,82.5,184.5,258.0,212.8,272.0,197.0,178.0,223.0,848.8,112.8,61.5]},"新北":{"lo":121.44,"la":24.99,"e":24,"T":[15.3,16.7,18.4,22.4,25.1,27.2,28.4,28.5,27.4,25.6,21.3,17.5],"R":[86.3,106.8,218.0,241.5,329.3,507.0,294.0,404.8,211.0,716.3,156.8,69.5]},"新屋":{"lo":121.05,"la":25.0,"e":21,"T":[15.4,16.2,18.0,22.7,25.2,27.6,28.9,29.2,27.8,25.9,21.6,17.9],"R":[27.3,58.8,140.3,296.8,209.3,249.5,230.8,93.5,65.8,289.3,74.8,28.0]},"新竹":{"lo":121.01,"la":24.83,"e":27,"T":[15.8,16.9,18.6,23.2,26.0,28.1,29.2,29.6,28.4,26.5,22.1,18.2],"R":[19.0,47.3,135.3,315.0,192.3,369.8,377.5,143.8,55.0,142.3,34.0,10.0]},"後龍":{"lo":120.79,"la":24.61,"e":7,"T":[15.2,16.2,18.3,22.9,25.5,27.8,28.6,28.7,27.6,26.0,21.8,17.8],"R":[11.8,54.5,135.0,413.8,208.3,286.0,414.8,141.0,80.8,50.0,30.8,6.8]},"臺中":{"lo":120.68,"la":24.15,"e":84,"T":[16.9,18.3,20.5,24.5,27.1,28.4,28.9,28.7,28.5,27.4,23.3,19.1],"R":[14.5,42.3,60.3,156.5,123.3,416.8,735.0,304.8,95.3,29.0,30.8,11.3]},"田中":{"lo":120.58,"la":23.88,"e":50,"T":[16.4,18.0,20.3,24.4,27.0,28.3,28.8,28.7,28.4,27.1,22.8,18.7],"R":[12.5,37.0,56.0,125.3,113.0,369.5,588.5,387.8,75.1,31.5,31.0,18.8]},"日月潭":{"lo":120.91,"la":23.88,"e":1015,"T":[13.4,15.3,17.0,19.7,21.8,22.7,22.9,23.0,22.7,22.3,19.4,15.9],"R":[28.8,54.0,99.3,109.5,212.3,583.5,964.3,392.8,114.3,48.5,27.5,36.5]},"古坑":{"lo":120.58,"la":23.64,"e":100,"T":[16.0,17.7,19.9,24.0,26.5,27.6,28.1,27.9,27.5,26.3,22.3,18.1],"R":[15.5,54.3,46.3,88.0,60.5,444.5,810.0,535.5,124.3,85.3,47.0,17.0]},"嘉義":{"lo":120.43,"la":23.5,"e":27,"T":[16.6,18.0,20.3,24.5,27.1,28.3,28.8,28.7,28.1,26.8,22.5,18.6],"R":[13.8,46.0,25.5,80.8,63.0,544.0,640.8,387.8,144.8,23.3,29.0,14.3]},"阿里山":{"lo":120.81,"la":23.51,"e":2413,"T":[5.1,7.4,9.3,11.3,13.4,14.6,14.6,14.5,13.9,13.9,11.7,7.5],"R":[60.5,120.3,128.8,138.0,219.0,736.3,1028.5,694.3,254.8,248.0,102.3,53.0]},"玉山":{"lo":120.96,"la":23.49,"e":3845,"T":[-0.1,1.8,2.8,4.5,6.1,8.3,8.2,8.1,8.3,7.6,4.7,2.3],"R":[82.5,130.3,62.8,147.5,148.3,512.5,616.8,468.5,268.5,253.0,127.5,79.5]},"臺南":{"lo":120.2,"la":22.99,"e":41,"T":[17.4,18.8,21.6,25.5,28.1,28.7,29.1,28.8,29.1,27.8,23.5,19.7],"R":[3.0,43.5,19.8,45.5,36.0,641.8,361.3,862.5,109.5,65.3,67.5,13.0]},"永康":{"lo":120.24,"la":23.04,"e":9,"T":[17.4,18.9,21.5,25.5,28.1,28.7,29.2,28.8,28.9,27.6,23.5,19.6],"R":[2.8,49.0,31.5,53.0,40.0,630.0,434.5,899.5,109.8,67.3,56.3,18.8]},"高雄":{"lo":120.32,"la":22.57,"e":2,"T":[17.8,19.4,22.0,25.3,28.0,28.2,28.6,28.0,28.1,27.1,23.5,19.8],"R":[6.3,27.3,7.3,60.5,42.0,736.5,417.3,1034.3,169.8,259.8,95.5,14.0]},"恆春":{"lo":120.74,"la":22.0,"e":22,"T":[20.0,21.5,23.4,26.0,28.2,28.6,28.6,28.4,28.4,27.9,25.1,22.2],"R":[21.0,8.0,8.5,9.8,21.0,562.8,820.5,896.5,264.5,253.3,112.0,11.8]},"宜蘭":{"lo":121.76,"la":24.76,"e":7,"T":[16.0,17.3,19.2,22.9,24.9,27.5,28.8,28.7,27.7,25.5,21.3,17.9],"R":[54.5,88.3,142.8,91.3,153.8,219.3,128.8,119.0,185.8,662.0,485.5,173.5]},"花蓮":{"lo":121.61,"la":23.98,"e":16,"T":[17.7,18.8,20.7,23.5,25.5,27.9,28.6,28.4,28.0,26.6,23.1,19.8],"R":[28.5,42.8,91.3,50.8,180.8,218.5,217.8,255.0,188.8,312.0,141.3,34.5]},"成功":{"lo":121.37,"la":23.1,"e":34,"T":[18.2,19.3,21.3,23.9,25.7,27.5,27.9,27.7,27.3,26.5,23.5,20.4],"R":[72.5,76.3,75.0,73.5,162.8,245.0,581.3,309.5,321.3,395.5,203.3,56.3]},"臺東":{"lo":121.15,"la":22.75,"e":9,"T":[18.7,20.1,22.1,24.9,26.9,28.5,28.8,28.7,28.3,27.3,24.1,21.0],"R":[35.0,48.0,34.0,49.5,85.8,195.8,538.0,339.8,392.3,378.3,199.3,28.5]},"大武":{"lo":120.9,"la":22.36,"e":8,"T":[19.4,20.7,22.7,25.3,27.2,28.3,28.3,28.1,27.8,27.4,24.6,21.5],"R":[84.3,31.5,34.8,45.8,36.5,349.5,1136.0,714.0,280.0,417.8,181.8,37.5]},"蘭嶼":{"lo":121.56,"la":22.04,"e":324,"T":[17.5,18.6,20.4,22.9,24.6,26.0,26.2,26.1,25.7,24.6,22.3,19.6],"R":[178.3,191.8,140.3,78.3,249.8,292.8,485.0,456.5,224.8,369.5,217.6,162.8]},"澎湖":{"lo":119.56,"la":23.57,"e":11,"T":[16.8,17.3,20.3,24.2,26.2,28.0,28.8,28.4,28.4,26.7,22.8,19.4],"R":[6.5,35.3,44.8,46.0,75.8,251.5,193.0,259.3,38.3,9.8,28.0,10.0]},"東吉島":{"lo":119.67,"la":23.26,"e":43,"T":[17.5,18.2,21.0,24.5,26.5,28.0,28.5,28.1,28.1,26.5,23.0,19.9],"R":[10.0,41.5,33.5,48.3,22.0,291.8,261.5,285.5,83.3,70.5,45.5,11.3]}};
+/* 中央氣象署「每月氣象」2021-10～2026-09 各曆月五年平均（只留五年資料齊全的 24 站），bake_cwa.py 產生；季＝3–5、6–8、9–11、12–2 月 */
+const CWA={"基隆":{"lo":121.73,"la":25.13,"e":27,"T":[16.2,16.5,18.6,22.5,24.5,27.7,29.7,29.4,28,25.3,21.7,17.8],"R":[248.2,384.8,249.7,186,363.3,230.2,106.4,113.3,372.5,698.3,475.1,443.7]},"臺北":{"lo":121.51,"la":25.04,"e":6,"T":[16.7,17.4,19.8,23.4,25.4,28.5,30.2,30,28.7,25.7,22.3,18.2],"R":[53.2,94.8,124.3,166.6,266.4,415.2,223.1,292,258.5,299.7,64.9,58.2]},"鞍部":{"lo":121.53,"la":25.18,"e":826,"T":[9.9,11.2,13.6,17.2,19,22.2,23.4,23.2,21.9,19,15.7,11.5],"R":[249.8,289.8,236.2,232.3,339.7,301,267.5,288.4,616.6,1647.5,554.1,454.8]},"竹子湖":{"lo":121.54,"la":25.17,"e":607,"T":[11.9,13,15.4,18.9,20.8,23.9,25.1,24.9,23.7,20.9,17.6,13.4],"R":[182.9,248.2,186.3,192.1,297.3,264.6,291.1,282.7,527.5,1582.1,432.2,412.3]},"淡水":{"lo":121.45,"la":25.16,"e":19,"T":[15.8,16.3,18.6,22.4,24.6,27.6,29.5,29.3,27.9,25.1,21.6,17.3],"R":[71.7,115.3,146.2,165,243.7,200.7,134.3,177.9,257.2,523.3,90.3,97.2]},"新屋":{"lo":121.05,"la":25,"e":21,"T":[15.8,15.9,18.4,22.5,24.4,27.6,29.3,29.2,27.9,25.3,21.6,17.5],"R":[40.2,101.1,122.7,200.9,290.5,196.8,128.1,89.9,110.5,196.3,65.1,69.9]},"新竹":{"lo":121.01,"la":24.83,"e":27,"T":[16.2,16.6,19.1,23,25.2,28.2,29.8,29.6,28.4,25.8,22.1,17.8],"R":[28.2,76.1,124.4,216.7,294.3,260.6,201.3,134.7,113.6,111.8,46.1,33.8]},"臺中":{"lo":120.68,"la":24.15,"e":84,"T":[17.3,18.2,20.9,24.5,26.3,28.5,29.2,28.8,28.3,26.7,23.3,18.9],"R":[14.5,46.9,62.5,142.8,200.8,276.8,444.5,263.5,160.2,28.1,17.6,14.1]},"田中":{"lo":120.58,"la":23.88,"e":50,"T":[16.8,17.9,20.7,24.4,26.3,28.5,29.2,28.8,28.2,26.4,22.9,18.5],"R":[12.8,43,52.2,98.2,153,233.5,425.7,312.3,121.6,25.6,14.9,16.2]},"日月潭":{"lo":120.91,"la":23.88,"e":1015,"T":[14.2,15.5,17.3,19.8,21.3,22.6,23.2,23,22.6,21.6,19.2,15.8],"R":[25.7,57.4,76.2,119.5,296.5,500.4,725.6,361.8,192.7,42,22.5,33.7]},"嘉義":{"lo":120.43,"la":23.5,"e":27,"T":[17.1,18,20.8,24.5,26.3,28.6,29.1,28.8,28.1,26.2,22.8,18.6],"R":[14.3,45.4,29.4,100.3,144.7,358.7,568.7,308.1,229.9,22.8,13.3,20.4]},"阿里山":{"lo":120.81,"la":23.51,"e":2413,"T":[6,8,9.4,11.6,13.1,14.4,14.8,14.5,14.1,13.3,11.3,7.9],"R":[57.3,104.2,89.4,167,410.8,497,911.8,678.6,366.1,160.8,61.1,77.6]},"玉山":{"lo":120.96,"la":23.49,"e":3845,"T":[0.4,2.1,2.7,4.9,6.3,8.4,9,8.5,8.2,6.7,4.6,2.1],"R":[61.6,95.1,63,137.1,358.9,326.3,523.5,368.8,336.2,195.3,82.9,117.7]},"臺南":{"lo":120.2,"la":22.99,"e":41,"T":[17.9,18.9,22,25.6,27.4,29.1,29.6,29,28.9,27.3,23.9,19.6],"R":[9.4,27.9,13.8,49.8,82.7,390.8,360,559.3,180.5,35,28.5,11.9]},"高雄":{"lo":120.32,"la":22.57,"e":2,"T":[18.6,19.5,22.3,25.6,27.2,28.6,28.9,28.2,28,26.9,24,20.1],"R":[7.6,18.4,7.9,60.7,106,438.9,431.8,609.5,273.1,130.4,41.1,10.9]},"恆春":{"lo":120.74,"la":22,"e":22,"T":[20.7,21.9,23.5,26,27.5,28.8,29,28.5,28.3,27.2,25.1,22.3],"R":[46.3,8.8,8.5,23.2,118.3,330.7,541.8,546.6,248,256.9,52.3,6.8]},"宜蘭":{"lo":121.76,"la":24.76,"e":7,"T":[16.5,17.5,19.5,22.7,24.4,27.5,29.2,29,27.6,24.6,21.3,17.7],"R":[145.9,150.6,100.9,66.5,181.6,165.3,145.8,99.6,241.1,587.4,406.3,206.3]},"花蓮":{"lo":121.61,"la":23.98,"e":16,"T":[18.1,19.1,20.8,23.6,25.1,27.8,28.8,28.7,28,25.6,22.9,19.8],"R":[89.4,43.9,52.5,54.4,169.6,237.4,319.1,156.1,207.3,485.3,96.1,34.2]},"成功":{"lo":121.37,"la":23.1,"e":34,"T":[18.7,19.7,21.3,23.8,25.3,27.6,28.2,27.9,27.5,25.8,23.3,20.4],"R":[106.6,66,94.4,106.7,144.2,194.4,374.3,183.6,338.2,477.4,128.2,55.3]},"臺東":{"lo":121.15,"la":22.75,"e":9,"T":[19.4,20.6,22.3,24.9,26.3,28.7,29.3,29.1,28.4,26.5,24,21],"R":[58.7,31.6,25.2,86.6,88.6,154.3,359.4,243.7,324.9,401.1,110.5,31.1]},"大武":{"lo":120.9,"la":22.36,"e":8,"T":[20.1,21.2,23,25.4,26.7,28.6,28.8,28.4,27.9,26.7,24.5,21.7],"R":[80.3,26.2,34.2,72,128.8,259.3,691.8,395,312.1,421.2,96.8,29.9]},"蘭嶼":{"lo":121.56,"la":22.04,"e":324,"T":[18.2,19,20.5,22.9,24.2,26.1,26.4,26.3,25.8,24.2,22.3,19.6],"R":[232.9,176.6,150.4,88.2,333.8,247,317.1,274.5,309.8,471.6,267.6,185.3]},"澎湖":{"lo":119.56,"la":23.57,"e":11,"T":[17.1,17,20.3,23.9,25.6,28.2,29.2,28.8,28.4,26.3,23,19.2],"R":[8.3,35.1,39.3,70,148.7,183.7,222.8,157.7,64.1,6.9,13.2,8.8]},"東吉島":{"lo":119.67,"la":23.26,"e":43,"T":[18,18.1,21.1,24.3,25.8,28.2,29.1,28.6,28.1,26.2,23.3,19.9],"R":[10.6,35.2,30.5,75.9,80.5,213,236.8,195,104.4,33.3,21.6,9.6]}};
 const SM=[[2,3,4],[5,6,7],[8,9,10],[11,0,1]];
 const ssum=(A,s)=>SM[s].reduce((t,m)=>t+A[m],0),savg=(A,s)=>ssum(A,s)/3;
 const f1=x=>(Math.floor(x*10+.5)/10).toFixed(1),f0=x=>String(Math.floor(x+.5));
@@ -1328,26 +1330,26 @@ const WIND=[["🌧️","春：5、6 月有梅雨"],["↗","夏：颱風和西南
 /* 地點資料：全部取自課本 1-2、1-3；t＝地形，ts＝說明，p／w＝每季的物產或生活與原因 */
 const all=x=>[x,x,x,x];
 const PLACES=[
-{n:"基隆",st:"基隆",sn:"基隆",lo:121.725,la:25.09,t:"丘陵",ts:"四季多雨的北部港市",dir:1,ic:"🌧️",p:all("四季多雨"),
- w:["四季都有雨，沒有真正的旱季。","7、8 月雨最少，夏季雨比中南部少。","近兩年秋季雨量最多。","受東北季風影響，降雨量多。"]},
-{n:"九份",sn:"九份",lo:121.84,la:25.10,t:"丘陵",ts:"常常下雨的山城",dir:1,ic:"🏠",p:all("油毛氈屋頂"),w:all("多雨潮溼，屋頂做成傾斜好排水，再用油毛氈防雨。")},
-{n:"臺北信義區",st:"臺北",sn:"信義",lo:121.57,la:25.03,t:"盆地",ts:"四周高、中間低平",dir:0,ic:"🏙️",p:all("高樓與工商業"),w:all("盆地中間平坦，人口密集，發展成都市。")},
-{n:"新北石碇",sn:"石碇",lo:121.66,la:24.99,t:"丘陵",ts:"起伏較小的小山",dir:1,ic:"🍵",p:all("種茶、製茶"),w:all("氣候適宜、排水良好，在坡地開闢茶園。")},
-{n:"桃園台地",st:"新屋",sn:"桃園",lo:121.18,la:24.93,t:"台地",ts:"頂部平坦、邊緣陡坡",dir:0,ic:"💧",p:all("埤塘儲水"),w:all("早期居民用埤塘把水存起來，灌溉農田。")},
-{n:"宜蘭",st:"宜蘭",sn:"宜蘭",lo:121.76,la:24.70,t:"平原",ts:"北部的平原",dir:1,ic:"🌡️",p:all("夏熱冬冷"),w:all("位在臺灣北部，夏天和冬天的氣溫差比較大。")},
-{n:"臺中和平",sn:"和平",lo:121.29,la:24.24,t:"山地",ts:"高度 1000 公尺以上",dir:1,ic:"🍎",p:all("高山蔬果"),w:all("活動受地形限制，選坡度較緩處種水果。高山四季氣溫都比平地低。")},
-{n:"濁水溪",st:"田中",sn:"濁水溪",lo:120.62,la:23.82,t:"河川",ts:"臺灣最長的河川",dir:0,ic:"🏞️",p:["水量隨雨量變","河水量多","水量隨雨量變","河床部分裸露"],w:["河川水量會因季節降雨量而不同。","夏季雨量較多，河水量也較多。","河川水量會因季節降雨量而不同。","冬季雨量較少，部分河床裸露。"]},
-{n:"玉山",st:"玉山",sn:"玉山",lo:120.96,la:23.47,t:"山地",ts:"地勢很高的高山",dir:1,ic:"⛰️",p:all("全臺氣溫最低"),w:all("氣溫是各測站中最低，四季都比平地冷；高山雨量也比平地多。")},
-{n:"嘉南平原",st:"嘉義",sn:"嘉南",lo:120.32,la:23.30,t:"平原",ts:"西部又低又平的平原",dir:0,ic:"🚰",p:all("水圳灌溉農田"),w:all("地勢平坦利於耕作，水庫和嘉南大圳把水送到田裡。")},
-{n:"臺東池上",st:"臺東",sn:"池上",lo:121.22,la:23.12,t:"平原",ts:"花東縱谷平原",dir:1,ic:"🌾",p:all("種植稻米"),w:all("花東縱谷地勢平坦，居民以種植稻米為主。")},
-{n:"高雄",st:"高雄",sn:"高雄",lo:120.32,la:22.65,t:"平原",ts:"南部的平原",dir:0,ic:"☀️",p:["夏雨冬乾","吃冰消暑","夏雨冬乾","夏雨冬乾"],w:["春天雨還不多，到夏天才變多。","夏天炎熱，吃冰很受歡迎；6 到 8 月雨量都很多。","11 月以後雨明顯變少，進入乾季。","冬天乾燥少雨，每月雨量都不到 30 毫米。"]},
-{n:"屏東枋寮",sn:"枋寮",lo:120.60,la:22.38,t:"平原",ts:"沿海地勢平坦",dir:0,ic:"🐟",p:all("養殖漁業"),w:all("沿海平坦，養殖漁業非常發達。")},
-{n:"屏東恆春",st:"恆春",sn:"恆春",lo:120.75,la:22.02,t:"平原",ts:"南部的小平原",dir:0,ic:"🌊",p:["四季氣溫高","海邊戲水","四季氣溫高","四季氣溫高"],w:["位在臺灣南部，四季氣溫都高。","天氣炎熱，夏天到海邊堆沙堡、戲水。","位在臺灣南部，四季氣溫都高。","冬天仍然溫暖，雨也很少。"]},
-{n:"澎湖七美",st:"澎湖",sn:"七美",lo:119.43,la:23.21,t:"海島",ts:"土壤貧瘠的小島",dir:0,tl:"海島",ic:"🥜",p:all("花生、地瓜"),w:all("乾燥少雨、不適合種稻，所以種耐旱作物。")}
+{n:"基隆",ps:all("多雨"),st:"基隆",sn:"基隆",lo:121.725,la:25.09,t:"丘陵",ts:"四季多雨的北部港市",dir:1,ic:"🌧️",p:all("四季多雨"),
+ w:["四季都有雨，沒有真正的旱季。","7、8 月雨最少，夏季雨比中南部少。","近五年秋季雨量最多。","受東北季風影響，降雨量多。"]},
+{n:"九份",ps:all("油毛氈"),sn:"九份",lo:121.84,la:25.10,t:"丘陵",ts:"常常下雨的山城",dir:1,ic:"🏠",p:all("油毛氈屋頂"),w:all("多雨潮溼，屋頂做成傾斜好排水，再用油毛氈防雨。")},
+{n:"臺北信義區",ps:all("高樓"),st:"臺北",sn:"信義",lo:121.57,la:25.03,t:"盆地",ts:"四周高、中間低平",dir:0,ic:"🏙️",p:all("高樓與工商業"),w:all("盆地中間平坦，人口密集，發展成都市。")},
+{n:"新北石碇",ps:all("種茶"),sn:"石碇",lo:121.66,la:24.99,t:"丘陵",ts:"起伏較小的小山",dir:1,ic:"🍵",p:all("種茶、製茶"),w:all("氣候適宜、排水良好，在坡地開闢茶園。")},
+{n:"桃園台地",ps:all("埤塘"),st:"新屋",sn:"桃園",lo:121.18,la:24.93,t:"台地",ts:"頂部平坦、邊緣陡坡",dir:0,ic:"💧",p:all("埤塘儲水"),w:all("早期居民用埤塘把水存起來，灌溉農田。")},
+{n:"宜蘭",ps:all("夏熱冬冷"),st:"宜蘭",sn:"宜蘭",lo:121.76,la:24.70,t:"平原",ts:"北部的平原",dir:1,ic:"🌡️",p:all("夏熱冬冷"),w:all("位在臺灣北部，夏天和冬天的氣溫差比較大。")},
+{n:"臺中和平",ps:all("蔬果"),sn:"和平",lo:121.29,la:24.24,t:"山地",ts:"高度 1000 公尺以上",dir:1,ic:"🍎",p:all("高山蔬果"),w:all("活動受地形限制，選坡度較緩處種水果。高山四季氣溫都比平地低。")},
+{n:"濁水溪",ps:["水隨雨變","河水多","水隨雨變","河床露"],st:"田中",sn:"濁水溪",lo:120.62,la:23.82,t:"河川",ts:"臺灣最長的河川",dir:0,ic:"🏞️",p:["水量隨雨量變","河水量多","水量隨雨量變","河床部分裸露"],w:["河川水量會因季節降雨量而不同。","夏季雨量較多，河水量也較多。","河川水量會因季節降雨量而不同。","冬季雨量較少，部分河床裸露。"]},
+{n:"玉山",ps:all("最冷"),st:"玉山",sn:"玉山",lo:120.96,la:23.47,t:"山地",ts:"地勢很高的高山",dir:1,ic:"⛰️",p:all("全臺氣溫最低"),w:all("氣溫是各測站中最低，四季都比平地冷；高山雨量也比平地多。")},
+{n:"嘉南平原",ps:all("水圳"),st:"嘉義",sn:"嘉南",lo:120.32,la:23.30,t:"平原",ts:"西部又低又平的平原",dir:0,ic:"🚰",p:all("水圳灌溉農田"),w:all("地勢平坦利於耕作，水庫和嘉南大圳把水送到田裡。")},
+{n:"臺東池上",ps:all("稻米"),st:"臺東",sn:"池上",lo:121.22,la:23.12,t:"平原",ts:"花東縱谷平原",dir:1,ic:"🌾",p:all("種植稻米"),w:all("花東縱谷地勢平坦，居民以種植稻米為主。")},
+{n:"高雄",ps:["夏雨冬乾","吃冰","夏雨冬乾","夏雨冬乾"],st:"高雄",sn:"高雄",lo:120.32,la:22.65,t:"平原",ts:"南部的平原",dir:0,ic:"☀️",p:["夏雨冬乾","吃冰消暑","夏雨冬乾","夏雨冬乾"],w:["春天雨還不多，到夏天才變多。","夏天炎熱，吃冰很受歡迎；6 到 8 月雨量都很多。","11 月以後雨明顯變少，進入乾季。","冬天乾燥少雨，每月雨量都不到 30 毫米。"]},
+{n:"屏東枋寮",ps:all("養殖"),sn:"枋寮",lo:120.60,la:22.38,t:"平原",ts:"沿海地勢平坦",dir:0,ic:"🐟",p:all("養殖漁業"),w:all("沿海平坦，養殖漁業非常發達。")},
+{n:"屏東恆春",ps:["氣溫高","戲水","氣溫高","氣溫高"],st:"恆春",sn:"恆春",lo:120.75,la:22.02,t:"平原",ts:"南部的小平原",dir:0,ic:"🌊",p:["四季氣溫高","海邊戲水","四季氣溫高","四季氣溫高"],w:["位在臺灣南部，四季氣溫都高。","天氣炎熱，夏天到海邊堆沙堡、戲水。","位在臺灣南部，四季氣溫都高。","冬天仍然溫暖，雨也很少。"]},
+{n:"澎湖七美",ps:all("花生地瓜"),st:"澎湖",sn:"七美",lo:119.43,la:23.21,t:"海島",ts:"土壤貧瘠的小島",dir:0,tl:"海島",ic:"🥜",p:all("花生、地瓜"),w:all("乾燥少雨、不適合種稻，所以種耐旱作物。")}
 ];
 /* ===== WebGL ===== */
 const $=s=>document.querySelector(s),cv=$("#gl"),gl=cv.getContext("webgl",{antialias:true,alpha:true});
-const state={s:0,layer:"prod",place:9,yaw:.0,pitch:1.05,dist:4.75,play:false};
+const state={s:0,layer:"prod",place:9,yaw:.0,pitch:1.05,zoom:1,play:false};
 const W=[1,0,0,0],WT=[1,0,0,0],L=[0,0,0,1],LT=[0,0,0,1];
 let uni={},puni={},nIdx=0,nPts=0,meshB,idxB,ptB,prog,pprog;
 const VS=`attribute vec3 aP;attribute vec3 aN;attribute float aD;attribute vec3 aT;attribute vec4 aR;attribute vec4 aC;
@@ -1412,7 +1414,13 @@ function mul(a,b){const o=new Array(16);for(let i=0;i<4;i++)for(let j=0;j<4;j++)
 function look(e,c){let z=[e[0]-c[0],e[1]-c[1],e[2]-c[2]];const zl=Math.hypot(...z);z=z.map(v=>v/zl);let up=[0,1,0];let x=[up[1]*z[2]-up[2]*z[1],up[2]*z[0]-up[0]*z[2],up[0]*z[1]-up[1]*z[0]];const xl=Math.hypot(...x);x=x.map(v=>v/xl);const y=[z[1]*x[2]-z[2]*x[1],z[2]*x[0]-z[0]*x[2],z[0]*x[1]-z[1]*x[0]];
  return[x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-(x[0]*e[0]+x[1]*e[1]+x[2]*e[2]),-(y[0]*e[0]+y[1]*e[1]+y[2]*e[2]),-(z[0]*e[0]+z[1]*e[1]+z[2]*e[2]),1]}
 let M=null,cw=1,ch=1,dpr=1;
-function camera(){const a=cw/ch,fov=.62;const dist=state.dist*Math.max(1,1.05/a);const cp=Math.cos(state.pitch),spt=Math.sin(state.pitch),c=[0,.03,.26];const e=[c[0]+dist*cp*Math.sin(state.yaw),c[1]+dist*spt,c[2]+dist*cp*Math.cos(state.yaw)];M=mul(perspective(fov,a,.1,20),look(e,c))}
+const FIT=[[119.35,25.35],[122.05,25.35],[119.35,21.85],[122.05,21.85]].map(([lo,la])=>[(lo-120.85)*KX,0,23.6-la]);
+function camera(){const a=cw/ch,P=perspective(.62,a,.1,80),cp=Math.cos(state.pitch),spt=Math.sin(state.pitch),c=[0,0,0];
+ const at=d=>mul(P,look([d*cp*Math.sin(state.yaw),d*spt,d*cp*Math.cos(state.yaw)],c));
+ const bbox=m=>{let x0=9,x1=-9,y0=9,y1=-9;for(const[x,y,z]of FIT){const w=m[3]*x+m[7]*y+m[11]*z+m[15],X=(m[0]*x+m[4]*y+m[8]*z+m[12])/w,Y=(m[1]*x+m[5]*y+m[9]*z+m[13])/w;x0=Math.min(x0,X);x1=Math.max(x1,X);y0=Math.min(y0,Y);y1=Math.max(y1,Y)}return[x0,x1,y0,y1]};
+ let lo=1,hi=40;for(let k=0;k<18;k++){const d=(lo+hi)/2,[x0,x1,y0,y1]=bbox(at(d));if(x1-x0>1.86||y1-y0>1.84)lo=d;else hi=d}
+ const m=at(hi*state.zoom),[x0,x1,y0,y1]=bbox(at(hi)),dx=-(x0+x1)/2,dy=-(y0+y1)/2;
+ for(let k=0;k<4;k++){m[k*4]+=dx*m[k*4+3];m[k*4+1]+=dy*m[k*4+3]}M=m}
 function project(x,y,z){const X=M[0]*x+M[4]*y+M[8]*z+M[12],Y=M[1]*x+M[5]*y+M[9]*z+M[13],w=M[3]*x+M[7]*y+M[11]*z+M[15];return[(X/w*.5+.5)*cw,(1-(Y/w*.5+.5))*ch]}
 function resize(){const r=cv.getBoundingClientRect();cw=r.width;ch=r.height;dpr=Math.min(window.devicePixelRatio||1,2);cv.width=cw*dpr;cv.height=ch*dpr;if(gl)gl.viewport(0,0,cv.width,cv.height)}
 function bindAttr(p,name,size,st,off){const a=gl.getAttribLocation(p,name);if(a<0)return;gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,size,gl.FLOAT,false,st*4,off*4)}
@@ -1439,18 +1447,24 @@ function placeH(p){return heightAt(p.lo,p.la)}
 function pT(p,s){return p.st?savg(CWA[p.st].T,s):tempAt(s,p.la,placeH(p),p.lo)}
 function pR(p,s){return p.st?ssum(CWA[p.st].R,s)/1400:rainAt(s,p.lo,p.la,placeH(p))}
 function pinText(p){const s=state.s;switch(state.layer){
- case"terrain":return p.sn+"｜"+(p.tl||p.t);
- case"temp":return p.sn+"｜"+tempWord(pT(p,s));
- case"rain":return p.sn+"｜"+rainWord(pR(p,s));
- default:return p.ic+" "+p.sn+"｜"+p.p[s]}}
-function buildPins(){const box=$("#pins");PLACES.forEach((p,i)=>{const b=document.createElement("button");b.className="pin"+(p.dir?"":" west");b.innerHTML="<i></i><b></b>";b.onclick=()=>selectPlace(i);box.appendChild(b);pinEls.push(b)})}
-/* 標籤避讓：圓點留在原位，只把文字上下移開 */
-const pinH=PLACES.map(placeH);let pinW=null;
-function placePins(){if(!M)return;if(!pinW)pinW=pinEls.map(b=>[b.offsetWidth,b.offsetHeight]);
- const R=PLACES.map((p,i)=>{const q=project(toX(p.lo),pinH[i]*YS+.012,toZ(p.la)),[w,h]=pinW[i],x=p.dir?q[0]-8:q[0]-w+8;return{i,x:Math.max(0,Math.min(cw-w,x)),y:q[1]-h/2,w,h,dy:0}}).sort((a,b)=>a.y-b.y);
- const done=[];for(const r of R){let t=r.y;for(let k=0;k<8;k++){const c=done.find(o=>r.x<o.x+o.w&&o.x<r.x+r.w&&t<o.t+o.h&&o.t<t+r.h);if(!c)break;t=c.t+c.h+1}r.t=t;done.push(r);
-  const b=pinEls[r.i];b.style.transform=`translate(${r.x}px,${r.y}px)`;b.querySelector("b").style.transform=`translateY(${t-r.y}px)`}}
-function refreshPins(){PLACES.forEach((p,i)=>{pinEls[i].querySelector("b").textContent=pinText(p);pinEls[i].setAttribute("aria-pressed",i===state.place);pinEls[i].setAttribute("aria-label",p.n+"，"+pinText(p))});pinW=null}
+ case"terrain":return p.sn+" "+(p.tl||p.t);
+ case"temp":return p.sn+" "+tempWord(pT(p,s));
+ case"rain":return p.sn+" "+rainWord(pR(p,s));
+ default:return p.ic+" "+p.sn+" "+p.ps[s]}}
+function buildPins(){const box=$("#pins");PLACES.forEach((p,i)=>{const b=document.createElement("button");b.className="pin";b.innerHTML="<i></i><b></b>";b.onclick=()=>selectPlace(i);box.appendChild(b);pinEls.push(b)})}
+/* 標籤排版：圓點留在原位，文字分東西兩欄、上下排開不重疊，再用引線連回圓點 */
+const pinH=PLACES.map(placeH),leads=[];let pinW=null;
+function buildLeads(){const svg=$("#leads");PLACES.forEach(()=>{const l=document.createElementNS("http://www.w3.org/2000/svg","line");svg.appendChild(l);leads.push(l)})}
+function placePins(){if(!M)return;if(!pinW)pinW=pinEls.map(b=>{const e=b.querySelector("b");return[e.offsetWidth,e.offsetHeight]});
+ const GAP=4,GUT=26,flip=Math.cos(state.yaw)<0,top=$(".tl").offsetHeight+12,box=$("#mapw").getBoundingClientRect(),rect=el=>el.getBoundingClientRect().top-box.top;
+ const R=PLACES.map((p,i)=>{const q=project(toX(p.lo),pinH[i]*YS+.012,toZ(p.la));pinEls[i].style.transform=`translate(${q[0]-8}px,${q[1]-8}px)`;return{i,q,w:pinW[i][0],h:pinW[i][1],e:!!p.dir!==flip}}).filter(r=>r.w>0||(leads[r.i].setAttribute("x1",0),leads[r.i].setAttribute("x2",0),leads[r.i].setAttribute("y1",0),leads[r.i].setAttribute("y2",0),false));
+ for(const east of[true,false]){const G=R.filter(r=>r.e===east).sort((a,b)=>a.q[1]-b.q[1]);if(!G.length)continue;
+  const col=east?Math.max(...G.map(r=>r.q[0]))+GUT:Math.min(...G.map(r=>r.q[0]))-GUT,lo=east?4:top,hi=(east?rect($("#legend")):rect($(".scale")))-4;
+  G.forEach((r,k)=>{r.t=Math.max(lo,r.q[1]-r.h/2);if(k)r.t=Math.max(r.t,G[k-1].t+G[k-1].h+GAP)});
+  for(let k=G.length-1;k>=0;k--){const lim=k===G.length-1?hi:G[k+1].t-GAP;if(G[k].t+G[k].h>lim)G[k].t=lim-G[k].h}
+  const nb=$(".north"),nL=nb.offsetLeft,nB=nb.offsetTop+nb.offsetHeight;for(const r of G){let x=Math.max(2,Math.min(cw-r.w-2,east?col:col-r.w));if(r.t<nB+4)x=Math.min(x,nL-r.w-6);const[qx,qy]=r.q,l=leads[r.i];pinEls[r.i].querySelector("b").style.transform=`translate(${x-qx+8}px,${r.t-qy+8}px)`;
+   l.setAttribute("x1",qx);l.setAttribute("y1",qy);l.setAttribute("x2",east?x:x+r.w);l.setAttribute("y2",r.t+r.h/2)}}}
+function refreshPins(){PLACES.forEach((p,i)=>{pinEls[i].querySelector("b").textContent=pinText(p);pinEls[i].setAttribute("aria-pressed",i===state.place);pinEls[i].setAttribute("aria-label",p.n+"，"+p.p[state.s])});pinW=null}
 function legend(){const T={terrain:"臺灣地形圖",temp:`臺灣${SN[state.s]}季氣溫圖`,rain:`臺灣${SN[state.s]}季雨量圖`,prod:`臺灣${SN[state.s]}季物產與生活圖`};$("#mtitle").textContent=T[state.layer];const el=$("#legend");if(state.layer==="terrain")el.innerHTML="圖例：地形"+Object.entries(TCOL).reverse().map(([k,c])=>`<div class="sw"><i style="background:rgb(${c.map(v=>v*255|0)})"></i>${k}</div>`).join("");
  else if(state.layer==="temp")el.innerHTML='圖例：'+SN[state.s]+'季氣溫<div class="bar" style="background:linear-gradient(90deg,#3a5cbf,#9ed1ed,#fbef9e,#f29945,#cc3321)"></div><div class="ends"><span>冷</span><span>熱</span></div>';
  else if(state.layer==="rain")el.innerHTML='圖例：'+SN[state.s]+'季雨量<div class="bar" style="background:linear-gradient(90deg,#f5e8c2,#99cce6,#123d94)"></div><div class="ends"><span>少</span><span>多</span></div>';
@@ -1458,7 +1472,7 @@ function legend(){const T={terrain:"臺灣地形圖",temp:`臺灣${SN[state.s]}�
 function chart(o,s){const W=520,H=92,mx=Math.max(...o.R,1),mn=Math.min(...o.T),rg=Math.max(...o.T)-mn||1;let b="",l="";for(let m=0;m<12;m++){const x=m*W/12,bh=o.R[m]/mx*(H-4);b+=`<rect x="${x+4}" y="${H-bh}" width="${W/12-8}" height="${bh}" fill="${SM[s].includes(m)?"var(--accent)":"#b9c6d4"}"/>`;l+=`${x+W/24},${H-6-(o.T[m]-mn)/rg*(H-14)} `}
  return `<svg class="mchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="每月雨量與氣溫">${b}<polyline points="${l}" fill="none" stroke="#a4301f" stroke-width="3"/></svg><div class="mlab"><span>1 月</span><span>長條雨量・紅線氣溫</span><span>12 月</span></div>`}
 function card(){const p=PLACES[state.place],s=state.s,h=placeH(p),t=pT(p,s),r=pR(p,s);
- const o=p.st&&CWA[p.st];const n=o?`氣象署${p.st}站近兩年：${SN[s]}季平均 ${f1(savg(o.T,s))}℃、雨量合計 ${f0(ssum(o.R,s))} 毫米`+chart(o,s):"";const on=k=>state.layer===k?' class="on"':"";
+ const o=p.st&&CWA[p.st];const n=o?`氣象署${p.st}站近五年平均：${SN[s]}季 ${f1(savg(o.T,s))}℃、雨量合計 ${f0(ssum(o.R,s))} 毫米`+chart(o,s):"";const on=k=>state.layer===k?' class="on"':"";
  $("#pCard").innerHTML=`<h2>${p.n}．${SN[s]}天</h2><ul class="chain">
  <li${on("terrain")}><b>⛰️ 地形</b><span>${p.tl||p.t}：${p.ts}</span></li><div class="arr">↓</div>
  <li${on("temp")}><b>🌡️ 氣溫</b><span>${tempWord(t)}${h>1000?"（越高越冷）":""}</span></li><div class="arr">↓</div>
@@ -1492,20 +1506,20 @@ const ptrs=new Map();let pd=0;
 cv.addEventListener("pointerdown",e=>{cv.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);goal=null});
 cv.addEventListener("pointermove",e=>{const o=ptrs.get(e.pointerId);if(!o)return;const dx=e.clientX-o[0],dy=e.clientY-o[1];ptrs.set(e.pointerId,[e.clientX,e.clientY]);
  if(ptrs.size===1){state.yaw-=dx*.006;state.pitch=Math.max(.45,Math.min(1.5,state.pitch+dy*.005))}
- else if(ptrs.size===2){const[a,b]=[...ptrs.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd)state.dist=Math.max(1.4,Math.min(4.6,state.dist*pd/d));pd=d}});
+ else if(ptrs.size===2){const[a,b]=[...ptrs.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd)state.zoom=Math.max(.4,Math.min(1,state.zoom*pd/d));pd=d}});
 const up=e=>{ptrs.delete(e.pointerId);pd=0};cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",up);
-cv.addEventListener("wheel",e=>{e.preventDefault();state.dist=Math.max(1.4,Math.min(4.6,state.dist*(1+e.deltaY*.001)))},{passive:false});
+cv.addEventListener("wheel",e=>{e.preventDefault();state.zoom=Math.max(.4,Math.min(1,state.zoom*(1+e.deltaY*.001)))},{passive:false});
 addEventListener("resize",resize);
 function loop(ms){if(goal){state.pitch+=(goal.pitch-state.pitch)*.08;state.yaw+=(goal.yaw-state.yaw)*.08}draw(ms/1000);requestAnimationFrame(loop)}
 /* 啟動 */
 if(window.parent!==window)document.body.classList.add("embedded");
-buildPins();
-if(!gl){$("#nogl").style.display="flex";$("#gl").style.display="none";$("#pins").style.display="none"}
+buildPins();buildLeads();
+if(!gl){$("#nogl").style.display="flex";$("#gl").style.display="none";$("#pins").style.display="none";$("#leads").style.display="none"}
 else{prog=pr(VS,FS);pprog=pr(PVS,PFS);for(const n of["uM","uW","uL","uTime"])uni[n]=gl.getUniformLocation(prog,n);for(const n of["uM","uW","uTime","uFx","uPx","uWind"])puni[n]=gl.getUniformLocation(pprog,n);
  gl.clearColor(0,0,0,0);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);buildMesh();resize()}
 setLayer("prod");setSeason(0);task();
 if(gl)requestAnimationFrame(loop);
-window.__map={state,PLACES,heightAt,terrainClass,rainAt,tempAt,rainWord,tempWord,setSeason,setLayer,selectPlace,runTask,showPane,placeH};
+window.__map={draw,state,PLACES,heightAt,terrainClass,rainAt,tempAt,rainWord,tempWord,setSeason,setLayer,selectPlace,runTask,showPane,placeH};
 </script>
 </body>
 </html>
