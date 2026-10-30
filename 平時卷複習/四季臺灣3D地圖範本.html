@@ -1415,10 +1415,11 @@ function look(e,c){let z=[e[0]-c[0],e[1]-c[1],e[2]-c[2]];const zl=Math.hypot(...
  return[x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-(x[0]*e[0]+x[1]*e[1]+x[2]*e[2]),-(y[0]*e[0]+y[1]*e[1]+y[2]*e[2]),-(z[0]*e[0]+z[1]*e[1]+z[2]*e[2]),1]}
 let M=null,cw=1,ch=1,dpr=1;
 const FIT=[[119.35,25.35],[122.05,25.35],[119.35,21.85],[122.05,21.85]].map(([lo,la])=>[(lo-120.85)*KX,0,23.6-la]);
+let labelW=0;
 function camera(){const a=cw/ch,P=perspective(.62,a,.1,80),cp=Math.cos(state.pitch),spt=Math.sin(state.pitch),c=[0,0,0];
  const at=d=>mul(P,look([d*cp*Math.sin(state.yaw),d*spt,d*cp*Math.cos(state.yaw)],c));
  const bbox=m=>{let x0=9,x1=-9,y0=9,y1=-9;for(const[x,y,z]of FIT){const w=m[3]*x+m[7]*y+m[11]*z+m[15],X=(m[0]*x+m[4]*y+m[8]*z+m[12])/w,Y=(m[1]*x+m[5]*y+m[9]*z+m[13])/w;x0=Math.min(x0,X);x1=Math.max(x1,X);y0=Math.min(y0,Y);y1=Math.max(y1,Y)}return[x0,x1,y0,y1]};
- let lo=1,hi=40;for(let k=0;k<18;k++){const d=(lo+hi)/2,[x0,x1,y0,y1]=bbox(at(d));if(x1-x0>1.86||y1-y0>1.84)lo=d;else hi=d}
+ const xlim=Math.min(1.86,Math.max(.8,2*(1-2*(labelW+34)/cw)));let lo=1,hi=40;for(let k=0;k<18;k++){const d=(lo+hi)/2,[x0,x1,y0,y1]=bbox(at(d));if(x1-x0>xlim||y1-y0>1.84)lo=d;else hi=d}
  const m=at(hi*state.zoom),[x0,x1,y0,y1]=bbox(at(hi)),dx=-(x0+x1)/2,dy=-(y0+y1)/2;
  for(let k=0;k<4;k++){m[k*4]+=dx*m[k*4+3];m[k*4+1]+=dy*m[k*4+3]}M=m}
 function project(x,y,z){const X=M[0]*x+M[4]*y+M[8]*z+M[12],Y=M[1]*x+M[5]*y+M[9]*z+M[13],w=M[3]*x+M[7]*y+M[11]*z+M[15];return[(X/w*.5+.5)*cw,(1-(Y/w*.5+.5))*ch]}
@@ -1456,16 +1457,17 @@ function buildPins(){const box=$("#pins");PLACES.forEach((p,i)=>{const b=documen
 const pinH=PLACES.map(placeH),leads=[];let pinW=null;
 function buildLeads(){const svg=$("#leads");PLACES.forEach(()=>{const l=document.createElementNS("http://www.w3.org/2000/svg","line");svg.appendChild(l);leads.push(l)})}
 function placePins(){if(!M)return;if(!pinW)pinW=pinEls.map(b=>{const e=b.querySelector("b");return[e.offsetWidth,e.offsetHeight]});
- const GAP=4,GUT=26,flip=Math.cos(state.yaw)<0,top=$(".tl").offsetHeight+12,box=$("#mapw").getBoundingClientRect(),rect=el=>el.getBoundingClientRect().top-box.top;
+ labelW=Math.max(...pinW.map(v=>v[0]));const GAP=4,GUT=26,flip=Math.cos(state.yaw)<0,top=$(".tl").offsetHeight+12,box=$("#mapw").getBoundingClientRect(),rect=el=>el.getBoundingClientRect().top-box.top;
  const R=PLACES.map((p,i)=>{const q=project(toX(p.lo),pinH[i]*YS+.012,toZ(p.la));pinEls[i].style.transform=`translate(${q[0]-8}px,${q[1]-8}px)`;return{i,q,w:pinW[i][0],h:pinW[i][1],e:!!p.dir!==flip}}).filter(r=>r.w>0||(leads[r.i].setAttribute("x1",0),leads[r.i].setAttribute("x2",0),leads[r.i].setAttribute("y1",0),leads[r.i].setAttribute("y2",0),false));
+ if(flip){const nE=PLACES.filter(p=>p.dir).length;[...R].sort((a,b)=>b.q[0]-a.q[0]).forEach((r,k)=>r.e=k<nE)}
  for(const east of[true,false]){const G=R.filter(r=>r.e===east).sort((a,b)=>a.q[1]-b.q[1]);if(!G.length)continue;
-  const col=east?Math.max(...G.map(r=>r.q[0]))+GUT:Math.min(...G.map(r=>r.q[0]))-GUT,lo=east?4:top,hi=(east?rect($("#legend")):rect($(".scale")))-4;
+  const col=east?Math.max(...R.map(r=>r.q[0]))+GUT:Math.min(...R.map(r=>r.q[0]))-GUT,nb=$(".north"),lo=east?(col+Math.max(...G.map(r=>r.w))>nb.offsetLeft-6?nb.offsetTop+nb.offsetHeight+4:4):top,hi=(east?rect($("#legend")):rect($(".scale")))-4;
   G.forEach((r,k)=>{r.t=Math.max(lo,r.q[1]-r.h/2);if(k)r.t=Math.max(r.t,G[k-1].t+G[k-1].h+GAP)});
   for(let k=G.length-1;k>=0;k--){const lim=k===G.length-1?hi:G[k+1].t-GAP;if(G[k].t+G[k].h>lim)G[k].t=lim-G[k].h}
-  const nb=$(".north"),nL=nb.offsetLeft,nB=nb.offsetTop+nb.offsetHeight;for(const r of G){let x=Math.max(2,Math.min(cw-r.w-2,east?col:col-r.w));if(r.t<nB+4)x=Math.min(x,nL-r.w-6);const[qx,qy]=r.q,l=leads[r.i];pinEls[r.i].querySelector("b").style.transform=`translate(${x-qx+8}px,${r.t-qy+8}px)`;
+  for(const r of G){const x=Math.max(2,Math.min(cw-r.w-2,east?col:col-r.w)),[qx,qy]=r.q,l=leads[r.i];pinEls[r.i].querySelector("b").style.transform=`translate(${x-qx+8}px,${r.t-qy+8}px)`;
    l.setAttribute("x1",qx);l.setAttribute("y1",qy);l.setAttribute("x2",east?x:x+r.w);l.setAttribute("y2",r.t+r.h/2)}}}
 function refreshPins(){PLACES.forEach((p,i)=>{pinEls[i].querySelector("b").textContent=pinText(p);pinEls[i].setAttribute("aria-pressed",i===state.place);pinEls[i].setAttribute("aria-label",p.n+"，"+p.p[state.s])});pinW=null}
-function legend(){const T={terrain:"臺灣地形圖",temp:`臺灣${SN[state.s]}季氣溫圖`,rain:`臺灣${SN[state.s]}季雨量圖`,prod:`臺灣${SN[state.s]}季物產與生活圖`};$("#mtitle").textContent=T[state.layer];const el=$("#legend");if(state.layer==="terrain")el.innerHTML="圖例：地形"+Object.entries(TCOL).reverse().map(([k,c])=>`<div class="sw"><i style="background:rgb(${c.map(v=>v*255|0)})"></i>${k}</div>`).join("");
+function legend(){const T={terrain:"臺灣地形圖",temp:`臺灣${SN[state.s]}季氣溫圖`,rain:`臺灣${SN[state.s]}季雨量圖`,prod:`臺灣${SN[state.s]}季物產與生活圖`};$("#mtitle").textContent=T[state.layer];const el=$("#legend");if(state.layer==="terrain")el.innerHTML="圖例：地形<div style=\"display:grid;grid-template-columns:auto auto;column-gap:12px\">"+Object.entries(TCOL).reverse().map(([k,c])=>`<div class="sw"><i style="background:rgb(${c.map(v=>v*255|0)})"></i>${k}</div>`).join("")+"</div>";
  else if(state.layer==="temp")el.innerHTML='圖例：'+SN[state.s]+'季氣溫<div class="bar" style="background:linear-gradient(90deg,#3a5cbf,#9ed1ed,#fbef9e,#f29945,#cc3321)"></div><div class="ends"><span>冷</span><span>熱</span></div>';
  else if(state.layer==="rain")el.innerHTML='圖例：'+SN[state.s]+'季雨量<div class="bar" style="background:linear-gradient(90deg,#f5e8c2,#99cce6,#123d94)"></div><div class="ends"><span>少</span><span>多</span></div>';
  else el.innerHTML="圖例：物產・生活<div class=\"sw\">🌾 農作　🍵 茶</div><div class=\"sw\">🐟 漁業　🏠 建築</div><div class=\"sw\">🌧️🌡️ 看氣候</div>"}
