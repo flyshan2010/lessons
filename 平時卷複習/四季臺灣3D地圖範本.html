@@ -1236,16 +1236,21 @@ body.embedded .app{grid-template-columns:minmax(0,1fr) 510px}body.embedded .sea 
  .side{border-left:0;border-top:2px solid var(--line)}
  .tabs{margin-left:0;flex-wrap:wrap}
  .tab{flex:1}.sea{min-width:0;flex:1}
+ .wind{white-space:nowrap;max-width:none}
+ .pin::before{content:"";position:absolute;inset:-10px;border-radius:50%}
  .pin b{font-size:18px}.wind{max-width:60%;font-size:18px}.legend{font-size:18px;max-width:40%}.mtitle{font-size:20px}
 }
 @media (max-width:700px){
  .top{padding:8px 12px 4px}.top h1{font-size:26px}
  .tabs{width:100%;flex-wrap:nowrap;gap:4px}.tab{min-width:0;padding:4px;font-size:18px;white-space:nowrap}
  .ctl{padding:6px 12px}.sea{padding:4px;font-size:18px}.sea small{display:none}.play,.vw{font-size:18px;padding:4px 8px;white-space:nowrap}
- .pin b{display:none}.pin[aria-pressed=true] b{display:block}
- .north{width:56px;height:60px}.north svg{width:44px;height:44px}.north b{font-size:14px}.scale{font-size:14px;padding:2px 6px}.wind{font-size:16px;padding:2px 8px}.wind span.a{font-size:22px}.legend{font-size:15px;padding:2px 8px}
+ .app{grid-template-rows:auto 70vh auto auto}.legend{max-width:none;white-space:nowrap}
+ .north{width:64px;height:68px}.north svg{width:30px;height:30px}.north b{font-size:16px}.mhide{display:none}.scale{font-size:14px;padding:2px 6px}.wind{font-size:16px;padding:2px 8px}.wind span.a{font-size:22px}.legend{font-size:15px;padding:2px 8px}
  .pane{font-size:20px}.pane h2{font-size:26px}.chain li{grid-template-columns:88px 1fr}.disc{font-size:16px}.side{padding:8px 12px}
 }
+@media (max-width:700px),(max-height:500px){.pin b{display:none}.pin[aria-pressed=true] b{display:block}}
+@media (max-width:360px){.wind{display:none}}
+@media (max-height:500px){.app{grid-template-rows:auto 78vh auto auto}.top h1,.mhide{display:none}.wind{display:none}.legend{font-size:15px;padding:2px 8px}.north{width:64px;height:68px}.north svg{width:30px;height:30px}.north b{font-size:16px}.scale{font-size:14px;padding:2px 6px}.mtitle{font-size:20px}}
 </style>
 </head>
 <body>
@@ -1256,7 +1261,7 @@ body.embedded .app{grid-template-columns:minmax(0,1fr) 510px}body.embedded .sea 
    <button class="tab" data-layer="terrain">⛰️ 地形</button>
    <button class="tab" data-layer="temp">🌡️ 氣溫</button>
    <button class="tab" data-layer="rain">🌧️ 雨量</button>
-   <button class="tab" data-layer="prod">🌾 物產・生活</button>
+   <button class="tab" data-layer="prod">🌾 物產<span class="mhide">・生活</span></button>
   </div>
  </header>
  <div class="mapw" id="mapw">
@@ -1415,12 +1420,13 @@ function look(e,c){let z=[e[0]-c[0],e[1]-c[1],e[2]-c[2]];const zl=Math.hypot(...
  return[x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-(x[0]*e[0]+x[1]*e[1]+x[2]*e[2]),-(y[0]*e[0]+y[1]*e[1]+y[2]*e[2]),-(z[0]*e[0]+z[1]*e[1]+z[2]*e[2]),1]}
 let M=null,cw=1,ch=1,dpr=1;
 const FIT=[[119.35,25.35],[122.05,25.35],[119.35,21.85],[122.05,21.85]].map(([lo,la])=>[(lo-120.85)*KX,0,23.6-la]);
-let labelW=0;
+let labelW=0,compact=false,rT=0,rB=0;
 function camera(){const a=cw/ch,P=perspective(.62,a,.1,80),cp=Math.cos(state.pitch),spt=Math.sin(state.pitch),c=[0,0,0];
  const at=d=>mul(P,look([d*cp*Math.sin(state.yaw),d*spt,d*cp*Math.cos(state.yaw)],c));
  const bbox=m=>{let x0=9,x1=-9,y0=9,y1=-9;for(const[x,y,z]of FIT){const w=m[3]*x+m[7]*y+m[11]*z+m[15],X=(m[0]*x+m[4]*y+m[8]*z+m[12])/w,Y=(m[1]*x+m[5]*y+m[9]*z+m[13])/w;x0=Math.min(x0,X);x1=Math.max(x1,X);y0=Math.min(y0,Y);y1=Math.max(y1,Y)}return[x0,x1,y0,y1]};
- const xlim=Math.min(1.86,Math.max(.8,2*(1-2*(labelW+34)/cw)));let lo=1,hi=40;for(let k=0;k<18;k++){const d=(lo+hi)/2,[x0,x1,y0,y1]=bbox(at(d));if(x1-x0>xlim||y1-y0>1.84)lo=d;else hi=d}
- const m=at(hi*state.zoom),[x0,x1,y0,y1]=bbox(at(hi)),dx=-(x0+x1)/2,dy=-(y0+y1)/2;
+ if(compact){const tl=$(".tl"),leg=$("#legend"),sc=$(".scale");rT=ch<320?34:tl.offsetTop+tl.offsetHeight+38;rB=ch<320?4:ch-Math.min(leg.offsetTop,sc.offsetTop)+4}else{rT=0;rB=0}
+ const ylim=compact?Math.max(.4,2*(ch-rT-rB)/ch*.97):1.84,xlim=compact?(ch<320?Math.max(.8,2*(1-2*($("#legend").offsetWidth+8)/cw)):1.86):Math.min(1.86,Math.max(.8,2*(1-2*(Math.max(labelW+34,$("#legend").offsetWidth+20))/cw)));let lo=1,hi=40;for(let k=0;k<18;k++){const d=(lo+hi)/2,[x0,x1,y0,y1]=bbox(at(d));if(x1-x0>xlim||y1-y0>ylim)lo=d;else hi=d}
+ const m=at(hi*state.zoom),[x0,x1,y0,y1]=bbox(at(hi)),dx=-(x0+x1)/2,dy=-(y0+y1)/2+(compact?(rB-rT)/ch:0);
  for(let k=0;k<4;k++){m[k*4]+=dx*m[k*4+3];m[k*4+1]+=dy*m[k*4+3]}M=m}
 function project(x,y,z){const X=M[0]*x+M[4]*y+M[8]*z+M[12],Y=M[1]*x+M[5]*y+M[9]*z+M[13],w=M[3]*x+M[7]*y+M[11]*z+M[15];return[(X/w*.5+.5)*cw,(1-(Y/w*.5+.5))*ch]}
 function resize(){const r=cv.getBoundingClientRect();cw=r.width;ch=r.height;dpr=Math.min(window.devicePixelRatio||1,2);cv.width=cw*dpr;cv.height=ch*dpr;if(gl)gl.viewport(0,0,cv.width,cv.height)}
@@ -1440,7 +1446,7 @@ function draw(t){
  gl.depthMask(false);gl.drawArrays(gl.POINTS,0,nPts);gl.depthMask(true);
  placePins();elems();
 }
-function elems(){const a=project(0,0,0),b=project(0,0,-.3),e=project(.9,0,0);const ang=Math.atan2(b[0]-a[0],a[1]-b[1])*180/Math.PI;$("#northS").style.transform=`rotate(${ang}deg)`;$("#northN").style.transform=`translate(${Math.sin(ang*Math.PI/180)*36}px,${-Math.cos(ang*Math.PI/180)*36}px)`;$("#sbar").style.width=Math.hypot(e[0]-a[0],e[1]-a[1])+"px"}
+function elems(){const a=project(0,0,0),b=project(0,0,-.3),e=project(.9,0,0);const ang=Math.atan2(b[0]-a[0],a[1]-b[1])*180/Math.PI;$("#northS").style.transform=`rotate(${ang}deg)`;$("#northN").style.transform=`translate(${Math.sin(ang*Math.PI/180)*$("#north").offsetHeight*.33}px,${-Math.cos(ang*Math.PI/180)*$("#north").offsetHeight*.33}px)`;$("#sbar").style.width=Math.hypot(e[0]-a[0],e[1]-a[1])+"px"}
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* ===== 介面 ===== */
 const pinEls=[];
@@ -1457,8 +1463,9 @@ function buildPins(){const box=$("#pins");PLACES.forEach((p,i)=>{const b=documen
 const pinH=PLACES.map(placeH),leads=[];let pinW=null;
 function buildLeads(){const svg=$("#leads");PLACES.forEach(()=>{const l=document.createElementNS("http://www.w3.org/2000/svg","line");svg.appendChild(l);leads.push(l)})}
 function placePins(){if(!M)return;if(!pinW)pinW=pinEls.map(b=>{const e=b.querySelector("b");return[e.offsetWidth,e.offsetHeight]});
- labelW=Math.max(...pinW.map(v=>v[0]));const GAP=4,GUT=26,flip=Math.cos(state.yaw)<0,top=$(".tl").offsetHeight+12,box=$("#mapw").getBoundingClientRect(),rect=el=>el.getBoundingClientRect().top-box.top;
+ labelW=Math.max(...pinW.map(v=>v[0]));compact=pinW.filter(v=>v[0]>0).length<=1;const GAP=4,GUT=26,flip=Math.cos(state.yaw)<0,top=$(".tl").offsetHeight+12,box=$("#mapw").getBoundingClientRect(),rect=el=>el.getBoundingClientRect().top-box.top;
  const R=PLACES.map((p,i)=>{const q=project(toX(p.lo),pinH[i]*YS+.012,toZ(p.la));pinEls[i].style.transform=`translate(${q[0]-8}px,${q[1]-8}px)`;return{i,q,w:pinW[i][0],h:pinW[i][1],e:!!p.dir!==flip}}).filter(r=>r.w>0||(leads[r.i].setAttribute("x1",0),leads[r.i].setAttribute("x2",0),leads[r.i].setAttribute("y1",0),leads[r.i].setAttribute("y2",0),false));
+ if(compact){for(const r of R){const x=(cw-r.w)/2,t=rT-r.h-4,[qx,qy]=r.q,l=leads[r.i];pinEls[r.i].querySelector("b").style.transform=`translate(${x-qx+8}px,${t-qy+8}px)`;l.setAttribute("x1",qx);l.setAttribute("y1",qy);l.setAttribute("x2",cw/2);l.setAttribute("y2",t+r.h)}return}
  if(flip){const nE=PLACES.filter(p=>p.dir).length;[...R].sort((a,b)=>b.q[0]-a.q[0]).forEach((r,k)=>r.e=k<nE)}
  for(const east of[true,false]){const G=R.filter(r=>r.e===east).sort((a,b)=>a.q[1]-b.q[1]);if(!G.length)continue;
   const col=east?Math.max(...R.map(r=>r.q[0]))+GUT:Math.min(...R.map(r=>r.q[0]))-GUT,nb=$(".north"),lo=east?(col+Math.max(...G.map(r=>r.w))>nb.offsetLeft-6?nb.offsetTop+nb.offsetHeight+4:4):top,hi=(east?rect($("#legend")):rect($(".scale")))-4;
