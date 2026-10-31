@@ -2117,6 +2117,16 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
 
 </style>
 
@@ -2411,6 +2421,14 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
         <div class="item" data-reveal>把先算的部分加上括號</div>
         <div class="item" data-reveal>回頭念一次：括號裡表示什麼？答案表示什麼？</div>
       </div><div class="takeaway-band" data-reveal><span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span><span class="text">算得對還不夠，要能<b>說出括號在題目裡代表什麼</b>。</span></div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">數L8-1 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：括號與併式</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/ig7RJc7s-XM?rel=0" title="數8-1加與減總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分二十八秒）</summary><ol><li>剛剛這節課，我們學了，怎麼把兩個算式，合併成一個算式。</li><li>冰箱有七十五杯綠豆沙，又放進二十五杯，賣掉七十杯。先算七十五加二十五，等於一百，再算一百減七十，等於三十。</li><li>這個一百，是先算出來的結果。把它換成七十五加二十五，再加上括號，就合併成一個算式，這叫併式。</li><li>括號框住的，就是先算的部分。看到括號，就先算裡面。</li><li>湯鍋原價一千二百五十元，便宜一百二十五元，媽媽付一千五百元。先算打折後的價錢，它寫在後面，括號就加在後面。</li><li>如果少了括號，就變成連減兩次，算出來是一百二十五，意思完全不一樣。先算的在後面，括號一定不能省。</li><li>一箱果汁四十八瓶，阿姨拿十二瓶，媽媽拿八瓶。可以先算阿姨拿走後剩下的，也可以先算兩人共拿走的。兩種併式都對。</li><li>下一節小考前，想一想：停車場原有八十六輛車，開走三十輛，又開進十八輛，括號要加在哪裡？</li></ol></details>
+      </div>
     </section>
 
     <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
