@@ -2115,6 +2115,16 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
 .qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
 
 </style>
 
@@ -2497,6 +2507,14 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       <div class="takeaway-band" data-reveal>
         <span class="icon"><svg class="ico"><use href="#ico-warn"></use></svg></span>
         <span class="text">先確定<b>對應點</b>，對應邊和對應角就跟著出來了</span>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">數L7-3 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：疊合與對應</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/le0US5DYO_U?rel=0" title="數7-3認識全等總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分十七秒）</summary><ol><li>剛剛這節課，我們認識了全等：兩個圖形，能完全疊合，就是全等。</li><li>怎麼疊呢？位置不同，就移過去；方向不同，就轉一轉；移和轉都不行，就翻過來。</li><li>全等，就是形狀一樣、大小也一樣。形狀一樣但大小不同，不是全等；形狀不同，也不是。</li><li>疊合的時候，碰在一起的頂點，叫對應點：A 對 D、B 對 E、C 對 F。</li><li>碰在一起的邊，是對應邊：AB 疊在 DE 上，一樣長。碰在一起的角，是對應角：角 B 疊在角 E 上，一樣大。</li><li>所以不用量就知道：AB 是八公分，DE 也是八公分；角 B 是三十七度，角 E 也是三十七度。</li><li>要注意，不能只照字母順序配。圖形翻過來時，順序常常顛倒，要看實際疊起來，誰碰到誰。</li><li>下一節小考前，想一想：甲和乙全等，A 對 D、C 對 F，那 AC 的對應邊是哪一條？</li></ol></details>
       </div>
     </section>
 
