@@ -2114,6 +2114,17 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
 .qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
+
 
 </style>
 
@@ -2481,6 +2492,14 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       <div class="takeaway-band" data-reveal>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
         <span class="text">畫完別忘了<b>量回去檢查</b>——這是判斷自己有沒有畫對的方法</span>
+      </div>
+    </section>
+
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">數L7-2 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：先角、再邊、最後連</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/OoYmjhV7vYs?rel=0" title="數7-2畫三角形總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分二十秒）</summary><ol><li>剛剛這節課，我們學會畫三角形：先在百點卡上數格子，再用工具，照條件畫出來。</li><li>百點卡上，相鄰兩點的距離都一樣。橫線和直線交出來的角，剛好是直角；要兩條邊一樣長，數格子就好。</li><li>畫等腰直角三角形：先做出直角，兩邊都數四格，再把端點連起來，就完成了。</li><li>接著學一個記法：連接 A、B 兩點的線段，寫成線段 AB。AB 和 BA，是同一條邊。</li><li>沒有格線，就用工具畫。三角形的畫法都是三步：先固定角，再固定邊，最後連起來。</li><li>畫看看：角 A 是一百二十度，兩邊三公分和四公分。先畫一百二十度的角，再從 A 量三公分和四公分，最後連接兩個端點。</li><li>畫得準有訣竅：量角器的中心點對準頂點，零度線對準一條邊；直尺的零刻度，對準起點。</li><li>下一節小考前，想一想：用直尺量出三公分，直尺要怎麼放？</li></ol></details>
       </div>
     </section>
 
