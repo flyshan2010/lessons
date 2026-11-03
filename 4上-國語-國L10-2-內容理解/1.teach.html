@@ -2037,6 +2037,17 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
+
 
 </style>
 </head>
@@ -2438,6 +2449,14 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     </section>
 
     <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">國L10-2 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：珊瑚礁的祕密</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/masaJHdstY8?rel=0" title="國10-2內容理解總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分多鐘）</summary><ol><li>剛剛這節課，我們讀了〈珊瑚礁〉。地方不大，卻住著許多生物，所以被叫作海洋熱帶雨林。</li><li>珊瑚長得像樹枝，但其實是動物。一隻隻珊瑚蟲，聚成一株珊瑚，許多珊瑚，一層層堆積，就成了珊瑚礁。</li><li>珊瑚礁有許多縫隙，小魚躲進去，大魚追不到。礁上還有足夠的食物。所以，這裡是養育下一代的好地方。</li><li>珊瑚的顏色，來自體內的海藻。海水太熱，海藻離開，珊瑚就變白，再漸漸死去。</li><li>變白，是快要死，還沒死。海水如果及時降溫，海藻回來，珊瑚還有機會恢復。</li><li>臺灣的珊瑚礁，在墾丁、小琉球、綠島、蘭嶼。親近海洋時，不傷害生物、不丟垃圾，防晒也要選海洋友善的。</li><li>下一節小考前，想一想：為什麼珊瑚礁，是海洋生物養育下一代的好地方？</li></ol></details>
+      </div>
+    </section>
+
     <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 國L10-2</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
       <div class="action-list">
