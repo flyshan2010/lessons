@@ -2053,6 +2053,16 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
+/* 總結影片（lesson-motion 自製片，可內嵌：RULE_教學產出部署 §4）——放在 v4-shell 區塊外，build 不會覆蓋 */
+.motion-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.motion-frame { height: min(100%, 58vh); aspect-ratio: 16 / 9; max-width: 100%; border: var(--line-mid) solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--ink); }
+.motion-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.motion-offline { font-size: var(--t4); color: var(--muted); width: 100%; max-width: 1400px; }
+.motion-offline summary { cursor: pointer; }
+.motion-offline ol { margin: var(--s2) 0 0; padding-left: 1.6em; line-height: var(--lh-normal); color: var(--ink); columns: 2; column-gap: var(--s6); }
+.motion-offline li { break-inside: avoid; margin-bottom: var(--s2); }
+/* 展開旁白稿＝離線模式：收起播放器，整頁給旁白稿 */
+.motion-wrap:has(.motion-offline[open]) .motion-frame { display: none; }
 
 </style>
 </head>
@@ -2493,6 +2503,13 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
     </section>
 
+    <section class="slide" data-phase="learn" data-slide-id="motion" aria-labelledby="motion-t" hidden>
+      <div class="page-head"><span class="label">國L11-2 · 總結影片</span><h2 id="motion-t" class="title">影片回顧：美食島的反諷</h2></div>
+      <div class="motion-wrap">
+        <div class="motion-frame"><iframe src="https://www.youtube-nocookie.com/embed/glQlpT4n0iM?rel=0" title="國11-2內容理解總結影片" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe></div>
+        <details class="motion-offline"><summary>看不到影片？看旁白稿（一分十六秒）</summary><ol><li>剛剛這節課，我們讀了〈美食島〉。大海裡，忽然出現一座島，動物們都好奇極了。</li><li>海龜說，它像美食大拼盤；虎鯨說，這是老天爺送的禮物。可是仔細一看，島上堆滿寶特瓶、鐵鋁罐、鞋子，全是垃圾。</li><li>紅白相間的水母，其實是塑膠袋；白色的蝦子，其實是塑膠湯匙。</li><li>好吃的浮游生物，其實是塑膠微粒；奇怪的海藻，其實是廢棄漁網。垃圾和食物長得太像，動物分不出來。</li><li>前面大家吃到飽，好開心。可是，怪事發生了！燈籠魚沉不下去，海豚、海龜被纏住，只能喊救命。</li><li>作者故意取名美食島，讓我們跟動物一起被騙，這叫反諷。主旨是：不製造海洋垃圾，才能保護海洋生物。</li><li>下一節小考前，想一想：燈籠魚吃完浮游生物，就沉不下去，牠吃的其實是什麼？</li></ol></details>
+      </div>
+    </section>
     <!-- ③ 重點總結：本節 points（非本課最後一節時同時是下一節小考範圍） -->
     <section class="slide" data-slide-id="summary" data-phase="summary" aria-labelledby="summary-t" hidden>
       <div class="page-head"><span class="label"><span class="phase phase-sum">③ 重點總結 · 5 分鐘</span> 國L11-2</span><h2 id="summary-t" class="title">今天帶走這四件事</h2></div>
