@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-subject="chinese"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四上國語 期中前作文說明單〈下課時間〉進階版</title>
+<style>
+/* ===== 教學 Design System（內嵌，勿手改；改請回正本重新打包） ===== */
+/* ============================================================
+   教學 Design System · tokens.css  v1.0
+   基準設計尺：1600 × 900（16:9 投影）
+   用法：在 <html> 或 .stage 上加 data-subject="chinese|math|
+   nature|society|health|art"，主題即整份切換。
+   鐵則：面向學生的文字一律 ≥ 24px；語意色不隨主題變。
+   ============================================================ */
+
+:root {
+  /* ---------- 版面骨架 ---------- */
+  --stage-w: 1600;
+  --stage-h: 900;
+  --safe-x: 96px;          /* 左右安全區 */
+  --safe-y: 64px;          /* 上下安全區 */
+  --header-h: 92px;        /* 頁首帶 */
+  --footer-h: 76px;        /* 頁尾判斷帶 */
+
+  /* ---------- 字級階梯（投影用，勿低於 T5） ---------- */
+  --t1: 80px;              /* 核心判斷／單一大字 72–88 */
+  --t2: 56px;              /* 頁標題 52–60 */
+  --t3: 38px;              /* 區塊標／欄標 36–40 */
+  --t4: 30px;              /* 內文／表格主文 28–32 */
+  --t5: 24px;              /* 標籤／註記（硬性下限） */
+  --t-min: 24px;           /* 驗證器據此檢查 */
+
+  --lh-tight: 1.15;
+  --lh-normal: 1.45;
+  --lh-loose: 1.7;
+
+  --fw-regular: 400;
+  --fw-bold: 700;
+
+  --font-sans: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC",
+               "Heiti TC", system-ui, sans-serif;
+  --font-hand: "Chalkduster", "Bradley Hand", var(--font-sans);
+
+  /* ---------- 間距尺（8 的倍數） ---------- */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 48px;
+  --s6: 64px;
+  --s7: 96px;
+
+  /* ---------- 線寬／圓角／陰影（各三級） ---------- */
+  --line-thin: 1px;
+  --line-mid: 2px;
+  --line-bold: 4px;
+
+  --r-sm: 6px;
+  --r-md: 14px;
+  --r-lg: 24px;
+
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, .08);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, .10);
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, .14);
+
+  /* ---------- 語意色：跨主題固定，不得覆寫 ----------
+     鐵則：語意一律「顏色 + 圖示（或文字）」雙軌呈現，不得只靠顏色。
+     色覺障礙學生看不出紅綠差別；投影機色偏也會讓暖色系互相靠近。
+     正確 → ✓ / #ico-check   錯誤 → ✗ / #ico-cross   提醒 → ⚠ / #ico-warn
+     ------------------------------------------------------- */
+  --correct: #1B7A3E;
+  --correct-soft: #E6F3EA;
+  --wrong: #C0322B;
+  --wrong-soft: #FBEAE9;
+  --warn: #8A6100;
+  --warn-soft: #FBF2DC;
+  --neutral-soft: #EFEFEF;
+
+  /* ---------- 動畫：白名單三用途 ---------- */
+  --dur-fast: 200ms;
+  --dur-base: 300ms;
+  --dur-slow: 400ms;
+  --ease: cubic-bezier(.22, .61, .36, 1);
+
+  /* ---------- 預設主題（無 data-subject 時＝通用教學） ---------- */
+  --bg: #F8F8F7;
+  --surface: #FFFFFF;
+  --ink: #1A1A1A;
+  --muted: #5C5C5C;
+  --line: #D6D4CF;
+  --accent: #B4441F;
+  --accent-soft: #FBEDE7;
+  --accent-2: #2B5680;
+  --texture: none;
+}
+
+/* ============================================================
+   六科主題（層 1：由科目決定色彩／質感）
+   每組皆已驗過：ink/bg ≥ 7:1、accent/bg ≥ 4.5:1
+   ============================================================ */
+
+/* 國語：宣紙米白 + 墨黑 + 硃紅 */
+[data-subject="chinese"] {
+  --bg: #FAF7F0;
+  --surface: #FFFDF8;
+  --ink: #1C1A17;
+  --muted: #5E574C;
+  --line: #DED5C4;
+  --accent: #B23A2E;
+  --accent-soft: #F7E9E5;
+  --accent-2: #5A6B7A;   /* 墨青：與 --warn 拉開，避免「次重點」被誤讀成「注意」 */
+  --texture: none;
+}
+
+/* 數學：淨白 + 靛藍 + 橘 */
+[data-subject="math"] {
+  --bg: #FBFCFD;
+  --surface: #FFFFFF;
+  --ink: #16202B;
+  --muted: #556575;
+  --line: #D3DDE7;
+  --accent: #1F5FA8;
+  --accent-soft: #E8F0F9;
+  --accent-2: #7A3D9A;   /* 深紫：原橙對比僅 4.03 且撞 --warn，已改 */
+  --texture: grid;
+}
+
+/* 自然：淺灰白 + 森綠 + 琥珀 */
+[data-subject="nature"] {
+  --bg: #F7F9F6;
+  --surface: #FFFFFF;
+  --ink: #16201A;
+  --muted: #506055;
+  --line: #D2DFD3;
+  --accent: #1E6B45;
+  --accent-soft: #E7F2EB;
+  --accent-2: #205C7A;   /* 深青藍：原琥珀與 --warn 撞色，已改 */
+  --texture: none;
+}
+
+/* 社會：牛皮紙 + 深褐 + 靛 */
+[data-subject="society"] {
+  --bg: #FAF6EE;
+  --surface: #FFFCF6;
+  --ink: #241E16;
+  --muted: #6A5B49;
+  --line: #DCCFB8;
+  --accent: #2B5680;
+  --accent-soft: #E7EEF5;
+  --accent-2: #6B4423;   /* 加深土褐：與 --warn 拉開 */
+  --texture: paper;
+}
+
+/* 健體：明亮白 + 深青 + 活力橙 */
+[data-subject="health"] {
+  --bg: #FBFDFD;
+  --surface: #FFFFFF;
+  --ink: #14201F;
+  --muted: #4F6362;
+  --line: #CFE0DF;
+  --accent: #0E6B6B;
+  --accent-soft: #E4F2F1;
+  --accent-2: #B0355F;   /* 桃紅：原橙對比僅 4.44 且撞 --warn，已改 */
+  --texture: none;
+}
+
+/* 藝文：低彩灰 + 炭黑 + 紫（accent 可依作品取樣覆寫） */
+[data-subject="art"] {
+  --bg: #F8F7F6;
+  --surface: #FFFFFF;
+  --ink: #1B1A19;
+  --muted: #5C5859;
+  --line: #DAD6D4;
+  --accent: #6B4E8C;
+  --accent-soft: #F0EBF5;
+  --accent-2: #45607A;   /* 炭青：與 --warn 拉開 */
+  --texture: canvas;
+}
+
+/* ============================================================
+   質感層（極輕，不干擾閱讀）
+   ============================================================ */
+[data-subject="math"] .stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(31, 95, 168, .05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(31, 95, 168, .05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+[data-subject="society"] .stage::before,
+[data-subject="art"] .stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .35;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(138, 90, 43, .05) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(138, 90, 43, .04) 0 2px, transparent 3px);
+  background-size: 180px 180px;
+}
+
+/* ============================================================
+   基礎排版
+   ============================================================ */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #222;
+  font-family: var(--font-sans);
+  color: var(--ink);
+}
+
+.stage {
+  position: relative;
+  width: 1600px;
+  height: 900px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: var(--safe-y) var(--safe-x);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+h1, h2, h3, p, ul, ol { margin: 0; }
+
+.t1 { font-size: var(--t1); line-height: var(--lh-tight); font-weight: var(--fw-bold); }
+.t2 { font-size: var(--t2); line-height: var(--lh-tight); font-weight: var(--fw-bold); }
+.t3 { font-size: var(--t3); line-height: var(--lh-normal); font-weight: var(--fw-bold); }
+.t4 { font-size: var(--t4); line-height: var(--lh-normal); }
+.t5 { font-size: var(--t5); line-height: var(--lh-normal); color: var(--muted); }
+
+.ink { color: var(--ink); }
+.muted { color: var(--muted); }
+.em { color: var(--accent); font-weight: var(--fw-bold); }
+
+/* ============================================================
+   動畫白名單：只有這三種用途
+   1. reveal   逐步揭露
+   2. step-on  流程演示（步驟點亮）
+   3. focus    聚焦重點（其餘降透明）
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur-base) var(--ease),
+              transform var(--dur-base) var(--ease);
+}
+[data-reveal].is-shown { opacity: 1; transform: none; }
+
+.is-dimmed {
+  opacity: .28;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.is-active-step {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft);
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}
+
+@media print {
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .is-dimmed { opacity: 1 !important; }
+  .slide { page-break-after: always; }
+}
+/* ============================================================
+   教學 Design System · components.css  v1.0
+   靜態元件 10 個 + 互動元件 5 個
+   依賴 tokens.css。所有尺寸以 1600×900 設計尺為準。
+   ============================================================ */
+
+/* ---------- 共用：頁首帶／頁尾判斷帶 ---------- */
+.page-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s3);
+  min-height: var(--header-h);
+  border-bottom: var(--line-mid) solid var(--line);
+  padding-bottom: var(--s2);
+}
+.page-head .label {
+  font-size: var(--t5);
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+  letter-spacing: .08em;
+}
+.page-head .title { font-size: var(--t2); font-weight: var(--fw-bold); }
+.page-meta {
+  position: absolute;
+  right: var(--safe-x);
+  bottom: var(--s3);
+  font-size: var(--t5);
+  color: var(--muted);
+}
+
+/* 直屬投影片的主要內容區塊撐滿可用高度，避免內容擠在上方、下半頁大片留白。
+   .takeaway-band 靠自身的 margin-top:auto 貼底，不受影響。 */
+.slide > .compare-pair,
+.slide > .flow-steps,
+.slide > .misconception,
+.slide > .figure-block,
+.slide > .timeline,
+.slide > .question-frame,
+.slide > .drag-match,
+.slide > .section-divider,
+.slide > .data-focus,
+.slide > .action-list,
+.slide > .slide-body { flex: 1; min-height: 0; }
+.slide > .section-divider,
+.slide > .data-focus { justify-content: center; }
+
+.slide > .question-frame { justify-content: center; }
+
+/* ---------- 1. 概念卡 concept-card ---------- */
+.concept-card {
+  background: var(--surface);
+  border: var(--line-thin) solid var(--line);
+  border-left: var(--line-bold) solid var(--accent);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  box-shadow: var(--shadow-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.concept-card > .head { font-size: var(--t3); font-weight: var(--fw-bold); }
+.concept-card > .body { font-size: var(--t4); color: var(--ink); }
+
+/* ---------- 2. 對照組 compare-pair ---------- */
+.compare-pair {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: var(--s3);
+}
+.compare-pair.stacked { grid-template-columns: 1fr; }
+.compare-pair > .side {
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.compare-pair > .side > .head {
+  font-size: var(--t3);
+  font-weight: var(--fw-bold);
+  padding-bottom: var(--s1);
+  border-bottom: var(--line-thin) solid var(--line);
+}
+.compare-pair > .side > .item { font-size: var(--t4); }
+.compare-pair > .side.is-focus { border-color: var(--accent); background: var(--accent-soft); }
+.compare-pair > .vs {
+  align-self: center;
+  font-size: var(--t3);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+}
+
+/* ---------- 3. 流程列 flow-steps ---------- */
+.flow-steps { display: flex; align-items: stretch; gap: var(--s2); }
+.flow-steps.vertical { flex-direction: column; }
+.flow-steps > .step {
+  flex: 1;
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.flow-steps > .step > .badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: var(--t3);
+  font-weight: var(--fw-bold);
+  display: grid;
+  place-items: center;
+}
+.flow-steps > .step > .head { font-size: var(--t3); font-weight: var(--fw-bold); }
+.flow-steps > .step > .body { font-size: var(--t4); color: var(--muted); }
+.flow-steps > .arrow {
+  align-self: center;
+  color: var(--accent);
+  font-size: var(--t2);
+  line-height: 1;
+}
+
+/* ---------- 4. 時間軸 timeline ---------- */
+.timeline { position: relative; padding-left: var(--s6); }
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 26px;
+  top: 8px;
+  bottom: 8px;
+  width: var(--line-bold);
+  background: var(--line);
+  border-radius: 2px;
+}
+.timeline > .node {
+  position: relative;
+  padding: 0 0 var(--s4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+.timeline > .node::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: var(--line-bold) solid var(--bg);
+}
+.timeline > .node > .when { font-size: var(--t5); color: var(--accent); font-weight: var(--fw-bold); }
+.timeline > .node > .what { font-size: var(--t4); font-weight: var(--fw-bold); }
+.timeline > .node > .note { font-size: var(--t5); color: var(--muted); }
+
+/* ---------- 5. 詞彙卡 vocab-card ---------- */
+.vocab-card {
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  min-width: 300px;
+}
+.vocab-card > .word {
+  font-size: var(--t2);
+  font-weight: var(--fw-bold);
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+}
+.vocab-card > .word > .zhuyin {
+  font-size: var(--t5);
+  color: var(--accent);
+  font-weight: var(--fw-regular);
+}
+.vocab-card > .mean { font-size: var(--t4); }
+.vocab-card > .example {
+  font-size: var(--t5);
+  color: var(--muted);
+  border-left: var(--line-mid) solid var(--line);
+  padding-left: var(--s2);
+}
+
+/* ---------- 6. 任務卡 task-card ---------- */
+.task-card {
+  background: var(--accent-soft);
+  border: var(--line-mid) solid var(--accent);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.task-card > .mission { font-size: var(--t2); font-weight: var(--fw-bold); }
+.task-card > .facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s5);
+}
+.task-card > .facts > .fact {
+  font-size: var(--t4);
+  display: flex;
+  align-items: center;
+  gap: var(--s1);
+}
+.task-card > .facts > .fact > .k {
+  font-size: var(--t5);
+  color: var(--muted);
+  font-weight: var(--fw-bold);
+}
+
+/* ---------- 7. 迷思澄清框 misconception ---------- */
+.misconception { display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--s3); align-items: stretch; }
+.misconception > .wrong-side,
+.misconception > .right-side {
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.misconception > .wrong-side { background: var(--wrong-soft); border: var(--line-mid) solid var(--wrong); }
+.misconception > .right-side { background: var(--correct-soft); border: var(--line-mid) solid var(--correct); }
+.misconception .mark,
+.misconception > .wrong-side > .head,
+.misconception > .right-side > .head { font-size: var(--t3); font-weight: var(--fw-bold); }
+.misconception > .wrong-side .mark,
+.misconception > .wrong-side > .head { color: var(--wrong); }
+.misconception > .right-side .mark,
+.misconception > .right-side > .head { color: var(--correct); }
+.misconception .text,
+.misconception > .wrong-side > .body,
+.misconception > .right-side > .body { font-size: var(--t4); }
+.misconception > .becomes {
+  align-self: center;
+  font-size: var(--t2);
+  color: var(--muted);
+}
+
+/* ---------- 8. 重點判斷帶 takeaway-band ---------- */
+.takeaway-band {
+  margin-top: auto;
+  background: var(--surface);
+  border: var(--line-mid) solid var(--accent);
+  border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  min-height: var(--footer-h);
+}
+.takeaway-band > .icon { font-size: var(--t3); color: var(--accent); }
+.takeaway-band > .text { font-size: var(--t3); font-weight: var(--fw-bold); }
+
+/* ---------- 9. 圖文區塊 figure-block ---------- */
+.figure-block { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s5); align-items: center; }
+.figure-block.figure-top { grid-template-columns: 1fr; }
+.figure-block > .figure {
+  background: var(--surface);
+  border: var(--line-thin) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+}
+.figure-block > .figure svg,
+.figure-block > .figure img { max-width: 100%; max-height: 420px; }
+.figure-block > .caption { display: flex; flex-direction: column; gap: var(--s2); }
+.figure-block > .caption > .head { font-size: var(--t3); font-weight: var(--fw-bold); }
+.figure-block > .caption > .body { font-size: var(--t4); }
+
+/* ---------- 10. 三層提問框 question-frame ---------- */
+.question-frame { display: flex; flex-direction: column; gap: var(--s3); }
+.question-frame > .q {
+  background: var(--surface);
+  border: var(--line-thin) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+}
+.question-frame > .q > .tier {
+  flex: none;
+  font-size: var(--t5);
+  font-weight: var(--fw-bold);
+  color: #fff;
+  background: var(--muted);
+  border-radius: var(--r-sm);
+  padding: 4px 12px;
+}
+.question-frame > .q.tier-3 > .tier { background: var(--accent); }
+.question-frame > .q > .text { font-size: var(--t3); }
+
+/* ---------- 11. 過場分隔頁 section-divider ----------
+   段落之間的呼吸點。整頁只放一句，讓學生知道「換段了」。
+   版型輪替鐵則：full-bleed 版型只用於封面／過場／結尾，內容頁不用。 */
+.section-divider {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--s3);
+  background: var(--accent-soft);
+  border-left: var(--line-bold) solid var(--accent);
+  border-radius: var(--r-lg);
+  padding: var(--s6) var(--s7);
+}
+.section-divider > .kicker {
+  font-size: var(--t3);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  letter-spacing: .05em;
+}
+.section-divider > .headline { font-size: var(--t1); font-weight: var(--fw-bold); line-height: var(--lh-tight); }
+.section-divider > .sub { font-size: var(--t4); color: var(--muted); }
+
+/* ---------- 12. 數據聚焦頁 data-focus ----------
+   一個大數字（或一張圖）＋一句結論。重點數據不再埋在內文裡。 */
+.data-focus { display: grid; grid-template-columns: auto 1fr; gap: var(--s5); align-items: center; }
+.data-focus.stacked { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+.data-focus > .figure-num {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s1);
+  padding: var(--s4) var(--s6);
+  background: var(--surface);
+  border: var(--line-bold) solid var(--accent);
+  border-radius: var(--r-lg);
+}
+.data-focus > .figure-num > .num {
+  font-size: var(--num-xl, 160px);   /* 刻意超過 T1：數據就是主角。RWD 會降階 */
+  line-height: 1;
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+}
+.data-focus > .figure-num > .unit { font-size: var(--t3); font-weight: var(--fw-bold); color: var(--muted); }
+.data-focus > .readout { display: flex; flex-direction: column; gap: var(--s3); }
+.data-focus > .readout > .claim { font-size: var(--t2); font-weight: var(--fw-bold); }
+.data-focus > .readout > .note { font-size: var(--t4); color: var(--muted); }
+
+/* ---------- 13. 行動／檢核頁 action-list ----------
+   明確的下一步或檢核清單。方框＝待辦、✓＋綠底＝完成，顏色＋記號雙軌。 */
+.action-list { display: flex; flex-direction: column; gap: var(--s2); }
+.action-list > .head { font-size: var(--t2); font-weight: var(--fw-bold); margin-bottom: var(--s2); }
+.action-list > .item {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  background: var(--surface);
+  border: var(--line-thin) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+  font-size: var(--t4);
+  min-height: 64px;
+}
+.action-list > .item::before {
+  content: "";
+  flex: none;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border: var(--line-mid) solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-size: var(--t5); font-weight: var(--fw-bold);
+}
+.action-list > .item.is-done { color: var(--muted); }
+.action-list > .item.is-done::before {
+  content: "✓"; color: #fff; background: var(--correct); border-color: var(--correct);
+}
+
+/* 課堂書寫欄 .write-field（單一正本，簡報與教材網頁共用）
+   用 contenteditable 而非 textarea，才能有作業本底線格。
+   高度以 --field-h 固定（min == max），內容再長只在框內捲動，不撐破版面。
+   line-height 必須等於底線格距，字才會坐在線上。 */
+.write-field {
+  --field-h: 84px;
+  min-height: var(--field-h);
+  max-height: var(--field-h);
+  padding: 0 4px;
+  overflow-y: auto;
+  font-family: inherit;
+  font-size: 28px;
+  line-height: 42px;
+  color: var(--ink);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 40px,
+    var(--line) 40px 42px
+  );
+  outline: 0;
+  cursor: text;
+}
+.write-field:empty::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  opacity: .7;
+}
+.write-field:focus {
+  border-radius: var(--r-sm);
+  box-shadow: inset 0 0 0 var(--line-mid) var(--accent);
+}
+@media print {
+  .write-field { overflow: visible; box-shadow: none; }
+  .write-field:empty::before { content: none; }
+}
+
+/* ============================================================
+   互動元件（5 個）— 純 CSS/JS，離線可用
+   ============================================================ */
+
+/* ---------- I1. 翻牌 flip-card ---------- */
+.flip-card {
+  perspective: 1200px;
+  width: 100%;
+  min-height: 240px;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+}
+/* .inner 必須 display:block —— 若是 <span> 等 inline 元素，
+   min-height／height 會完全失效，正反面會塌成小方塊、文字溢出卡片外。 */
+.flip-card > .inner {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  transition: transform var(--dur-slow) var(--ease);
+  transform-style: preserve-3d;
+}
+.flip-card.is-flipped > .inner { transform: rotateY(180deg); }
+.flip-card .face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--r-md);
+  border: var(--line-mid) solid var(--line);
+  background: var(--surface);
+  padding: var(--s3);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  /* 正面是「問題」，用 t3 而非 t1/t2：卡片欄寬有限，56px 會撐爆。
+     每張卡建議至少 280px 寬。 */
+  font-size: var(--t3);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-normal);
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+.flip-card .face.back {
+  transform: rotateY(180deg);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  font-size: var(--t4);
+}
+.flip-card:focus-visible { outline: var(--line-bold) solid var(--accent); outline-offset: 4px; }
+
+/* ---------- I2. 抽題／抽人 picker ---------- */
+.picker {
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  align-items: center;
+}
+.picker > .display {
+  font-size: var(--t1);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  min-height: 96px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.picker > .display.is-rolling { opacity: .55; }
+.picker > .status { font-size: var(--t5); color: var(--muted); }
+
+/* ---------- I3. 拖曳配對 drag-match ---------- */
+.drag-match { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s5); }
+.drag-match .pool { display: flex; flex-wrap: wrap; gap: var(--s2); align-content: flex-start; }
+.drag-match .chip {
+  font-size: var(--t4);
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s2) var(--s3);
+  cursor: grab;
+  user-select: none;
+}
+.drag-match .chip.is-dragging { opacity: .5; cursor: grabbing; }
+.drag-match .chip.is-placed { cursor: default; }
+.drag-match .zones { display: flex; flex-direction: column; gap: var(--s3); }
+.drag-match .zone {
+  border: var(--line-bold) dashed var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.drag-match .zone > .zone-head { font-size: var(--t3); font-weight: var(--fw-bold); }
+.drag-match .zone > .drop { display: flex; flex-wrap: wrap; gap: var(--s2); min-height: 48px; }
+.drag-match .zone.is-over { border-color: var(--accent); background: var(--accent-soft); }
+.drag-match .chip.is-correct { border-color: var(--correct); background: var(--correct-soft); color: var(--correct); }
+.drag-match .chip.is-wrong { border-color: var(--wrong); background: var(--wrong-soft); color: var(--wrong); }
+
+/* ---------- I4. 倒數計時 countdown ---------- */
+.countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s3);
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s2) var(--s4);
+}
+.countdown > .time {
+  font-size: var(--t1);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  min-width: 200px;
+  text-align: center;
+}
+.countdown.is-warning > .time { color: var(--warn); }
+.countdown.is-done > .time { color: var(--wrong); }
+.countdown.is-done { border-color: var(--wrong); background: var(--wrong-soft); }
+
+/* ---------- I5. 加分板 score-board ---------- */
+.score-board { display: flex; gap: var(--s3); flex-wrap: wrap; }
+.score-board > .team {
+  flex: 1;
+  min-width: 200px;
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s2);
+}
+.score-board > .team > .name { font-size: var(--t3); font-weight: var(--fw-bold); }
+.score-board > .team > .score {
+  font-size: var(--t1);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.score-board > .team.is-lead { border-color: var(--accent); background: var(--accent-soft); }
+.score-board > .team > .ctrl { display: flex; gap: var(--s2); }
+
+/* 共用按鈕 */
+.ds-btn {
+  font-family: inherit;
+  font-size: var(--t4);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s1) var(--s3);
+  cursor: pointer;
+  min-width: 56px;
+  min-height: 56px;
+}
+.ds-btn:hover { border-color: var(--accent); }
+.ds-btn:focus-visible { outline: var(--line-bold) solid var(--accent); outline-offset: 3px; }
+.ds-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+@media print {
+  .picker, .countdown, .score-board .ctrl, .ds-btn { display: none !important; }
+  .flip-card > .inner { transform: none !important; }
+  .flip-card .face.back { position: static; transform: none; backface-visibility: visible; }
+}
+
+/* ============================================================
+   I6–I8 作答型互動元件（2026-07-21 新增）
+   共通鐵則：正誤一律「顏色 ＋ 圖示」雙軌；可點區最小 56×56；
+   字級不低於 --t5(24px)；滑鼠／觸控／鍵盤三種操作都要能完成。
+   ============================================================ */
+
+/* ---------- 作答結果回饋（三元件共用） ---------- */
+.ans-feedback {
+  display: none;
+  align-items: center;
+  gap: var(--s2);
+  margin-top: var(--s3);
+  padding: var(--s2) var(--s3);
+  border-radius: var(--r-md);
+  font-size: var(--t4);
+  font-weight: var(--fw-bold);
+  border: var(--line-mid) solid transparent;
+}
+.ans-feedback.is-shown { display: flex; }
+.ans-feedback .ico { width: 1.2em; height: 1.2em; flex: none; }
+.ans-feedback.is-correct { color: var(--correct); background: var(--correct-soft); border-color: var(--correct); }
+.ans-feedback.is-wrong   { color: var(--wrong);   background: var(--wrong-soft);   border-color: var(--wrong); }
+
+/* ---------- I6. 選擇題 quiz（單選／多選／是非） ---------- */
+.quiz {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-lg);
+}
+.quiz > .q-stem,
+.fillq > .q-stem {
+  font-size: var(--t3);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-normal);
+}
+.quiz > .q-hint { font-size: var(--t5); color: var(--muted); }
+.quiz > .q-options {
+  display: grid;
+  gap: var(--s2);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.quiz[data-mode="tf"] > .q-options { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+.q-opt {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  text-align: left;
+  font: inherit;
+  font-size: var(--t4);
+  line-height: var(--lh-normal);
+  min-height: 56px;
+  padding: var(--s2) var(--s3);
+  background: var(--bg);
+  color: var(--ink);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.q-opt:hover { border-color: var(--accent); }
+.q-opt:focus-visible { outline: var(--line-bold) solid var(--accent); outline-offset: 3px; }
+
+/* 選項前的標記格：未選為空框，已選填入記號 —— 不只靠底色表達「已選」 */
+.q-opt::before {
+  content: "";
+  flex: none;
+  width: 32px; height: 32px;
+  border: var(--line-mid) solid var(--line);
+  background: var(--surface);
+}
+.quiz[data-mode="multi"] .q-opt::before { border-radius: var(--r-sm); }
+.quiz:not([data-mode="multi"]) .q-opt::before { border-radius: 50%; }
+.q-opt.is-picked { border-color: var(--accent); background: var(--accent-soft); }
+.q-opt.is-picked::before {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 4px var(--surface);
+}
+
+/* 對答案後：顏色 ＋ 文字記號雙軌（::after 為圖示欄） */
+.q-opt.is-correct { border-color: var(--correct); background: var(--correct-soft); color: var(--correct); }
+.q-opt.is-wrong   { border-color: var(--wrong);   background: var(--wrong-soft);   color: var(--wrong); }
+.q-opt.is-missed  { border-color: var(--correct); border-style: dashed; color: var(--correct); }
+.q-opt.is-correct::after { content: "✓"; margin-left: auto; font-weight: var(--fw-bold); }
+.q-opt.is-wrong::after   { content: "✗"; margin-left: auto; font-weight: var(--fw-bold); }
+.q-opt.is-missed::after  { content: "（正解）"; margin-left: auto; font-size: var(--t5); }
+.quiz.is-locked .q-opt { cursor: default; }
+
+/* ---------- I7. 排列題 order ---------- */
+.order-q {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-lg);
+}
+.order-q > .q-stem { font-size: var(--t3); font-weight: var(--fw-bold); }
+.order-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  counter-reset: ord;
+}
+.order-item {
+  counter-increment: ord;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--t4);
+  line-height: var(--lh-normal);
+  min-height: 56px;
+  padding: var(--s2) var(--s3);
+  background: var(--bg);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  cursor: grab;
+}
+.order-item::before {
+  content: counter(ord);
+  flex: none;
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  font-weight: var(--fw-bold);
+  color: var(--surface);
+  background: var(--accent);
+  border-radius: 50%;
+}
+.order-item > .txt { flex: 1; min-width: 0; overflow-wrap: break-word; }
+.order-item > .move {
+  flex: none;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  font: inherit; font-size: var(--t4);
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.order-item > .move:hover { border-color: var(--accent); }
+.order-item > .move:focus-visible { outline: var(--line-bold) solid var(--accent); outline-offset: 2px; }
+.order-item > .move[disabled] { opacity: .35; cursor: default; }
+.order-item.is-dragging { opacity: .5; cursor: grabbing; }
+.order-item.is-over { border-color: var(--accent); border-style: dashed; }
+.order-item.is-correct { border-color: var(--correct); background: var(--correct-soft); }
+.order-item.is-wrong   { border-color: var(--wrong);   background: var(--wrong-soft); }
+.order-item.is-correct > .txt::after { content: " ✓"; color: var(--correct); font-weight: var(--fw-bold); }
+.order-item.is-wrong   > .txt::after { content: " ✗"; color: var(--wrong);   font-weight: var(--fw-bold); }
+
+/* ---------- I8. 圖標答題 hotspot ---------- */
+.hotspot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--surface);
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-lg);
+}
+.hotspot > .q-stem { font-size: var(--t3); font-weight: var(--fw-bold); }
+.hotspot > .q-hint { font-size: var(--t5); color: var(--muted); }
+.hs-stage {
+  position: relative;
+  align-self: center;
+  max-width: 100%;
+  line-height: 0;            /* 消除 img 底部行距，讓座標與圖精準對齊 */
+  border: var(--line-mid) solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+.hs-stage:focus-visible { outline: var(--line-bold) solid var(--accent); outline-offset: 3px; }
+.hs-stage > img,
+.hs-stage > svg { display: block; max-width: 100%; height: auto; }
+
+/* 學生放下的標記；用 --x/--y 百分比定位，縮放後仍對齊 */
+.hs-mark {
+  position: absolute;
+  left: var(--x); top: var(--y);
+  width: 48px; height: 48px;
+  margin: -24px 0 0 -24px;
+  border-radius: 50%;
+  border: var(--line-bold) solid var(--accent);
+  background: var(--accent-soft);
+  display: grid; place-items: center;
+  font-size: 24px; line-height: 1;
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  pointer-events: none;
+}
+.hs-mark.is-correct { border-color: var(--correct); background: var(--correct-soft); color: var(--correct); }
+.hs-mark.is-correct::after { content: "✓"; }
+.hs-mark.is-wrong { border-color: var(--wrong); background: var(--wrong-soft); color: var(--wrong); }
+.hs-mark.is-wrong::after { content: "✗"; }
+
+/* 對答案後才顯示的正解圈 */
+.hs-target {
+  position: absolute;
+  left: var(--x); top: var(--y);
+  border-radius: 50%;
+  border: var(--line-bold) dashed var(--correct);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: none;
+}
+.hotspot.is-revealed .hs-target { display: block; }
+
+/* ============================================================
+   RWD：教學網頁在手機／平板／投影機都要能讀
+   斷點語意 —— 1024：平板橫；768：平板直／小筆電；480：手機
+   字級只降到 --t-min(24px) 為止，不再往下（後排學生可讀性優先）
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root {
+    --t1: 60px; --t2: 46px; --t3: 34px; --t4: 28px;
+    --s7: 64px; --s6: 48px;
+    --safe-x: 48px; --safe-y: 40px;
+  }
+}
+@media (max-width: 768px) {
+  :root {
+    --t1: 46px; --t2: 36px; --t3: 30px; --t4: 26px;
+    --s7: 40px; --s6: 32px; --s5: 28px;
+    --safe-x: 24px; --safe-y: 24px;
+  }
+  /* 並排結構一律改直排，避免擠成無法閱讀的窄欄 */
+  .compare-pair,
+  .misconception,
+  .flow-steps,
+  .figure-block { grid-template-columns: 1fr !important; }
+  .quiz > .q-options { grid-template-columns: 1fr; }
+  .drag-match .zones { grid-template-columns: 1fr; }
+  .timeline { padding-left: var(--s4); }
+  /* 數據聚焦頁：窄螢幕改上下堆疊，大數字降階 */
+  .data-focus { grid-template-columns: 1fr !important; text-align: center; justify-items: center; }
+  :root { --num-xl: 110px; }
+  .section-divider { padding: var(--s5) var(--s5); }
+}
+@media (max-width: 480px) {
+  :root { --t1: 38px; --t2: 32px; --t3: 28px; --t4: 25px; --num-xl: 80px; }
+  .quiz, .order-q, .hotspot, .concept-card, .task-card { padding: var(--s3); }
+  .order-item { flex-wrap: wrap; }
+  /* 手機上工具列按鈕改為可換行，不要橫向溢出 */
+  .ds-btn { flex: 1 1 auto; }
+}
+
+/* 觸控裝置：hover 效果會「黏住」，關掉純 hover 的視覺變化 */
+@media (hover: none) {
+  .q-opt:hover, .order-item > .move:hover, .ds-btn:hover { border-color: var(--line); }
+  .q-opt.is-picked:hover { border-color: var(--accent); }
+}
+
+@media print {
+  .quiz .ds-btn, .order-q .ds-btn, .hotspot .ds-btn { display: none !important; }
+  .order-item > .move { display: none !important; }
+  .hs-stage { cursor: default; }
+  .ans-feedback { display: none !important; }
+}
+
+/* 鍵盤操作時的預覽標記（方向鍵移動、Enter 才真正放下） */
+.hs-mark.is-ghost { opacity: .55; border-style: dashed; }
+.hs-mark.is-ghost::after { content: none; }
+
+/* 按鈕列：手機上自動換行，不橫向溢出 */
+.row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; }
+/* 單檔頁面用：非簡報頁面不需要 16:9 舞台，改為可捲動文件 */
+html, body { overflow: auto; height: auto; background: var(--bg); }
+.ico { width: 1em; height: 1em; fill: none; stroke: currentColor;
+       stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+<style>
+/* 作文說明單網頁版：可捲動文件（非 16:9 簡報），字級只用 DS 階梯、顏色只用 DS token */
+body { font-size: var(--t4); line-height: var(--lh-loose); }
+.sheet { max-width: 1120px; margin: 0 auto; padding: var(--s5) var(--s4) var(--s6);
+  display: flex; flex-direction: column; gap: var(--s4); }
+.sheet-head { display: flex; flex-direction: column; gap: var(--s2); }
+.sheet-head .kicker { font-size: var(--t5); color: var(--muted); }
+.sheet-head h1 { font-size: var(--t2); line-height: var(--lh-tight); }
+.steps-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1); font-size: var(--t5); }
+.steps-bar .s { background: var(--surface); border: var(--line-thin) solid var(--line);
+  border-radius: var(--r-sm); padding: 0 var(--s1); }
+.steps-bar .a { color: var(--muted); }
+.concept-card > .head .no { display: inline-block; background: var(--accent); color: var(--surface);
+  border-radius: var(--r-sm); padding: 0 var(--s1); margin-right: var(--s2); font-size: var(--t5); vertical-align: middle; }
+.concept-card > .body { display: flex; flex-direction: column; gap: var(--s2); }
+.concept-card > .body > p { overflow-wrap: anywhere; }
+.hint { color: var(--muted); }
+.hint::before { content: "▸ "; }
+.link { color: var(--accent); font-weight: var(--fw-bold); }
+.link::before { content: "➜ "; }
+.bl { display: inline-block; inline-size: var(--w, 5em); max-inline-size: 100%; block-size: 1.1em;
+  border-bottom: var(--line-mid) solid var(--ink); vertical-align: text-bottom; }
+.okng { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); }
+.okng > span { border-radius: var(--r-sm); padding: var(--s1) var(--s2); }
+.okng .ok { background: var(--correct-soft); border-left: var(--line-bold) solid var(--correct); }
+.okng .ng { background: var(--wrong-soft); border-left: var(--line-bold) solid var(--wrong); }
+.okng .ok::before { content: "✓ 要寫："; font-weight: var(--fw-bold); color: var(--correct); }
+.okng .ng::before { content: "✗ 不要："; font-weight: var(--fw-bold); color: var(--wrong); }
+.write-field { border: var(--line-thin) solid var(--line); border-radius: var(--r-sm); background-color: var(--surface); }
+.outline { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: var(--s3); }
+.outline > .is-core { grid-column: 1 / -1; }
+.ocard { background: var(--surface); border: var(--line-mid) solid var(--line); border-radius: var(--r-md);
+  padding: var(--s3); display: flex; flex-direction: column; gap: var(--s1); }
+.ocard.is-core { border-color: var(--accent); background: var(--accent-soft); }
+.ocard .ct { font-weight: var(--fw-bold); }
+.ocard .meta { align-self: flex-start; font-size: var(--t5); border: var(--line-thin) solid var(--muted);
+  border-radius: var(--r-sm); padding: 0 var(--s1); color: var(--muted); }
+.pick { background: var(--accent-soft); border: var(--line-mid) dashed var(--accent); border-radius: var(--r-md);
+  padding: var(--s2) var(--s3); display: flex; flex-direction: column; gap: var(--s1); }
+.essay { background: var(--surface); border: var(--line-mid) solid var(--ink); border-radius: var(--r-md);
+  padding: var(--s3) var(--s4); display: flex; flex-direction: column; gap: var(--s2); }
+.essay .tt { font-size: var(--t3); font-weight: var(--fw-bold); text-align: center; letter-spacing: .3em; }
+.essay .par { text-indent: 2em; }
+.essay .lt-w1 { text-indent: 2em; } .essay .lt-end { text-align: end; }
+.essay .lab { display: block; text-indent: 0; font-size: var(--t5); font-weight: var(--fw-bold); color: var(--accent-2); }
+.essay .st { font-weight: var(--fw-bold); text-decoration: underline var(--accent) var(--line-mid); text-underline-offset: 4px; }
+.essay .tag { font-size: var(--t5); border: var(--line-thin) solid var(--accent-2); color: var(--accent-2);
+  border-radius: var(--r-sm); padding: 0 4px; margin: 0 4px; white-space: nowrap; }
+.action-list > .item { align-items: flex-start; }
+.sheet-foot { font-size: var(--t5); color: var(--muted); text-align: center; }
+@media (max-width: 768px) {
+  .sheet { padding: var(--s3) 16px var(--s5); }
+  .okng { grid-template-columns: 1fr; }
+  .outline { grid-template-columns: 1fr; }
+  .concept-card { padding: var(--s3); }
+  .essay { padding: var(--s3) var(--s2); }
+}
+@media print { .write-field { border: var(--line-thin) solid var(--line); } }
+</style></head>
+<body><main class="sheet">
+<header class="sheet-head">
+<p class="kicker">四上國語・期中前作文・進階版</p>
+<h1>作文說明單〈下課時間〉</h1>
+<p>文體：記敘文（寫事）｜分成五段｜照每段的工作和關鍵詞寫，寫到稿紙<b>三百字的線</b>以上。</p>
+<div class="steps-bar"><span class="a">寫作步驟：</span><span class="s">一審題</span><span class="a">→</span><span class="s">二立意</span><span class="a">→</span><span class="s">三選材</span><span class="a">→</span><span class="s">四組織</span><span class="a">→</span><span class="s">五技巧</span><span class="a">→</span><span class="s">寫在稿紙上</span><span class="a">→</span><span class="s">六檢查</span></div>
+</header>
+<section class="concept-card"><div class="head"><span class="no">想一想</span></div><div class="body">
+<p>下課鐘一響，校園就熱鬧起來了。你最喜歡在下課做什麼？有沒有哪一次下課，到現在還記得清清楚楚？</p>
+<p class="link">把那一次下課寫出來，就是你這篇作文的材料。照下面六個步驟，一步一步寫出來。</p>
+</div></section>
+<section class="concept-card"><div class="head"><span class="no">步驟一</span>審題：題目要我寫什麼？</div><div class="body">
+<p>（一）這是什麼文體？　→　記敘文・寫事：把下課的事寫清楚。</p>
+<p>（二）要寫什麼？　→　下課的樣子，加上<b>一次</b>最難忘的下課。</p>
+<p class="hint">全景是背景，那一次才是主角——不要把好幾件事擠在同一段。</p>
+<p class="link">下課帶給你什麼，下一步立意先想好。</p>
+</div></section>
+<section class="concept-card"><div class="head"><span class="no">步驟二</span>立意：這篇要告訴讀者什麼？</div><div class="body">
+<p class="hint">立意＝決定這篇作文要告訴讀者的<b>一個道理</b>。把它寫成一句話，就是主旨句。</p>
+<p>下課帶給我什麼？寫成一句主旨（可用「從……，我明白了：……」）：</p>
+<div class="write-field" contenteditable="true" style="--field-h:84px" data-placeholder="可以先在這裡試寫（不會存檔）"></div>
+<p class="link">這句主旨，到第五段（意義）要寫出來。</p>
+</div></section>
+<section class="concept-card"><div class="head"><span class="no">步驟三</span>選材：先列三種，再刪到一種</div><div class="body">
+<p>第一種：<span class="bl" style="--w:7em"></span>　□記得某一次的畫面　□有和別人一起</p>
+<p>第二種：<span class="bl" style="--w:7em"></span>　□記得某一次的畫面　□有和別人一起</p>
+<p>第三種：<span class="bl" style="--w:7em"></span>　□記得某一次的畫面　□有和別人一起</p>
+<p>我留下第<span class="bl" style="--w:1.5em"></span>種（兩格都能勾的最好寫）。刪掉另外兩種的理由：</p>
+<div class="write-field" contenteditable="true" style="--field-h:84px" data-placeholder="可以先在這裡試寫（不會存檔）"></div>
+<p class="link">留下的這一種，第三段寫怎麼玩，第四段寫最難忘的一次。</p>
+</div></section>
+<section class="concept-card"><div class="head"><span class="no">步驟四</span>組織：每段的工作</div><div class="body">
+<div class="outline"><div class="ocard"><p class="ct">一、開頭｜鐘聲響了</p><p>關鍵詞：鐘聲・第幾節・心情</p><p>想一想：鐘一響，我第一個動作是什麼？</p><span class="meta">三句</span></div><div class="ocard"><p class="ct">二、全景｜下課的熱鬧</p><p>關鍵詞：看到・聽到・像什麼</p><p>想一想：操場上最熱鬧的是哪裡？</p><span class="meta">三到四句</span></div><div class="ocard"><p class="ct">三、我最愛｜我最喜歡的遊戲</p><p>關鍵詞：最愛的遊戲・和誰・怎麼玩</p><p>想一想：這個遊戲哪裡最好玩？</p><span class="meta">三到四句</span></div><div class="ocard is-core"><p class="ct">四、那一次｜最難忘的一次（寫具體的樣子）★最重要</p><p>關鍵詞：看到・聽到・身體的感覺・心裡想・我做了什麼</p><p>想一想：那一次，我最記得哪個畫面？</p><span class="meta">五到六句</span></div><div class="ocard"><p class="ct">五、意義｜下課給我什麼</p><p>關鍵詞：鐘聲・下課給我什麼（主旨）・以後</p><p>想一想：開頭用鐘聲，結尾也用鐘聲收起來。</p><span class="meta">三句</span></div></div>
+<p class="hint">五段合起來大約十九句，寫到三百字以上。每一段只寫一個重點。</p>
+</div></section>
+<section class="concept-card"><div class="head"><span class="no">步驟五</span>寫作技巧：兩招把熱鬧寫出來</div><div class="body">
+<p>第一招：五感——寫出看到、聽到的，也可以加上聞到、摸到。</p>
+<p>第二招：用「像」的譬喻，讓讀者看見畫面。</p>
+<p>範文第二段：「操場上很熱鬧。」→「大家像一群被打翻的彈珠，滾向操場的每個角落」</p>
+<p>換你改寫：「教室裡很吵。」→</p>
+<div class="write-field" contenteditable="true" style="--field-h:84px" data-placeholder="可以先在這裡試寫（不會存檔）"></div>
+<p class="link">兩招用在第二段（全景）；第四段再用一次五感。</p>
+</div></section>
+<section class="concept-card"><div class="head"><span class="no">範文</span>照上面的步驟寫成的樣子</div><div class="body">
+<div class="pick"><p>步驟二 立意・主旨句：從那次下課的遊戲中，我明白了：和朋友一起笑過，再難的課也有力氣面對。</p><p>步驟三 選材：在大榕樹下玩木頭人。</p></div>
+<div class="essay"><p class="tt">下課時間</p><p class="par"><span class="lab">一、開頭｜鐘聲響了</span><span class="tag">鐘聲</span>「噹噹噹……」下課鐘才響第一聲，教室裡的椅子就「嘎」地往後推開了。<span class="tag">第幾節</span>這是第二節下課，足足有二十分鐘，是我們等了一早上的時間。<span class="tag">心情</span>我把鉛筆一丟，心裡只有一個念頭：衝！</p><p class="par"><span class="lab">二、全景｜下課的熱鬧（五感＋譬喻）</span><span class="tag">看到</span>操場上，籃球場擠滿了搶球的人，跳房子的格子旁排了長長的隊伍。<span class="tag">聽到</span>拍球聲、尖叫聲和哨子聲混在一起，吵得像菜市場。<span class="tag">像什麼</span>從二樓往下看，大家像一群被打翻的彈珠，滾向操場的每個角落。</p><p class="par"><span class="lab">三、我最愛｜我最喜歡的遊戲</span><span class="tag">最愛的遊戲</span>我最愛的，是在大榕樹下玩「木頭人」。<span class="tag">和誰</span>我總是和三四個好朋友一起玩。<span class="tag">怎麼玩</span>當鬼的人背對大家喊口令，一轉頭，誰動了就要被抓去當俘虜。最刺激的是想笑卻不能動。</p><p class="par"><span class="lab">四、那一次｜最難忘的一次（寫具體的樣子）</span><span class="tag">看到</span>有一次我當鬼，一轉頭，看見最後一個同學單腳站著，身體搖來搖去。<span class="tag">聽到</span>四周突然安靜下來，只剩下樹上的蟬「唧唧」地叫。<span class="tag">身體的感覺</span>我憋著笑，肚子都痛了起來。<span class="tag">心裡想</span>我心想：「再撐一下，你就會倒下！」<span class="tag">我做了什麼</span>果然，他「哎呀」一聲跌坐在地上，大家笑成一團。</p><p class="par"><span class="lab">五、意義｜下課給我什麼</span><span class="tag">鐘聲</span>「噹噹噹……」上課鐘響了，我們依依不捨地跑回教室。<span class="tag">下課給我什麼（主旨）</span>短短的下課讓我明白了：和朋友一起笑過，再難的課也有力氣面對。<span class="tag">以後</span>以後遇到難懂的課，我就想想榕樹下的笑聲。</p></div>
+<p class="hint">小框＝大綱的關鍵詞。找找看：開頭和結尾哪裡互相呼應？</p>
+</div></section>
+<section class="concept-card"><div class="head"><span class="no">步驟六</span>寫完自己檢查</div><div class="body">
+<div class="action-list"><div class="item"><span><b>【審題】</b>只寫下課的事，有一次寫得特別仔細。</span></div><div class="item"><span><b>【立意】</b>第五段寫出的道理，和我的主旨句一樣。</span></div><div class="item"><span><b>【選材】</b>第三、四段只寫一種遊戲、一次經過。</span></div><div class="item"><span><b>【組織】</b>五段的關鍵詞都寫到，每段只寫一個重點。</span></div><div class="item"><span><b>【技巧】</b>第二段用了五感和譬喻。</span></div><div class="item"><span><b>【體會】</b>結尾寫出下課的意義，不是只有「好好玩」。</span></div><div class="item"><span><b>【版面】</b>每段開頭空兩格；標點不寫在一行的第一格。</span></div><div class="item"><span><b>【字數】</b>寫到稿紙三百字的線以上。</span></div></div>
+<p class="hint">常寫錯：分享（不是「分想」）、籃球（不是「藍球」）、覺得（不是「覺的」）。</p>
+</div></section>
+<p class="sheet-foot">紙本說明單由老師發放，作文寫在稿紙上。</p>
+</main></body></html>
