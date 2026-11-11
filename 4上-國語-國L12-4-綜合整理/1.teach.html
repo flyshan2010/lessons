@@ -2047,6 +2047,19 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
 .slide .quiz > .q-stem, .slide .quiz > .q-options { grid-column: 1 / -1; }
 .slide .quiz > .ans-feedback { margin: 0; }
 .q-options.two { grid-template-columns: 1fr 1fr; }
+/* 看圖題圖左題右（.qsplit）：版型本身也放這裡，各科頁都能用（數L10 頁內原有同名規則，數值相同） */
+.qsplit { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--s3); align-items: start; }
+.qsplit > * { min-width: 0; }
+.qsplit:has(> .calc-card) { grid-template-columns: 1fr 1.8fr; }   /* 算式卡窄，讓長選項有寬度（數L8-3b） */
+.qsplit .quiz .q-options { display: grid; grid-template-columns: 1fr; gap: var(--s2); }
+.qsplit .tri-fig .tri { max-height: 320px; }
+.qsplit .map-svg { max-height: 520px; width: auto; max-width: 100%; margin: 0 auto; }
+@media (max-width: 768px) { .qsplit { grid-template-columns: 1fr; } }
+/* .qsplit 右欄窄：字縮一級、短選項排兩欄（長選項一欄免折行），判斷帶才不會壓到導覽列（1600×900 實測） */
+.qsplit .quiz { padding: var(--s3); gap: var(--s2); }
+.qsplit .quiz > .q-stem { font-size: var(--t4); }
+.qsplit .quiz .q-opt { padding: var(--s1) var(--s3); }
+.qsplit .quiz .q-options.two, .qsplit .quiz .q-options.tf { grid-template-columns: 1fr 1fr; }
 /* v4-shell:end */
 
 </style>
@@ -2059,7 +2072,7 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">第十二課 寧靜的音樂會 · 第四節</div>
         <div id="cover-t" class="headline" style="font-size:var(--t1);">綜合整理與寫作</div>
-        <div class="sub">把三節學過的全部收攏，然後——寫一封來自深海的邀請信</div>
+        <div class="sub">把三節學過的全部收攏，然後——換你當詩人，仿寫〈寧靜的○○會〉</div>
       </div>
     </section>
 
@@ -2309,58 +2322,60 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
     <section class="slide" data-phase="learn" data-slide-id="write-divider" aria-labelledby="write-divider-t" hidden>
       <div class="section-divider" style="height:100%;justify-content:center;">
         <div class="kicker">國L12-4 · 寫作教學</div>
-        <div id="write-divider-t" class="headline" style="font-size:var(--t1);">來自深海的邀請信</div>
-        <div class="sub">海洋動物要辦音樂會了——牠們請你幫忙寫一封邀請信給人類</div>
+        <div id="write-divider-t" class="headline" style="font-size:var(--t1);">寧靜的○○會</div>
+        <div class="sub">換你當詩人——找一個熟悉的地方，寫一場動物和植物的寧靜聚會</div>
       </div>
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="write-task" aria-labelledby="write-task-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 寫作任務</span><h2 id="write-task-t" class="title">這一次要寫什麼</h2></div>
       <div class="task-card" data-reveal>
-        <div class="mission">用<b>海洋動物</b>的身分，寫一封邀請信給人類，邀請他們來參加寧靜的音樂會</div>
+        <div class="mission">仿寫課文，寫一首詩〈寧靜的○○會〉：在你熟悉的地方，動物和植物辦了一場寧靜的聚會，你是被邀請的<b>嘉賓</b></div>
         <div class="facts">
-          <div class="fact"><span class="k">文體</span><span>應用文——書信（邀請信）</span></div>
-          <div class="fact"><span class="k">字數</span><span>150 字以上</span></div>
-          <div class="fact"><span class="k">必備</span><span>書信五格式 ＋ 邀請五要素 ＋ 至少一處轉化或譬喻</span></div>
+          <div class="fact"><span class="k">文體</span><span>詩歌（仿寫）——「○○會」自己定：音樂會、舞會、運動會……</span></div>
+          <div class="fact"><span class="k">篇幅</span><span>四節左右、十六到二十行（詩不算字數，算行數）</span></div>
+          <div class="fact"><span class="k">必備</span><span>一個譬喻 ＋ 轉化 ＋ 最後一節問一句</span></div>
         </div>
       </div>
       <div class="paper-note" data-reveal>
         <svg class="ico"><use href="#ico-pencil"></use></svg>
-        <span>✎ 正式稿寫在紙本稿紙學習單上（<b>2d.寫作稿紙_來自深海的邀請信</b>），寫完交給老師批閱。</span>
+        <span>✎ 老師會發<b>作文說明單</b>（基礎版／進階版／挑戰版），背面就是作文紙，照說明單的六個步驟寫。</span>
       </div>
     </section>
 
-    <section class="slide" data-phase="learn" data-slide-id="write-5w" aria-labelledby="write-5w-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 寫作步驟 1</span><h2 id="write-5w-t" class="title">邀請要說清楚五件事（注意事項最重要）</h2></div>
+    <section class="slide" data-phase="learn" data-slide-id="write-structure" aria-labelledby="write-structure-t" hidden>
+      <div class="page-head"><span class="label">國L12-4 · 寫作步驟 1</span><h2 id="write-structure-t" class="title">照課文的樣子，分成四節</h2></div>
       <div class="action-list">
-        <div class="item" data-reveal><b>誰邀請</b>：我是誰？（一隻章魚？一群海豚？珊瑚礁的居民？）</div>
-        <div class="item" data-reveal><b>邀請誰</b>：親愛的人類朋友／小朋友／岸上的鄰居</div>
-        <div class="item" data-reveal><b>什麼活動</b>：一場寧靜的音樂會，沒有人說話，只有心聲</div>
-        <div class="item" data-reveal><b>時間地點</b>：每年◯月◯日，在深海最安靜的那一片珊瑚礁</div>
-        <div class="item" data-reveal><b>注意事項</b>：請安靜、不要帶垃圾、不要伸手碰我們</div>
+        <div class="item" data-reveal><b>第一節　開始了</b>：在哪裡、什麼時候？誰先出場？（課文：音樂會的開始）</div>
+        <div class="item" data-reveal><b>第二節　大家來表演</b>：誰在唱歌、拍手、微笑、跳舞？（課文：音樂會的過程）</div>
+        <div class="item" data-reveal><b>第三節　我是嘉賓</b>：我怎麼做，才不會打擾牠們？</div>
+        <div class="item" data-reveal><b>第四節　問一句＋說希望</b>：像課文「每年都舉辦嗎？」（課文：音樂會的延續）</div>
+      </div>
+      <div class="takeaway-band" data-reveal>
+        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
+        <span class="text">地方選你<b>去過、看過</b>的：清晨的校園、雨後的草地、公園的池塘……</span>
       </div>
     </section>
 
-    <section class="slide" data-phase="learn" data-slide-id="write-format" aria-labelledby="write-format-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 寫作步驟 2</span><h2 id="write-format-t" class="title">書信的五個格式，一格都不能少</h2></div>
+    <section class="slide" data-phase="learn" data-slide-id="write-skill" aria-labelledby="write-skill-t" hidden>
+      <div class="page-head"><span class="label">國L12-4 · 寫作步驟 2</span><h2 id="write-skill-t" class="title">三招，讓詩像這一課</h2></div>
       <div class="flow-steps">
-        <div class="step" data-reveal><div class="badge">1</div><div class="head">稱謂</div><div class="body">親愛的人類朋友：（頂格寫，加冒號）</div></div>
+        <div class="step" data-reveal><div class="badge">1</div><div class="head">譬喻</div><div class="body">○○的○○是○○的○○<br>麻雀的叫聲是清脆的鈴鐺</div></div>
         <div class="arrow" data-reveal>→</div>
-        <div class="step" data-reveal><div class="badge">2</div><div class="head">問候</div><div class="body">你們好嗎？（空兩格開始）</div></div>
+        <div class="step" data-reveal><div class="badge">2</div><div class="head">轉化</div><div class="body">讓動植物像人一樣<br>樹葉一片一片，在風裡拍手</div></div>
         <div class="arrow" data-reveal>→</div>
-        <div class="step" data-reveal><div class="badge">3</div><div class="head">正文</div><div class="body">我是誰、要邀你來做什麼、時間地點、注意事項</div></div>
+        <div class="step" data-reveal><div class="badge">3</div><div class="head">斷句分行</div><div class="body">想強調的詞自己站一行<br>輕輕的／鞠一個躬</div></div>
       </div>
-      <div class="flow-steps">
-        <div class="step" data-reveal><div class="badge">4</div><div class="head">祝福語</div><div class="body">敬祝　平安喜樂</div></div>
-        <div class="arrow" data-reveal>→</div>
-        <div class="step" data-reveal><div class="badge">5</div><div class="head">署名與日期</div><div class="body">深海的章魚　敬邀<br>中華民國一一五年◯月◯日</div></div>
+      <div class="takeaway-band" data-reveal>
+        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
+        <span class="text">三招都是第三節學過的——課文怎麼寫，你就怎麼試</span>
       </div>
     </section>
 
-    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="是非" data-cp-src="國L12-4" data-cp-kp="書信" data-cp-hash="03930f" aria-labelledby="cp2-t" hidden>
-      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 國L12-4 · 書信</span><h2 id="cp2-t" class="title">署名寫在哪裡？</h2></div>
+    <section class="slide" data-slide-id="cp2" data-phase="learn" data-cp="C2" data-cp-kind="課中" data-cp-type="是非" data-cp-src="國L12-4" data-cp-kp="結構" data-cp-hash="cc9d56" aria-labelledby="cp2-t" hidden>
+      <div class="page-head"><span class="label"><span class="phase phase-learn">② 練習 · 全班作答 2</span> 國L12-4 · 結構</span><h2 id="cp2-t" class="title">寫詩要不要換行？</h2></div>
       <div class="quiz" data-quiz data-mode="single">
-        <p class="q-stem">寫邀請信時，署名和日期要寫在信的最開頭。</p>
+        <p class="q-stem">寫詩的時候，要把句子連成一大段，不要換行。</p>
         <div class="q-options tf">
           <button class="q-opt">⭕ 對</button>
           <button class="q-opt" data-correct>❌ 錯</button>
@@ -2374,62 +2389,48 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       </div>
       <div class="takeaway-band" data-reveal data-after-answer>
         <span class="icon"><svg class="ico"><use href="#ico-check"></use></svg></span>
-        <span class="text">錯！開頭是稱謂和問候，署名與日期在最後</span>
-      </div>
-    </section>
-
-    <section class="slide" data-phase="learn" data-slide-id="write-style" aria-labelledby="write-style-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 寫作步驟 3</span><h2 id="write-style-t" class="title">怎麼寫得像這一課？</h2></div>
-      <div class="action-list">
-        <div class="item" data-reveal>用<b>轉化</b>：讓珊瑚會招手、讓海流會唱歌、讓月光會走路</div>
-        <div class="item" data-reveal>用<b>譬喻</b>：「我們的音樂會是一場不用翻譯的對話」</div>
-        <div class="item" data-reveal>用本課<b>語詞</b>：寧靜、傳達、愉悅、嘉賓、天籟、載歌載舞</div>
-        <div class="item" data-reveal>把讀者當成<b>嘉賓</b>——你是主人，語氣要溫暖、有禮</div>
-      </div>
-      <div class="takeaway-band" data-reveal>
-        <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">寫的時候心裡放一句話：<b>我要讓收信的人捨不得破壞這片海</b></span>
+        <span class="text">錯！詩要分行、分節，想強調的詞還可以自己站一行</span>
       </div>
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="write-example" aria-labelledby="write-example-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 起步範例</span><h2 id="write-example-t" class="title">開頭這樣寫（只給前半，剩下自己寫）</h2></div>
+      <div class="page-head"><span class="label">國L12-4 · 起步範例</span><h2 id="write-example-t" class="title">第一節這樣寫（只給開頭，剩下自己寫）</h2></div>
       <div class="concept-card" data-reveal>
-        <div class="head">範例</div>
-        <div class="body">親愛的人類朋友：<br>　　你們好嗎？我是住在深海珊瑚礁裡的一隻章魚。<br>　　每年這個時候，我們都會舉辦一場<b>寧靜</b>的音樂會。說是音樂會，其實沒有人開口說話——我們用微笑的嘴脣、擺動的觸手，把<b>愉悅</b>的心聲<b>傳達</b>給彼此……</div>
+        <div class="head">範例〈寧靜的清晨音樂會〉第一節</div>
+        <div class="body">　　在清晨的校園裡，<br>　　一場<b>寧靜</b>的音樂會開始了。<br>　　麻雀的叫聲是清脆的鈴鐺，<br>　　叮叮噹噹，叫醒了大樹。</div>
       </div>
       <div class="paper-note" data-reveal>
         <svg class="ico"><use href="#ico-pencil"></use></svg>
-        <span>✎ 不可以照抄。請換一種動物、換自己的說法，把後面的時間地點、注意事項、祝福語補完。</span>
+        <span>✎ 不可以照抄。請換一個地方、換你自己的表演者，再寫第二到第四節。</span>
       </div>
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="write-rubric" aria-labelledby="write-rubric-t" hidden>
-      <div class="page-head"><span class="label">國L12-4 · 評分規準</span><h2 id="write-rubric-t" class="title">老師會看這四件事</h2></div>
+      <div class="page-head"><span class="label">國L12-4 · 自己檢查</span><h2 id="write-rubric-t" class="title">寫完看這四件事</h2></div>
       <div class="action-list">
-        <div class="item" data-reveal><b>格式（25%）</b>：稱謂、問候、正文、祝福語、署名日期五格式完整</div>
-        <div class="item" data-reveal><b>內容（30%）</b>：邀請五要素齊全，特別是「注意事項」寫得具體</div>
-        <div class="item" data-reveal><b>修辭（25%）</b>：至少一處轉化或譬喻，用得自然不生硬</div>
-        <div class="item" data-reveal><b>語句（20%）</b>：字數足夠、語句通順、標點正確、字跡工整</div>
+        <div class="item" data-reveal><b>審題</b>：寫成一首詩，主角是動物和植物，我是嘉賓</div>
+        <div class="item" data-reveal><b>組織</b>：分節、分行；每行開頭空兩格，每節中間空一行</div>
+        <div class="item" data-reveal><b>技巧</b>：有一個譬喻，有轉化，最好再加一處斷句分行</div>
+        <div class="item" data-reveal><b>體會</b>：最後一節問一句，也說出我的希望</div>
       </div>
       <div class="takeaway-band" data-reveal>
         <span class="icon"><svg class="ico"><use href="#ico-bulb"></use></svg></span>
-        <span class="text">寫完先自己檢查一遍：五格式有沒有少？注意事項寫得夠不夠具體？</span>
+        <span class="text">寫完大聲念一遍：換行的地方停一下，聽聽看順不順</span>
       </div>
     </section>
 
     <section class="slide" data-phase="learn" data-slide-id="write-do" aria-labelledby="write-do-t" hidden>
       <div class="page-head"><span class="label">國L12-4 · 動筆</span><h2 id="write-do-t" class="title">現在換你寫</h2></div>
       <div class="task-card" data-reveal>
-        <div class="mission">在稿紙上完成〈來自深海的邀請信〉</div>
+        <div class="mission">在作文紙上完成〈寧靜的○○會〉</div>
         <div class="facts">
-          <div class="fact"><span class="k">步驟</span><span>①先決定你是誰 ②列出五要素 ③照五格式寫 ④加一處修辭 ⑤檢查</span></div>
+          <div class="fact"><span class="k">步驟</span><span>①選地方 ②找表演者 ③照四節寫 ④放進譬喻和轉化 ⑤檢查</span></div>
           <div class="fact"><span class="k">時間</span><span>課堂 25 分鐘，寫不完的回家完成</span></div>
         </div>
       </div>
       <div class="paper-note" data-reveal>
         <svg class="ico"><use href="#ico-pencil"></use></svg>
-        <span>✎ 稿紙學習單：<b>2d.寫作稿紙_來自深海的邀請信</b>（含構思欄與 300 字稿紙），寫完交給老師批閱。</span>
+        <span>✎ 作文說明單正面看步驟、背面作文紙寫正式稿，寫完交給老師批閱。</span>
       </div>
     </section>
 
@@ -2439,8 +2440,8 @@ body.is-embedded .hud [data-action="fullscreen"] { display: none; }
       <div class="action-list">
         <div class="item" data-reveal>多義詞「教養」：「有教養」＝品德涵養；「教養孩子」＝教導養育</div>
         <div class="item" data-reveal>生活中的詩句：擷取下來，放在和詩意相呼應的地方</div>
-        <div class="item" data-reveal>邀請信五要素：誰邀請、邀請誰、什麼活動、時間地點、注意事項</div>
-        <div class="item" data-reveal>書信五格式：稱謂、問候、正文、祝福語、署名與日期</div>
+        <div class="item" data-reveal>仿寫詩歌：照課文分四節——開始、表演、我是嘉賓、問一句說希望</div>
+        <div class="item" data-reveal>寫詩三招：譬喻（○○是○○）、轉化（像人一樣）、斷句分行（強調的詞自己站一行）</div>
       </div>
       <div class="takeaway-band" data-reveal>
         <span class="icon"><svg class="ico"><use href="#ico-star"></use></svg></span>
